@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
  *
  * @folder API/后台/物流订单列表
  */
-@RequestMapping("/admin/logistics-order")
+@RequestMapping("/api/admin/logistics-order")
 @RestController
 public class LogisticsOrderController {
     private final LogisticsOrderServer logisticsOrderServer;

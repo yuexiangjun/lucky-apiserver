@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
  *
  * @folder API/后台/客服信息
  */
-@RequestMapping("/admin/customer")
+@RequestMapping("/api/admin/customer")
 @RestController
 public class CustomerInfoController {
     private final CustomerInfoServer customerInfoServer;

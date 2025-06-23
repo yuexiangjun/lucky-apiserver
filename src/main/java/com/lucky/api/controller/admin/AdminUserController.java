@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
  * @folder API/后台/用户
  */
 @RestController
-@RequestMapping("/admin/user")
+@RequestMapping
 public class AdminUserController {
 	private final AdminUserServer adminUserServer;
 
@@ -38,7 +38,7 @@ public class AdminUserController {
 	 * @param dto
 	 * @return
 	 */
-	@PostMapping("/save")
+	@PostMapping("/api/admin/user/save")
 	@ResponseFormat
 	public void save(@RequestBody AdminUserDTO dto) {
 		var entity = AdminUserDTO.toEntity(dto);
@@ -53,7 +53,7 @@ public class AdminUserController {
 	 * @param dto
 	 * @return
 	 */
-	@PutMapping("/update")
+	@PutMapping("/api/admin/user/update")
 	@ResponseFormat
 	public void update(@RequestBody AdminUserDTO dto) {
 		var entity = AdminUserDTO.toEntity(dto);
@@ -68,7 +68,7 @@ public class AdminUserController {
 	 * @param adminUserFindListDTO
 	 * @return
 	 */
-	@PostMapping("/list")
+	@PostMapping("/api/admin/user/list")
 	@ResponseFormat
 	public List<AdminUserVO> list(@RequestBody AdminUserFindListDTO adminUserFindListDTO) {
 		var adminUserEntity = AdminUserEntity.builder()
@@ -83,7 +83,7 @@ public class AdminUserController {
 	/**
 	 * 启用禁用
 	 */
-	@PutMapping("/enabled")
+	@PutMapping("/api/admin/user/enabled")
 	@ResponseFormat
 	public void enabled(@RequestBody EnabledDTO enabledDTO) {
 

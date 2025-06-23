@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
  * @folder API/小程序/订单记录
  */
 @RestController
-@RequestMapping("/wechat/order")
+@RequestMapping("/api/wechat/order")
 public class WechatOrderController extends BaseController {
 	private final OrderServer orderServer;
 

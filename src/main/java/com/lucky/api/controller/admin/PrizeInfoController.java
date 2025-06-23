@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
  * @folder API/后台/奖品设置
  */
 @RestController
-@RequestMapping("/prize-info")
+@RequestMapping("/api/prize-info")
 public class PrizeInfoController {
     private final PrizeInfoServer prizeInfoServer;
 

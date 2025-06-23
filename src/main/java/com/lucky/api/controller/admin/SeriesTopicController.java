@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
  * @folder API/后台/主题 系列
  */
 @RestController
-@RequestMapping("/series-topic")
+@RequestMapping("/api/series-topic")
 public class SeriesTopicController {
     private final SeriesTopicServer topicServer;
 

@@ -30,7 +30,7 @@ public class HuaWeiOssController {
 	 * @param file
 	 * @return
 	 */
-	@PostMapping("/upload")
+	@PostMapping("/api/upload")
 	@ResponseFormat
 	public String upload(@RequestPart("file")MultipartFile file) {
 		return HuaWeiOssServer.upload(file);

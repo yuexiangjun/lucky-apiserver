@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @folder API/小程序/首页详情
  */
 @RestController
-@RequestMapping("/wechat/detail")
+@RequestMapping("/api/wechat/detail")
 public class SessionInfoController  extends BaseController {
 	private final SessionInfoServer SessionInfoServer;
 

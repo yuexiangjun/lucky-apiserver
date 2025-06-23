@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
  *
  * @folder API/小程序/收货地址信息
  */
-@RequestMapping("/wechat/delivery-address")
+@RequestMapping("/api/wechat/delivery-address")
 @RestController
 public class DeliveryAddressController extends BaseController {
 	private final DeliveryAddressServer deliveryAddressServer;

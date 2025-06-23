@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @folder API/小程序/小程序的三方接口
  */
 @RestController
-@RequestMapping("/wechat/tripartite")
+@RequestMapping("/api/wechat/tripartite")
 public class WechatTripartiteController {
     private final WechatServer wechatServer;
     private final WechatUserServer wechatUserServer;

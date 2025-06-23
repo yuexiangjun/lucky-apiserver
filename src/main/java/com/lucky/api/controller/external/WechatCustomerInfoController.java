@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
  *
  * @folder API/小程序/客服信息
  */
-@RequestMapping("/wechat/customer")
+@RequestMapping("/api/wechat/customer")
 @RestController
 public class WechatCustomerInfoController {
     private final CustomerInfoServer customerInfoServer;

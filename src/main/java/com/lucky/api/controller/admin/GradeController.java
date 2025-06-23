@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
  * @folder API/后台/奖等级设置
  */
 @RestController
-@RequestMapping("/grade")
+@RequestMapping("/api/grade")
 public class GradeController {
     private final GradeServer gradeServer;
 

@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
  * @folder API/后台/订单记录
  */
 @RestController
-@RequestMapping("/admin/order")
+@RequestMapping("/api/admin/order")
 public class OrderController {
     private final OrderServer orderServer;
 

@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
  * @folder API/小程序/业务系统用户
  */
 @RestController
-@RequestMapping("/wechat/user")
+@RequestMapping
 public class WechatUserController extends BaseController {
 	private final WechatUserServer wechatUserServer;
 
@@ -29,7 +29,7 @@ public class WechatUserController extends BaseController {
 	/**
 	 * 登录注册
 	 */
-	@PostMapping("/login-enroll")
+	@PostMapping("/wechat/user/login-enroll")
 	@ResponseFormat
 	public LoginUserEntity login(@RequestBody WechatUserInfoDTO dto) {
 
@@ -42,7 +42,7 @@ public class WechatUserController extends BaseController {
 	/**
 	 * 获取用户信息
 	 */
-	@GetMapping("/get-info")
+	@GetMapping("/wechat/user/get-info")
 	@ResponseFormat
 	public WechatUserInfoVO getInfo() {
 		var entity = wechatUserServer.getInfo(this.getWechatUserId());
@@ -52,7 +52,7 @@ public class WechatUserController extends BaseController {
 	/**
 	 * 修改信息
 	 */
-	@PutMapping("/update-info")
+	@PutMapping("/wechat/user/update-info")
 	@ResponseFormat
 	public void updateInfo(@RequestBody WechatUserInfoDTO dto) {
 		WechatUserEntity entity = WechatUserInfoDTO.toEntity(dto);

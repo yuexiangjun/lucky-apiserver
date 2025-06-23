@@ -15,7 +15,7 @@ spring:
     host: 39.106.21.228
 #    host: 127.0.0.1
     port: 6379
-    password: fx1234@
+#    password: fx1234@
 wechat:
   appid: wxd827da4ada3486fd
   secret: bc2d8696bf75e4d2c077a74499018813
@@ -35,7 +35,7 @@ wx:
     mchserialno:  55B81111D0E04C5F96504101EF000BAB18645575
     appsecret: bc2d8696bf75e4d2c077a74499018813
     apikey: Fuxing1719160947Fuxing1719160947
-    notifyurl: "/wechat/pay/callback"
-    keypath: lucky-apiserver-boot/src/main/resources/apiclient_key.pem
+    notifyurl: "/api/wechat/pay/callback"
+    keypath: src/main/resources/apiclient_key.pem
     notifyhost: https://39.106.21.228:8333
 

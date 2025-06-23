@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
  *
  * @folder API/小程序/我的订单
  */
-@RequestMapping("/wechat/logistics-order")
+@RequestMapping("/api/wechat/logistics-order")
 @RestController
 public class WechatLogisticsOrderController extends BaseController {
     private final LogisticsOrderServer logisticsOrderServer;

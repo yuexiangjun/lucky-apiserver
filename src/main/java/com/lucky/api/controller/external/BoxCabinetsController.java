@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
  *
  * @folder API/小程序/盒柜
  */
-@RequestMapping("/wechat/box-cabinets")
+@RequestMapping("/api/wechat/box-cabinets")
 @RestController
 public class BoxCabinetsController extends BaseController {
     private final OrderServer orderServer;

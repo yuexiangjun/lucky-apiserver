@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
  *
  * @folder API/小程序/支付相关
  */
-@RequestMapping("/wechat/pay")
+@RequestMapping("/api/wechat/pay")
 @RestController
 public class LotteryController extends BaseController {
     private final LotteryServer lotteryServer;

@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
  * @folder API/小程序/主题系列
  */
 @RestController
-@RequestMapping("/wechat/series-topic")
+@RequestMapping("/api/wechat/series-topic")
 public class WechatSeriesTopicController {
 	private final SeriesTopicServer topicServer;
 
