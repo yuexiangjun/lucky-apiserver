@@ -15,7 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
  * @folder API/公共/图片上传
  */
 @RestController
-@RequestMapping("/oss")
+@RequestMapping("/api/oss")
 public class HuaWeiOssController {
 	private final HuaWeiOssServer HuaWeiOssServer;
 
@@ -30,7 +30,7 @@ public class HuaWeiOssController {
 	 * @param file
 	 * @return
 	 */
-	@PostMapping("/api/upload")
+	@PostMapping("/upload")
 	@ResponseFormat
 	public String upload(@RequestPart("file")MultipartFile file) {
 		return HuaWeiOssServer.upload(file);

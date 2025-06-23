@@ -94,7 +94,7 @@ public class AdminUserController {
 	/**
 	 * 登录
 	 */
-	@PostMapping("/login")
+	@PostMapping("/api/admin/user/login")
 	@ResponseFormat
 	public LoginUserEntity login(@RequestBody LoginDTO loginDTO) {
 		return adminUserServer.login(loginDTO.getPhone(), loginDTO.getPassword());
