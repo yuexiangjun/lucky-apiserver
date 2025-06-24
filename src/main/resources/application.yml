@@ -9,13 +9,10 @@ spring:
      url: jdbc:mysql://39.106.21.228:3306/lucky-star
      username: root
      password: fx1234@
-#    url: jdbc:mysql://127.0.0.1:3306/lucky-star
-#    username: root
-#    password: yue199625
      driver-class-name: com.mysql.cj.jdbc.Driver
   redis:
-    host: 39.106.21.228
-#    host: 127.0.0.1
+#    host: 39.106.21.228
+    host: redis
     port: 6379
     password: fx1234@
 wechat:
