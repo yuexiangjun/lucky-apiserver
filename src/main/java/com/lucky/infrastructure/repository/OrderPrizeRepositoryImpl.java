@@ -10,6 +10,7 @@ import com.lucky.infrastructure.repository.mysql.po.OrderPrizePO;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -51,11 +52,11 @@ public class OrderPrizeRepositoryImpl extends ServiceImpl<OrderPrizeMapper, Orde
     }
 
     @Override
-    public List<OrderPrizeEntity> findByWechatUserId(Long wechatUserId) {
+    public List<OrderPrizeEntity> findByWechatUserId(Long wechatUserId, Boolean isDelivery) {
 
         var orderPrizePOLambdaQueryWrapper = Wrappers.lambdaQuery(OrderPrizePO.class)
                 .eq(OrderPrizePO::getWechatUserId, wechatUserId)
-                .eq(OrderPrizePO::getIsDelivery, false);
+                .eq(Objects.nonNull(isDelivery),OrderPrizePO::getIsDelivery, isDelivery);
 
         return list(orderPrizePOLambdaQueryWrapper)
                 .stream()

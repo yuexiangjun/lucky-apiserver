@@ -33,8 +33,8 @@ public class SeriesTopicService {
     /**
      * 列表
      */
-    public List<SeriesTopicEntity> findByList() {
-        return seriesTopicRepository.findByList();
+    public List<SeriesTopicEntity> findByList(SeriesTopicEntity seriesTopicEntity) {
+        return seriesTopicRepository.findByList(seriesTopicEntity);
     }
 
     public SeriesTopicEntity findById(Long id) {

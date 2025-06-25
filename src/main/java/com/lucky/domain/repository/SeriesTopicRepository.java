@@ -9,7 +9,7 @@ public interface SeriesTopicRepository {
 
     Boolean deleteById(Long id);
 
-    List<SeriesTopicEntity> findByList();
+    List<SeriesTopicEntity> findByList(SeriesTopicEntity seriesTopicEntity);
 
     SeriesTopicEntity findById(Long id);
 

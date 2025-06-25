@@ -22,7 +22,7 @@ public class LogisticsOrderInfoVO {
      */
     private Long id;
     /**
-     * 订单状态
+     * 订单状态 0:待发货 1：收货中 2: 订单完成
      */
     private Integer status;
     /**

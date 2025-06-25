@@ -528,3 +528,61 @@ Caused by: java.lang.ClassNotFoundException: com.lucky.application.interceptor.U
 2025-06-24 15:34:30.089 [main] INFO  [,] o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat started on port 8333 (http) with context path ''
 2025-06-24 15:34:30.098 [main] INFO  [,] com.lucky.Main - Started Main in 4.947 seconds (process running for 5.308)
 2025-06-24 15:34:30.104 [main] INFO  [,] com.lucky.Main - lucky-apiServer-boot-successful
+2025-06-25 12:34:00.754 [main] INFO  [,] com.lucky.Main - Starting Main using Java 17.0.1 with PID 6540 (D:\lucky-apiserver-v2\target\classes started by Administrator in D:\lucky-apiserver-v2)
+2025-06-25 12:34:00.757 [main] INFO  [,] com.lucky.Main - The following 1 profile is active: "ss"
+2025-06-25 12:34:02.914 [main] INFO  [,] o.s.d.r.config.RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
+2025-06-25 12:34:02.917 [main] INFO  [,] o.s.d.r.config.RepositoryConfigurationDelegate - Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2025-06-25 12:34:02.969 [main] INFO  [,] o.s.d.r.config.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 36 ms. Found 0 Redis repository interfaces.
+2025-06-25 12:34:03.566 [main] INFO  [,] o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat initialized with port 8333 (http)
+2025-06-25 12:34:03.580 [main] INFO  [,] org.apache.catalina.core.StandardService - Starting service [Tomcat]
+2025-06-25 12:34:03.581 [main] INFO  [,] org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.19]
+2025-06-25 12:34:03.637 [main] INFO  [,] o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2025-06-25 12:34:03.638 [main] INFO  [,] o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 2827 ms
+2025-06-25 12:34:04.833 [main] INFO  [,] org.redisson.Version - Redisson 3.21.3
+2025-06-25 12:34:05.162 [redisson-netty-4-6] INFO  [,] o.r.connection.pool.MasterPubSubConnectionPool - 1 connections initialized for 39.106.21.228/39.106.21.228:6379
+2025-06-25 12:34:07.876 [redisson-netty-4-19] INFO  [,] org.redisson.connection.pool.MasterConnectionPool - 24 connections initialized for 39.106.21.228/39.106.21.228:6379
+2025-06-25 12:34:08.318 [main] INFO  [,] o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat started on port 8333 (http) with context path ''
+2025-06-25 12:34:08.327 [main] INFO  [,] com.lucky.Main - Started Main in 7.94 seconds (process running for 8.983)
+2025-06-25 12:34:08.331 [main] INFO  [,] com.lucky.Main - lucky-apiServer-boot-successful
+2025-06-25 18:33:45.931 [redisson-timer-6-1] ERROR [,] org.redisson.client.handler.PingConnectionHandler - Unable to send PING command over channel: [id: 0x3e277095, L:/192.168.0.200:51857 - R:39.106.21.228/39.106.21.228:6379]
+org.redisson.client.RedisTimeoutException: Command execution timeout for command: (PING), params: [], Redis client: [addr=redis://39.106.21.228:6379]
+	at org.redisson.client.RedisConnection.lambda$async$0(RedisConnection.java:256)
+	at io.netty.util.HashedWheelTimer$HashedWheelTimeout.run(HashedWheelTimer.java:706)
+	at io.netty.util.concurrent.ImmediateExecutor.execute(ImmediateExecutor.java:34)
+	at io.netty.util.HashedWheelTimer$HashedWheelTimeout.expire(HashedWheelTimer.java:694)
+	at io.netty.util.HashedWheelTimer$HashedWheelBucket.expireTimeouts(HashedWheelTimer.java:781)
+	at io.netty.util.HashedWheelTimer$Worker.run(HashedWheelTimer.java:494)
+	at io.netty.util.concurrent.FastThreadLocalRunnable.run(FastThreadLocalRunnable.java:30)
+	at java.base/java.lang.Thread.run(Thread.java:833)
+2025-06-25 19:22:30.397 [main] INFO  [,] com.lucky.Main - Starting Main using Java 17.0.1 with PID 9904 (D:\lucky-apiserver-v2\target\classes started by Administrator in D:\lucky-apiserver-v2)
+2025-06-25 19:22:30.400 [main] INFO  [,] com.lucky.Main - The following 1 profile is active: "ss"
+2025-06-25 19:22:31.145 [main] INFO  [,] o.s.d.r.config.RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
+2025-06-25 19:22:31.147 [main] INFO  [,] o.s.d.r.config.RepositoryConfigurationDelegate - Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2025-06-25 19:22:31.195 [main] INFO  [,] o.s.d.r.config.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 34 ms. Found 0 Redis repository interfaces.
+2025-06-25 19:22:31.842 [main] INFO  [,] o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat initialized with port 8333 (http)
+2025-06-25 19:22:31.853 [main] INFO  [,] org.apache.catalina.core.StandardService - Starting service [Tomcat]
+2025-06-25 19:22:31.854 [main] INFO  [,] org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.19]
+2025-06-25 19:22:31.916 [main] INFO  [,] o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2025-06-25 19:22:31.917 [main] INFO  [,] o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 1466 ms
+2025-06-25 19:22:33.036 [main] INFO  [,] org.redisson.Version - Redisson 3.21.3
+2025-06-25 19:22:36.377 [redisson-netty-4-20] INFO  [,] o.r.connection.pool.MasterPubSubConnectionPool - 1 connections initialized for 39.106.21.228/39.106.21.228:6379
+2025-06-25 19:22:51.319 [redisson-netty-4-19] INFO  [,] org.redisson.connection.pool.MasterConnectionPool - 24 connections initialized for 39.106.21.228/39.106.21.228:6379
+2025-06-25 19:22:51.894 [main] INFO  [,] o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat started on port 8333 (http) with context path ''
+2025-06-25 19:22:51.903 [main] INFO  [,] com.lucky.Main - Started Main in 21.901 seconds (process running for 22.507)
+2025-06-25 19:22:51.909 [main] INFO  [,] com.lucky.Main - lucky-apiServer-boot-successful
+2025-06-25 19:25:52.442 [main] INFO  [,] com.lucky.Main - Starting Main using Java 17.0.1 with PID 16604 (D:\lucky-apiserver-v2\target\classes started by Administrator in D:\lucky-apiserver-v2)
+2025-06-25 19:25:52.445 [main] INFO  [,] com.lucky.Main - The following 1 profile is active: "ss"
+2025-06-25 19:25:53.203 [main] INFO  [,] o.s.d.r.config.RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
+2025-06-25 19:25:53.205 [main] INFO  [,] o.s.d.r.config.RepositoryConfigurationDelegate - Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2025-06-25 19:25:53.255 [main] INFO  [,] o.s.d.r.config.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 36 ms. Found 0 Redis repository interfaces.
+2025-06-25 19:25:53.891 [main] INFO  [,] o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat initialized with port 8333 (http)
+2025-06-25 19:25:53.908 [main] INFO  [,] org.apache.catalina.core.StandardService - Starting service [Tomcat]
+2025-06-25 19:25:53.908 [main] INFO  [,] org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.19]
+2025-06-25 19:25:53.970 [main] INFO  [,] o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2025-06-25 19:25:53.971 [main] INFO  [,] o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 1476 ms
+2025-06-25 19:25:55.312 [main] INFO  [,] org.redisson.Version - Redisson 3.21.3
+2025-06-25 19:25:55.677 [redisson-netty-4-6] INFO  [,] o.r.connection.pool.MasterPubSubConnectionPool - 1 connections initialized for 39.106.21.228/39.106.21.228:6379
+2025-06-25 19:26:06.583 [redisson-netty-4-19] INFO  [,] org.redisson.connection.pool.MasterConnectionPool - 24 connections initialized for 39.106.21.228/39.106.21.228:6379
+2025-06-25 19:26:07.044 [main] INFO  [,] o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat started on port 8333 (http) with context path ''
+2025-06-25 19:26:07.052 [main] INFO  [,] com.lucky.Main - Started Main in 14.984 seconds (process running for 15.636)
+2025-06-25 19:26:07.055 [main] INFO  [,] com.lucky.Main - lucky-apiServer-boot-successful

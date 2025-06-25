@@ -158,8 +158,8 @@ public class OrderService {
 		return orderPrizeRepository.findByPrizeIds(prizeInfoIds, false);
 	}
 
-	public List<OrderPrizeEntity> findByWechatUserId(Long wechatUserId) {
-		return orderPrizeRepository.findByWechatUserId(wechatUserId);
+	public List<OrderPrizeEntity> findByWechatUserId(Long wechatUserId, Boolean isDelivery) {
+		return orderPrizeRepository.findByWechatUserId(wechatUserId, isDelivery);
 	}
 
 	public List<OrderPrizeEntity> deductionInventory(List<PrizeInfoNum> goods) {

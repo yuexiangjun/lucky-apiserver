@@ -67,7 +67,10 @@ public class SeriesTopicServer {
      * 列表
      */
     public List<SeriesTopicDetail> findByList() {
-        List<SeriesTopicEntity> byList = seriesTopicService.findByList();
+        var seriesTopicEntity = SeriesTopicEntity.builder()
+                .status(true)
+                .build();
+        List<SeriesTopicEntity> byList = seriesTopicService.findByList(seriesTopicEntity);
         if (CollectionUtils.isEmpty(byList))
             return List.of();
 
@@ -92,6 +95,9 @@ public class SeriesTopicServer {
     @Transactional(rollbackFor = Exception.class)
     public Boolean setFieldsNumber(Long topicId, Integer number) {
         var seriesTopicEntity = seriesTopicService.findById(topicId);
+
+        if (Objects.nonNull(seriesTopicEntity.getSession()))
+            throw BusinessException.newInstance("该主题已设置场次");
 
         seriesTopicEntity.setSession(number);
         seriesTopicService.saveOrUpdate(seriesTopicEntity);

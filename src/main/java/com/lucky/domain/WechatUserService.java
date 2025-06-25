@@ -73,9 +73,14 @@ public class WechatUserService {
     public  void  balanceReduce(Long wechatUserId, BigDecimal money, String remark) {
 
         var wechatUserEntity = wechatUserRepository.getById(wechatUserId);
+        if (Objects.isNull(wechatUserEntity))
+            throw BusinessException.newInstance("用户不存在");
+
+        if (Objects.isNull(wechatUserEntity.getBalance()))
+            throw BusinessException.newInstance("用户积分余额不足");
 
         if (wechatUserEntity.getBalance().compareTo(money) < 0)
-            throw BusinessException.newInstance("余额不足");
+            throw BusinessException.newInstance("用户积分余额不足");
 
         wechatUserEntity.setBalance(wechatUserEntity.getBalance().subtract(money));
 

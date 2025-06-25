@@ -56,8 +56,9 @@ public class SeriesTopicRepositoryImpl extends ServiceImpl<SeriesTopicMapper, Se
 	/**
 	 * 列表
 	 */
-	public List<SeriesTopicEntity> findByList() {
-		var wrapper = Wrappers.<SeriesTopicPO>lambdaQuery();
+	public List<SeriesTopicEntity> findByList(SeriesTopicEntity seriesTopicEntity) {
+		var wrapper = Wrappers.<SeriesTopicPO>lambdaQuery()
+				.eq(Objects.nonNull(seriesTopicEntity.getStatus()), SeriesTopicPO::getStatus, seriesTopicEntity.getStatus());
 
 		return seriesTopicMapper.selectList(wrapper)
 				.stream()

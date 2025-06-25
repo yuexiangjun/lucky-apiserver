@@ -30,7 +30,7 @@ public class UpdateLogisticsOrderDTO {
     private String logisticsCompany;
 
     /**
-     * 订单状态 1：待发送 2：已完成
+     * 订单状态 0:待发货 1:已发货 2:已完成
      */
     private Integer status;
     public static LogisticsOrderEntity toEntity(UpdateLogisticsOrderDTO dto ) {

@@ -2,6 +2,7 @@ package com.lucky.api.controller.admin.vo;
 
 import cn.hutool.core.bean.BeanUtil;
 import com.lucky.domain.entity.OrderEntity;
+import com.lucky.domain.valueobject.Order;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -55,7 +56,7 @@ public class OrderVO {
 	 */
 	private LocalDateTime sendTime;
 
-	public static OrderVO getInstance(OrderEntity entity) {
+	public static OrderVO getInstance(Order entity) {
 		if (Objects.isNull(entity))
 			return null;
 		return BeanUtil.toBean(entity, OrderVO.class);
