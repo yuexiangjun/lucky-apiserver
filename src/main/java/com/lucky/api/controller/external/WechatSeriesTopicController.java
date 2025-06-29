@@ -4,6 +4,8 @@ import com.lucky.api.controller.admin.vo.SeriesTopicVO;
 import com.lucky.api.utils.ResponseFormat;
 import com.lucky.application.SeriesTopicServer;
 
+import com.lucky.domain.entity.SeriesTopicEntity;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -17,6 +19,7 @@ import java.util.stream.Collectors;
  *
  * @folder API/小程序/主题系列
  */
+@Slf4j
 @RestController
 @RequestMapping("/api/wechat/series-topic")
 public class WechatSeriesTopicController {
@@ -33,8 +36,12 @@ public class WechatSeriesTopicController {
 	@PostMapping("/list")
 	@ResponseFormat
 	public List<SeriesTopicVO> findByList() {
+		log.info("系列列表");
 
-		return topicServer.findByList()
+		var seriesTopicEntity = SeriesTopicEntity.builder()
+                .status(true)
+				.build();
+		return topicServer.findByList(seriesTopicEntity)
 				.stream()
 				.map(SeriesTopicVO::getInstance)
 				.collect(Collectors.toList());

@@ -66,11 +66,9 @@ public class SeriesTopicServer {
     /**
      * 列表
      */
-    public List<SeriesTopicDetail> findByList() {
-        var seriesTopicEntity = SeriesTopicEntity.builder()
-                .status(true)
-                .build();
-        List<SeriesTopicEntity> byList = seriesTopicService.findByList(seriesTopicEntity);
+    public List<SeriesTopicDetail> findByList(SeriesTopicEntity  entity) {
+
+        List<SeriesTopicEntity> byList = seriesTopicService.findByList(entity);
         if (CollectionUtils.isEmpty(byList))
             return List.of();
 
@@ -84,7 +82,7 @@ public class SeriesTopicServer {
         var gradeMapName = byIds.stream()
                 .collect(Collectors.toMap(GradeEntity::getId, GradeEntity::getName));
         return byList.stream()
-                .map(entity -> SeriesTopicDetail.getInstance(entity, gradeMapName))
+                .map(s -> SeriesTopicDetail.getInstance(s, gradeMapName))
                 .collect(Collectors.toList());
 
     }

@@ -640,7 +640,7 @@ public class OrderServer {
      * 盒柜
      */
     public List<PrizeInfoEntity> boxCabinets(Long wechatUserId) {
-        var orderPrizeEntities = orderService.findByWechatUserId(wechatUserId, true);
+        var orderPrizeEntities = orderService.findByWechatUserId(wechatUserId, false);
 
         if (CollectionUtils.isEmpty(orderPrizeEntities))
             return Collections.emptyList();

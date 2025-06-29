@@ -6,8 +6,10 @@ import com.lucky.api.controller.admin.vo.SeriesTopicVO;
 import com.lucky.api.utils.ResponseFormat;
 import com.lucky.application.SeriesTopicServer;
 
+import com.lucky.domain.entity.SeriesTopicEntity;
 import com.lucky.domain.exception.BusinessException;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,6 +21,7 @@ import java.util.stream.Collectors;
  *
  * @folder API/后台/主题 系列
  */
+@Slf4j
 @RestController
 @RequestMapping("/api/series-topic")
 public class SeriesTopicController {
@@ -86,7 +89,10 @@ public class SeriesTopicController {
     @PostMapping("/list")
     @ResponseFormat
     public List<SeriesTopicVO> findByList() {
-        return topicServer.findByList()
+        log.info("后台系列列表");
+         var  seriesTopicEntity= SeriesTopicEntity
+                .builder().build();
+        return topicServer.findByList(seriesTopicEntity)
                 .stream()
                 .map(SeriesTopicVO::getInstance)
                 .collect(Collectors.toList());

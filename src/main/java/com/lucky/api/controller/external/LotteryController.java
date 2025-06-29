@@ -81,7 +81,8 @@ public class LotteryController extends BaseController {
     public PayInfo pay(@RequestBody PayDTO dto) {
 
         if (Objects.isNull(dto.getWechatUserId()))
-            dto.setWechatUserId(this.getWechatUserId());
+//            dto.setWechatUserId(this.getWechatUserId());
+            dto.setWechatUserId(1937732128810778625l);
 
         return lotteryServer.pay(PayDTO.toTripartiteEntity(dto));
     }

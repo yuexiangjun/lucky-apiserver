@@ -9,6 +9,7 @@ import com.lucky.infrastructure.repository.config.PayInfoConfig;
 import com.lucky.infrastructure.repository.utils.AesUtil;
 import com.wechat.pay.java.core.Config;
 import com.wechat.pay.java.core.RSAAutoCertificateConfig;
+import com.wechat.pay.java.core.util.PemUtil;
 import com.wechat.pay.java.service.payments.jsapi.JsapiServiceExtension;
 import com.wechat.pay.java.service.payments.jsapi.model.Amount;
 import com.wechat.pay.java.service.payments.jsapi.model.Payer;
@@ -18,8 +19,13 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
+import java.io.InputStream;
 import java.math.BigDecimal;
+import java.net.URL;
+import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 @Component
 @Slf4j
@@ -64,12 +70,23 @@ public class WeChatPayRepositoryImpl implements WeChatPayRepository {
 
     }
 
+    @SneakyThrows
     private JsapiServiceExtension getJsapiServiceExtension() {
         //构建微信支付参数
+
+        InputStream inputStream =getClass().getClassLoader().getResourceAsStream("apiclient_key.pem");
+        if (inputStream == null) {
+                throw new RuntimeException("支付鉴权文件未读取到");
+            }
+        // 读取文件内容
+        byte[] bytes = inputStream.readAllBytes();
+        String content = new String(bytes);
+
         // 使用微信支付公钥的RSA配置
         Config config = new RSAAutoCertificateConfig.Builder()
                 .merchantId(payInfoConfig.getMachid())
-                .privateKeyFromPath(payInfoConfig.getKeypath())
+//                .privateKeyFromPath(payInfoConfig.getKeypath())
+                .privateKey(content)
                 .merchantSerialNumber(payInfoConfig.getMchserialno())
                 .apiV3Key(payInfoConfig.getApikey())
                 .build();
