@@ -2,6 +2,7 @@ package com.lucky.domain.repository;
 
 import com.lucky.domain.entity.WechatUserEntity;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public interface WechatUserRepository  {
@@ -18,4 +19,6 @@ public interface WechatUserRepository  {
 	List<WechatUserEntity> getByIds(List<Long> wechatUserIds);
 
 	WechatUserEntity getWechatUserEntity(WechatUserEntity wechatUserEntity);
+
+	List<WechatUserEntity> listByTime(WechatUserEntity wechatUserEntity, LocalDateTime startTime, LocalDateTime endTime);
 }

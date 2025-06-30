@@ -5,7 +5,9 @@ import com.lucky.domain.repository.PayOrderRepository;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
+import java.time.LocalDateTime;
 import java.util.List;
+
 import java.util.Objects;
 
 @Component
@@ -30,6 +32,10 @@ public class PayOrderService {
 		return payOrderRepository.getById(id);
 	}
 
+	public List<PayOrderEntity> listByTime(PayOrderEntity payOrderEntity, LocalDateTime startTime, LocalDateTime endTime) {
+		return payOrderRepository.listByTime( payOrderEntity, startTime, endTime);
+
+	}
 	public  List<PayOrderEntity>findByWechatUserIds(List<Long> wechatUserIds) {
 		if (CollectionUtils.isEmpty(wechatUserIds)) {
 			return List.of();

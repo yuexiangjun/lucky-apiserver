@@ -10,6 +10,7 @@ import org.apache.logging.log4j.util.Strings;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -101,4 +102,20 @@ public class WechatUserRepositoryImpl extends ServiceImpl<WechatUserMapper, Wech
 	}
 
 
+
+
+    @Override
+    public List<WechatUserEntity> listByTime(WechatUserEntity entity, LocalDateTime startTime, LocalDateTime endTime) {
+        var wrapper = Wrappers.lambdaQuery(WechatUserPO.class)
+                .eq(Strings.isNotBlank(entity.getPhone()), WechatUserPO::getPhone, entity.getPhone())
+                .eq(Strings.isNotBlank(entity.getOpenid()), WechatUserPO::getOpenid, entity.getOpenid())
+                .eq(Strings.isNotBlank(entity.getName()), WechatUserPO::getName, entity.getName())
+                .ge(entity.getCreateTime() != null, WechatUserPO::getCreateTime, startTime)
+                .le(entity.getCreateTime() != null, WechatUserPO::getCreateTime, endTime);
+
+        return this.list(wrapper)
+                .stream()
+                .map(WechatUserPO::toEntity)
+                .collect(Collectors.toList());
+    }
 }

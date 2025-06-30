@@ -1,5 +1,6 @@
 package com.lucky.application;
 
+import cn.hutool.core.collection.CollectionUtil;
 import com.lucky.domain.*;
 import com.lucky.domain.config.RedissionConfig;
 import com.lucky.domain.entity.*;
@@ -14,6 +15,8 @@ import org.springframework.util.CollectionUtils;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.Function;
@@ -31,6 +34,8 @@ public class OrderServer {
 
     private final LogisticsOrderService logisticsOrderService;
 
+    private final PayOrderService payOrderService;
+
     private final RedissionConfig redissionConfig;
     private final static String DEDUCTION = "DEDUCTION:";
 
@@ -38,7 +43,7 @@ public class OrderServer {
                        PrizeInfoService prizeInfoService,
                        GradeService gradeService,
                        SeriesTopicService seriesTopicService,
-                       WechatUserService wechatUserService, SessionInfoService sessionInfoService, LogisticsOrderService logisticsOrderService, RedissionConfig redissionConfig) {
+                       WechatUserService wechatUserService, SessionInfoService sessionInfoService, LogisticsOrderService logisticsOrderService, PayOrderService payOrderService, RedissionConfig redissionConfig) {
         this.orderService = orderService;
         this.prizeInfoService = prizeInfoService;
         this.gradeService = gradeService;
@@ -47,6 +52,8 @@ public class OrderServer {
         this.sessionInfoService = sessionInfoService;
 
         this.logisticsOrderService = logisticsOrderService;
+        this.payOrderService = payOrderService;
+
         this.redissionConfig = redissionConfig;
     }
 
@@ -678,7 +685,7 @@ public class OrderServer {
         if (CollectionUtils.isEmpty(orderEntities))
             return List.of();
 
-        var orderPrizeEntities = orderService.findByWechatUserId(wechatUserId ,null);
+        var orderPrizeEntities = orderService.findByWechatUserId(wechatUserId, null);
 
 
         var topicIdIds = orderEntities
@@ -733,6 +740,111 @@ public class OrderServer {
 
                 )
                 .collect(Collectors.toList());
+
+    }
+
+    public Metrics metrics(LocalDateTime startTime, LocalDateTime endTime) {
+        LocalDate now = LocalDate.now();
+
+        //获取用户总数
+        var wechatUserEntities = wechatUserService.listByTime(new WechatUserEntity(), startTime, endTime);
+
+        Integer userCount = 0;
+
+        Integer userAddCount = 0;
+
+        if (CollectionUtil.isNotEmpty(wechatUserEntities)) {
+
+            userCount = wechatUserEntities.size();
+            List<WechatUserEntity> collect = wechatUserEntities
+                    .stream()
+                    .filter(s -> s.getCreateTime().toLocalDate().equals(now))
+                    .collect(Collectors.toList());
+            if (CollectionUtil.isNotEmpty(collect))
+                userAddCount = collect.size();
+        }
+
+
+        Integer orderCount = 0;
+        BigDecimal orderAmount = BigDecimal.ZERO;
+        //获取订单数
+        var payOrderEntities = payOrderService.listByTime(new PayOrderEntity(), startTime, endTime);
+        if (CollectionUtil.isNotEmpty(payOrderEntities)) {
+            orderCount = payOrderEntities.size();
+            orderAmount = payOrderEntities.stream()
+                    .map(PayOrderEntity::getPayMoney)
+                    .reduce(BigDecimal.ZERO, BigDecimal::add);
+        }
+        return Metrics.builder()
+                .userCount(userCount)
+                .userAddCount(userAddCount)
+                .orderCount(orderCount)
+                .orderAmount(orderAmount)
+                .build();
+
+    }
+
+    public List<ConsumeRank> consumeRank(LocalDateTime startTime, LocalDateTime endTime) {
+        //获取订单数
+        var payOrderEntities = payOrderService.listByTime(new PayOrderEntity(), startTime, endTime);
+
+        if (CollectionUtil.isEmpty(payOrderEntities))
+            return Collections.emptyList();
+        //用户
+        var wechatUserIds = payOrderEntities.stream()
+                .map(PayOrderEntity::getWechatUserId)
+                .collect(Collectors.toList());
+
+        var wechatUserEntities = wechatUserService.getByIds(wechatUserIds);
+
+        var ownerIds = wechatUserEntities.stream()
+                .map(WechatUserEntity::getOwnerId)
+                .collect(Collectors.toList());
+
+        var ownerEntities = wechatUserService.getByIds(ownerIds);
+
+        var ownerMap = ownerEntities.stream()
+                .collect(Collectors.toMap(WechatUserEntity::getId, Function.identity()));
+        var wechatUserMap = wechatUserEntities.stream()
+                .collect(Collectors.toMap(WechatUserEntity::getId, Function.identity()));
+
+
+        return payOrderEntities
+                .stream()
+                .collect(Collectors.groupingBy(PayOrderEntity::getWechatUserId))
+                .entrySet()
+                .stream()
+                .map(s -> {
+                    var wechatUserEntity = wechatUserMap.getOrDefault(s.getKey(), new WechatUserEntity());
+                    String customer = "";
+                    if (Objects.nonNull(wechatUserEntity)) {
+                        WechatUserEntity orDefault = ownerMap.getOrDefault(wechatUserEntity.getOwnerId(), new WechatUserEntity());
+                        customer = Strings.isNotBlank(orDefault.getName()) ? orDefault.getName() : orDefault.getPhone()
+                    }
+
+                    var consumeRankBuilder = ConsumeRank
+                            .builder()
+                            .userImage(wechatUserEntity.getAvatar())
+                            .joinTime(wechatUserEntity.getCreateTime())
+                            .userName(Strings.isNotBlank(wechatUserEntity.getName()) ? wechatUserEntity.getName() : wechatUserEntity.getPhone())
+                            .customer(customer);
+
+
+                    List<PayOrderEntity> value = s.getValue();
+                    if (!CollectionUtils.isEmpty(value)) {
+                        BigDecimal reduce = value.stream().map(PayOrderEntity::getPayMoney).reduce(BigDecimal.ZERO, BigDecimal::add);
+                        return consumeRankBuilder.amount(reduce)
+                                .orderCount(value.size())
+                                .build();
+                    } else
+                        return consumeRankBuilder.amount(BigDecimal.ZERO)
+                                .orderCount(0)
+                                .build();
+
+                })
+                .sorted((o1, o2) -> o2.getAmount().compareTo(o1.getAmount()))
+                .collect(Collectors.toList());
+
 
     }
 }
