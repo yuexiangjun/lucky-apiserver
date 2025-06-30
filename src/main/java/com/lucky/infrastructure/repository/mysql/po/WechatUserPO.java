@@ -57,6 +57,11 @@ public class WechatUserPO {
 	 */
 	private LocalDateTime createTime;
 
+	/**
+	 * 负责人id
+	 */
+	private Long ownerId;
+
 	public static WechatUserPO getInstance(WechatUserEntity entity) {
 		if (Objects.isNull(entity))
 			return null;

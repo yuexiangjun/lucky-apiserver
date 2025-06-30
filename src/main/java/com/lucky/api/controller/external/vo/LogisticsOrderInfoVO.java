@@ -47,6 +47,17 @@ public class LogisticsOrderInfoVO {
      */
     private List<WechatPrizeInfoVO> goods;
 
+    /**
+     * 收货地址
+     */
+    private String  address;
+
+    /**
+     *
+     * @param entity
+     * @return
+     */
+
     public static LogisticsOrderInfoVO getInstance(LogisticsOrderInfo entity) {
         if (Objects.isNull(entity))
             return null;

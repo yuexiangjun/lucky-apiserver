@@ -16,4 +16,6 @@ public interface WechatUserRepository  {
 	WechatUserEntity getByOpenId(String openId);
 
 	List<WechatUserEntity> getByIds(List<Long> wechatUserIds);
+
+	WechatUserEntity getWechatUserEntity(WechatUserEntity wechatUserEntity);
 }

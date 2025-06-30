@@ -43,6 +43,13 @@ public class LogisticsOrderInfo {
      * 商品信息
      */
     private List<PrizeInfoEntity> goods;
-
+    /**
+     * 收货地址
+     */
+    private String  address;
+    /**
+     * 手机号码
+     */
+    private String phone;
 
 }

@@ -1,17 +1,16 @@
 package com.lucky.api.controller.admin;
 
-import com.lucky.api.controller.admin.dto.AdminUserDTO;
-import com.lucky.api.controller.admin.dto.AdminUserFindListDTO;
-import com.lucky.api.controller.admin.dto.EnabledDTO;
-import com.lucky.api.controller.admin.dto.LoginDTO;
+import com.lucky.api.controller.admin.dto.*;
 import com.lucky.api.controller.admin.vo.AdminUserVO;
+import com.lucky.api.controller.admin.vo.WechatUserListVO;
+import com.lucky.api.controller.common.BaseController;
 import com.lucky.api.utils.ResponseFormat;
 import com.lucky.application.AdminUserServer;
+import com.lucky.application.WechatUserServer;
 import com.lucky.application.interceptor.LoginUserEntity;
-
 import com.lucky.domain.entity.AdminUserEntity;
+import com.lucky.domain.entity.WechatUserEntity;
 import com.lucky.domain.exception.BusinessException;
-
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -25,11 +24,13 @@ import java.util.stream.Collectors;
  */
 @RestController
 @RequestMapping
-public class AdminUserController {
+public class AdminUserController extends BaseController {
 	private final AdminUserServer adminUserServer;
+	private final WechatUserServer wechatUserServer;
 
-	public AdminUserController(AdminUserServer adminUserServer) {
+	public AdminUserController(AdminUserServer adminUserServer, WechatUserServer wechatUserServer) {
 		this.adminUserServer = adminUserServer;
+		this.wechatUserServer = wechatUserServer;
 	}
 
 	/**
@@ -99,4 +100,37 @@ public class AdminUserController {
 	public LoginUserEntity login(@RequestBody LoginDTO loginDTO) {
 		return adminUserServer.login(loginDTO.getPhone(), loginDTO.getPassword());
 	}
+
+
+	//微信用户管理
+
+
+	/**
+	 * 用户列表
+	 */
+	@PutMapping("api/admin/wechat-user")
+	@ResponseFormat
+	public List<WechatUserListVO> list(WechatUserFindListDTO dto) {
+
+		var wechatUserEntity = WechatUserEntity.builder()
+				.phone(dto.getPhone())
+				.name(dto.getName())
+				.build();
+
+		return wechatUserServer.list(wechatUserEntity, dto.getOwnerName())
+				.stream()
+				.map(WechatUserListVO::getInstance)
+				.collect(Collectors.toList());
+	}
+
+	/**
+	 * 增加用户余额
+	 */
+	@PutMapping("api/admin/wechat-user/balance")
+	@ResponseFormat
+	public void balanceAdd(BalanceDTO dto) {
+		wechatUserServer.balanceAdd(dto.getWechatUserId(), dto.getMoney(), this.getAdminUserId());
+	}
+
+
 }

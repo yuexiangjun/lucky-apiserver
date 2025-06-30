@@ -3,7 +3,9 @@ package com.lucky.domain;
 import com.lucky.domain.entity.PayOrderEntity;
 import com.lucky.domain.repository.PayOrderRepository;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 
+import java.util.List;
 import java.util.Objects;
 
 @Component
@@ -28,4 +30,12 @@ public class PayOrderService {
 		return payOrderRepository.getById(id);
 	}
 
+	public  List<PayOrderEntity>findByWechatUserIds(List<Long> wechatUserIds) {
+		if (CollectionUtils.isEmpty(wechatUserIds)) {
+			return List.of();
+		}
+
+		return payOrderRepository.findByWechatUserIds(wechatUserIds);
+
+	}
 }

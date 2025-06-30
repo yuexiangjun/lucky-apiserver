@@ -7,8 +7,11 @@ import com.lucky.domain.repository.PayOrderRepository;
 import com.lucky.infrastructure.repository.mysql.mapper.PayOrderMapper;
 import com.lucky.infrastructure.repository.mysql.po.PayOrderPO;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 
+import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Component
 public class PayOrderRepositoryImpl extends ServiceImpl<PayOrderMapper, PayOrderPO> implements PayOrderRepository {
@@ -30,6 +33,23 @@ public class PayOrderRepositoryImpl extends ServiceImpl<PayOrderMapper, PayOrder
 		if (Objects.nonNull(one))
 			return PayOrderPO.toEntity(one);
 		return null;
+
+	}
+
+	@Override
+	public List<PayOrderEntity> findByWechatUserIds(List<Long> wechatUserIds) {
+		if (CollectionUtils.isEmpty(wechatUserIds))
+			return List.of();
+
+		var wrapper = Wrappers.lambdaQuery(PayOrderPO.class)
+
+				.in(PayOrderPO::getWechatUserId, wechatUserIds);
+
+		var list = this.list(wrapper);
+
+		return list.stream()
+				.map(PayOrderPO::toEntity)
+				.collect(Collectors.toList());
 
 	}
 }

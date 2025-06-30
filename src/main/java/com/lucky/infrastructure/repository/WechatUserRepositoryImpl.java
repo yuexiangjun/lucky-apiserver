@@ -48,7 +48,9 @@ public class WechatUserRepositoryImpl extends ServiceImpl<WechatUserMapper, Wech
 		var wrapper = Wrappers.lambdaQuery(WechatUserPO.class)
 				.eq(Strings.isNotBlank(entity.getPhone()), WechatUserPO::getPhone, entity.getPhone())
 				.eq(Strings.isNotBlank(entity.getOpenid()), WechatUserPO::getOpenid, entity.getOpenid())
-				.eq(Strings.isNotBlank(entity.getName()), WechatUserPO::getName, entity.getName());
+				.eq(Strings.isNotBlank(entity.getName()), WechatUserPO::getName, entity.getName())
+				.eq(Objects.nonNull(entity.getOwnerId()), WechatUserPO::getOwnerId, entity.getOwnerId())
+				.orderByDesc(WechatUserPO::getCreateTime);
 
 		return this.list(wrapper)
 				.stream()
@@ -87,4 +89,16 @@ public class WechatUserRepositoryImpl extends ServiceImpl<WechatUserMapper, Wech
 				.map(WechatUserPO::toEntity)
 				.collect(Collectors.toList());
 	}
+
+	@Override
+	public WechatUserEntity getWechatUserEntity(WechatUserEntity wechatUserEntity) {
+		var wrapper = Wrappers.lambdaQuery(WechatUserPO.class)
+				.eq(WechatUserPO::getOpenid, wechatUserEntity.getOpenid())
+				.eq(WechatUserPO::getPhone, wechatUserEntity.getPhone())
+				.eq(WechatUserPO::getName, wechatUserEntity.getName());
+		var one = this.getOne(wrapper, false);
+		return WechatUserPO.toEntity(one);
+	}
+
+
 }
