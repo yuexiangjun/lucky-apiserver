@@ -13,7 +13,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 import java.util.stream.Collectors;
-
+/**
+ * 后台用户
+ *
+ * @folder API/后台/首页
+ */
 @RestController
 @RequestMapping("/api/admin/home")
 public class AdminHomeController {
