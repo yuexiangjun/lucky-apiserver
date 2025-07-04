@@ -819,7 +819,7 @@ public class OrderServer {
                     String customer = "";
                     if (Objects.nonNull(wechatUserEntity)) {
                         WechatUserEntity orDefault = ownerMap.getOrDefault(wechatUserEntity.getOwnerId(), new WechatUserEntity());
-                        customer = Strings.isNotBlank(orDefault.getName()) ? orDefault.getName() : orDefault.getPhone()
+                        customer = Strings.isNotBlank(orDefault.getName()) ? orDefault.getName() : orDefault.getPhone();
                     }
 
                     var consumeRankBuilder = ConsumeRank
