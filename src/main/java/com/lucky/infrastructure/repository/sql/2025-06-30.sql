@@ -16,7 +16,7 @@ CREATE TABLE `lucky-star`.`no_counter`  (
   PRIMARY KEY (`id`) USING BTREE
 ) COMMENT = '编号计数器';
 
-ALTER TABLE `lucky-star`.`wechat_user` MODIFY COLUMN `owner_id` bigint(20) NOT NULL COMMENT '负责人id' ;
+ALTER TABLE `lucky-star`.`wechat_user` ADD COLUMN `owner_id` bigint(20) NULL DEFAULT NULL COMMENT '负责人id' ;
 
 
 

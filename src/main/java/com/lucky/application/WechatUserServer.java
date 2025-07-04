@@ -139,7 +139,7 @@ public class WechatUserServer {
 
 					var orDefault = byWechatUserIds.getOrDefault(s.getId(), List.of());
 					wechatUserList.setOrderCount(orDefault.size());
-					wechatUserList.setAmountSpent(orDefault.stream().map(PayOrderEntity::getTotalMoney).reduce(BigDecimal.ZERO, BigDecimal::add));
+					wechatUserList.setAmountSpent(orDefault.stream().map(PayOrderEntity::getPayMoney).reduce(BigDecimal.ZERO, BigDecimal::add));
 					if (Objects.nonNull(s.getOwnerId())) {
 						WechatUserEntity wechatUser = ownerMap.getOrDefault(s.getOwnerId(), new WechatUserEntity());
 						wechatUserList.setOwnerName(Objects.isNull(wechatUser.getName()) ? wechatUser.getPhone() : wechatUser.getName());
