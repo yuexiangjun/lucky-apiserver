@@ -1,6 +1,7 @@
 package com.lucky.api.controller.external;
 
 import com.lucky.api.controller.admin.vo.BannerVO;
+import com.lucky.api.utils.ResponseFormat;
 import com.lucky.application.BannerServer;
 import com.lucky.domain.entity.BannerEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -32,6 +33,7 @@ public class WechatBannerController {
 	 * @return
 	 */
 	@GetMapping("/list")
+	@ResponseFormat
 	public List<BannerVO> list() {
 		var bannerEntity = new BannerEntity();
 		bannerEntity.setEnabled(true);
