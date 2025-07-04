@@ -17,3 +17,15 @@ CREATE TABLE `lucky-star`.`no_counter`  (
 ) COMMENT = '编号计数器';
 
 ALTER TABLE `lucky-star`.`wechat_user` MODIFY COLUMN `owner_id` bigint(20) NOT NULL COMMENT '负责人id' ;
+
+
+
+CREATE TABLE `banner` (
+  `id` bigint NOT NULL,
+  `name` varchar(255) DEFAULT NULL COMMENT ' banner名称',
+  `image` varchar(255) DEFAULT NULL COMMENT ' banner图片',
+  `enabled` tinyint(1) DEFAULT '0' COMMENT '启用禁用',
+  `create_time` datetime DEFAULT NULL,
+  `update_time` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+)COMMENT = 'banner';
