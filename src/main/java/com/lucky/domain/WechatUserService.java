@@ -1,8 +1,10 @@
 package com.lucky.domain;
 
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
+import com.lucky.domain.entity.BalanceLogEntity;
 import com.lucky.domain.entity.WechatUserEntity;
 import com.lucky.domain.exception.BusinessException;
+import com.lucky.domain.repository.BalanceLogRepository;
 import com.lucky.domain.repository.WechatUserRepository;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.stereotype.Component;
@@ -18,10 +20,13 @@ import java.util.Objects;
 public class WechatUserService {
     private final WechatUserRepository wechatUserRepository;
 
+    private final BalanceLogRepository balanceLogRepository;
 
-    public WechatUserService(WechatUserRepository wechatUserRepository) {
+
+    public WechatUserService(WechatUserRepository wechatUserRepository, BalanceLogRepository balanceLogRepository) {
         this.wechatUserRepository = wechatUserRepository;
 
+        this.balanceLogRepository = balanceLogRepository;
     }
 
     /**
@@ -120,4 +125,7 @@ public class WechatUserService {
     }
 
 
+    public WechatUserEntity getWechatUserEntity(WechatUserEntity build) {
+        return wechatUserRepository . getWechatUserEntity(build);
+    }
 }

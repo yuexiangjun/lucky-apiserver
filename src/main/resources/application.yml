@@ -15,7 +15,7 @@ spring:
      driver-class-name: com.mysql.cj.jdbc.Driver
   redis:
 #    host: 127.0.0.1
-    host: redis
+    host: 39.106.21.228
     port: 6379
     password: fx1234@
 wechat:
