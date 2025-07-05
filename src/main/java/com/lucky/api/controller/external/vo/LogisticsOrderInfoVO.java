@@ -26,6 +26,11 @@ public class LogisticsOrderInfoVO {
      */
     private Integer status;
     /**
+     * 手机号码
+     */
+    private String phone;
+
+    /**
      * 订单编号
      */
     private String number;

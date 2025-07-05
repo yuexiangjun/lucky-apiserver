@@ -1,114 +1,577 @@
-2025-07-04 13:26:04.738 [main] INFO  [,] com.lucky.Main - Starting Main using Java 17.0.1 with PID 17128 (D:\lucky-apiserver-v2\target\classes started by Administrator in D:\lucky-apiserver-v2)
-2025-07-04 13:26:04.747 [main] INFO  [,] com.lucky.Main - The following 1 profile is active: "ss"
-2025-07-04 13:26:07.741 [main] INFO  [,] o.s.d.r.config.RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
-2025-07-04 13:26:07.744 [main] INFO  [,] o.s.d.r.config.RepositoryConfigurationDelegate - Bootstrapping Spring Data Redis repositories in DEFAULT mode.
-2025-07-04 13:26:07.793 [main] INFO  [,] o.s.d.r.config.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 31 ms. Found 0 Redis repository interfaces.
-2025-07-04 13:26:08.589 [main] INFO  [,] o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat initialized with port 8333 (http)
-2025-07-04 13:26:08.606 [main] INFO  [,] org.apache.catalina.core.StandardService - Starting service [Tomcat]
-2025-07-04 13:26:08.606 [main] INFO  [,] org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.19]
-2025-07-04 13:26:08.674 [main] INFO  [,] o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
-2025-07-04 13:26:08.674 [main] INFO  [,] o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 3871 ms
-2025-07-04 13:26:10.015 [main] INFO  [,] org.redisson.Version - Redisson 3.21.3
-2025-07-04 13:26:15.257 [main] WARN  [,] o.s.b.w.s.c.AnnotationConfigServletWebServerApplicationContext - Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'redissonClient' defined in class path resource [com/lucky/domain/config/RedissionConfig.class]: Failed to instantiate [org.redisson.api.RedissonClient]: Factory method 'redissonClient' threw exception with message: java.net.UnknownHostException: Failed to resolve 'redis' [A(1), AAAA(28)] after 6 queries 
-2025-07-04 13:26:15.382 [main] INFO  [,] org.apache.catalina.core.StandardService - Stopping service [Tomcat]
-2025-07-04 13:26:15.399 [main] INFO  [,] o.s.b.a.logging.ConditionEvaluationReportLogger - 
-
-Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
-2025-07-04 13:26:15.417 [main] ERROR [,] org.springframework.boot.SpringApplication - Application run failed
-org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'redissonClient' defined in class path resource [com/lucky/domain/config/RedissionConfig.class]: Failed to instantiate [org.redisson.api.RedissonClient]: Factory method 'redissonClient' threw exception with message: java.net.UnknownHostException: Failed to resolve 'redis' [A(1), AAAA(28)] after 6 queries 
-	at org.springframework.beans.factory.support.ConstructorResolver.instantiate(ConstructorResolver.java:651)
-	at org.springframework.beans.factory.support.ConstructorResolver.instantiateUsingFactoryMethod(ConstructorResolver.java:485)
-	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.instantiateUsingFactoryMethod(AbstractAutowireCapableBeanFactory.java:1335)
-	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1165)
-	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:562)
-	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:522)
-	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:325)
-	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234)
-	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:323)
-	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:199)
-	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingletons(DefaultListableBeanFactory.java:975)
-	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:959)
-	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:624)
-	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:146)
-	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:754)
-	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:456)
-	at org.springframework.boot.SpringApplication.run(SpringApplication.java:334)
-	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1354)
-	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1343)
-	at com.lucky.Main.main(Main.java:17)
-Caused by: org.springframework.beans.BeanInstantiationException: Failed to instantiate [org.redisson.api.RedissonClient]: Factory method 'redissonClient' threw exception with message: java.net.UnknownHostException: Failed to resolve 'redis' [A(1), AAAA(28)] after 6 queries 
-	at org.springframework.beans.factory.support.SimpleInstantiationStrategy.instantiate(SimpleInstantiationStrategy.java:177)
-	at org.springframework.beans.factory.support.ConstructorResolver.instantiate(ConstructorResolver.java:647)
-	... 19 common frames omitted
-Caused by: org.redisson.client.RedisConnectionException: java.net.UnknownHostException: Failed to resolve 'redis' [A(1), AAAA(28)] after 6 queries 
-	at org.redisson.client.RedisClient.lambda$resolveAddr$0(RedisClient.java:207)
-	at io.netty.util.concurrent.DefaultPromise.notifyListener0(DefaultPromise.java:590)
-	at io.netty.util.concurrent.DefaultPromise.notifyListeners0(DefaultPromise.java:583)
-	at io.netty.util.concurrent.DefaultPromise.notifyListenersNow(DefaultPromise.java:559)
-	at io.netty.util.concurrent.DefaultPromise.notifyListeners(DefaultPromise.java:492)
-	at io.netty.util.concurrent.DefaultPromise.setValue0(DefaultPromise.java:636)
-	at io.netty.util.concurrent.DefaultPromise.setFailure0(DefaultPromise.java:629)
-	at io.netty.util.concurrent.DefaultPromise.setFailure(DefaultPromise.java:110)
-	at io.netty.resolver.InetSocketAddressResolver$1.operationComplete(InetSocketAddressResolver.java:62)
-	at io.netty.util.concurrent.DefaultPromise.notifyListener0(DefaultPromise.java:590)
-	at io.netty.util.concurrent.DefaultPromise.notifyListeners0(DefaultPromise.java:583)
-	at io.netty.util.concurrent.DefaultPromise.notifyListenersNow(DefaultPromise.java:559)
-	at io.netty.util.concurrent.DefaultPromise.notifyListeners(DefaultPromise.java:492)
-	at io.netty.util.concurrent.DefaultPromise.setValue0(DefaultPromise.java:636)
-	at io.netty.util.concurrent.DefaultPromise.setFailure0(DefaultPromise.java:629)
-	at io.netty.util.concurrent.DefaultPromise.tryFailure(DefaultPromise.java:118)
-	at io.netty.resolver.dns.DnsNameResolver.tryFailure(DnsNameResolver.java:1037)
-	at io.netty.resolver.dns.DnsNameResolver.access$500(DnsNameResolver.java:95)
-	at io.netty.resolver.dns.DnsNameResolver$7.operationComplete(DnsNameResolver.java:1057)
-	at io.netty.util.concurrent.DefaultPromise.notifyListener0(DefaultPromise.java:590)
-	at io.netty.util.concurrent.DefaultPromise.notifyListenersNow(DefaultPromise.java:557)
-	at io.netty.util.concurrent.DefaultPromise.notifyListeners(DefaultPromise.java:492)
-	at io.netty.util.concurrent.DefaultPromise.setValue0(DefaultPromise.java:636)
-	at io.netty.util.concurrent.DefaultPromise.setFailure0(DefaultPromise.java:629)
-	at io.netty.util.concurrent.DefaultPromise.tryFailure(DefaultPromise.java:118)
-	at io.netty.resolver.dns.DnsResolveContext.finishResolve(DnsResolveContext.java:1133)
-	at io.netty.resolver.dns.DnsResolveContext.tryToFinishResolve(DnsResolveContext.java:1072)
-	at io.netty.resolver.dns.DnsResolveContext.query(DnsResolveContext.java:444)
-	at io.netty.resolver.dns.DnsResolveContext.access$700(DnsResolveContext.java:68)
-	at io.netty.resolver.dns.DnsResolveContext$2.operationComplete(DnsResolveContext.java:513)
-	at io.netty.util.concurrent.DefaultPromise.notifyListener0(DefaultPromise.java:590)
-	at io.netty.util.concurrent.DefaultPromise.notifyListeners0(DefaultPromise.java:583)
-	at io.netty.util.concurrent.DefaultPromise.notifyListenersNow(DefaultPromise.java:559)
-	at io.netty.util.concurrent.DefaultPromise.notifyListeners(DefaultPromise.java:492)
-	at io.netty.util.concurrent.DefaultPromise.setValue0(DefaultPromise.java:636)
-	at io.netty.util.concurrent.DefaultPromise.setFailure0(DefaultPromise.java:629)
-	at io.netty.util.concurrent.DefaultPromise.tryFailure(DefaultPromise.java:118)
-	at io.netty.resolver.dns.DnsQueryContext.finishFailure(DnsQueryContext.java:380)
-	at io.netty.resolver.dns.DnsQueryContext$5.run(DnsQueryContext.java:315)
-	at io.netty.util.concurrent.PromiseTask.runTask(PromiseTask.java:98)
-	at io.netty.util.concurrent.ScheduledFutureTask.run(ScheduledFutureTask.java:153)
-	at io.netty.util.concurrent.AbstractEventExecutor.runTask$$$capture(AbstractEventExecutor.java:173)
-	at io.netty.util.concurrent.AbstractEventExecutor.runTask(AbstractEventExecutor.java)
-	at io.netty.util.concurrent.AbstractEventExecutor.safeExecute$$$capture(AbstractEventExecutor.java:166)
-	at io.netty.util.concurrent.AbstractEventExecutor.safeExecute(AbstractEventExecutor.java)
-	at io.netty.util.concurrent.SingleThreadEventExecutor.runAllTasks(SingleThreadEventExecutor.java:470)
-	at io.netty.channel.nio.NioEventLoop.run(NioEventLoop.java:569)
-	at io.netty.util.concurrent.SingleThreadEventExecutor$4.run(SingleThreadEventExecutor.java:997)
-	at io.netty.util.internal.ThreadExecutorMap$2.run(ThreadExecutorMap.java:74)
-	at io.netty.util.concurrent.FastThreadLocalRunnable.run(FastThreadLocalRunnable.java:30)
+2025-07-05 21:12:14.360 [main] INFO  [,] com.lucky.Main - Starting Main using Java 17.0.1 with PID 9972 (D:\lucky-apiserver-v2\target\classes started by Administrator in D:\lucky-apiserver-v2)
+2025-07-05 21:12:14.367 [main] INFO  [,] com.lucky.Main - The following 1 profile is active: "ss"
+2025-07-05 21:12:17.414 [main] INFO  [,] o.s.d.r.config.RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
+2025-07-05 21:12:17.418 [main] INFO  [,] o.s.d.r.config.RepositoryConfigurationDelegate - Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2025-07-05 21:12:17.468 [main] INFO  [,] o.s.d.r.config.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 32 ms. Found 0 Redis repository interfaces.
+2025-07-05 21:12:18.239 [main] INFO  [,] o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat initialized with port 8333 (http)
+2025-07-05 21:12:18.248 [main] INFO  [,] org.apache.catalina.core.StandardService - Starting service [Tomcat]
+2025-07-05 21:12:18.248 [main] INFO  [,] org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.19]
+2025-07-05 21:12:18.310 [main] INFO  [,] o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2025-07-05 21:12:18.311 [main] INFO  [,] o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 3887 ms
+2025-07-05 21:12:19.700 [main] INFO  [,] org.redisson.Version - Redisson 3.21.3
+2025-07-05 21:12:19.891 [redisson-netty-4-4] INFO  [,] o.r.connection.pool.MasterPubSubConnectionPool - 1 connections initialized for 127.0.0.1/127.0.0.1:6379
+2025-07-05 21:12:19.965 [redisson-netty-4-19] INFO  [,] org.redisson.connection.pool.MasterConnectionPool - 24 connections initialized for 127.0.0.1/127.0.0.1:6379
+2025-07-05 21:12:20.448 [main] INFO  [,] o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat started on port 8333 (http) with context path ''
+2025-07-05 21:12:20.460 [main] INFO  [,] com.lucky.Main - Started Main in 6.494 seconds (process running for 7.918)
+2025-07-05 21:12:20.464 [main] INFO  [,] com.lucky.Main - lucky-apiServer-boot-successful
+2025-07-05 21:15:22.947 [main] INFO  [,] com.lucky.Main - Starting Main using Java 17.0.1 with PID 1644 (D:\lucky-apiserver-v2\target\classes started by Administrator in D:\lucky-apiserver-v2)
+2025-07-05 21:15:22.949 [main] INFO  [,] com.lucky.Main - The following 1 profile is active: "ss"
+2025-07-05 21:15:23.633 [main] INFO  [,] o.s.d.r.config.RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
+2025-07-05 21:15:23.636 [main] INFO  [,] o.s.d.r.config.RepositoryConfigurationDelegate - Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2025-07-05 21:15:23.694 [main] INFO  [,] o.s.d.r.config.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 42 ms. Found 0 Redis repository interfaces.
+2025-07-05 21:15:24.383 [main] INFO  [,] o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat initialized with port 8333 (http)
+2025-07-05 21:15:24.393 [main] INFO  [,] org.apache.catalina.core.StandardService - Starting service [Tomcat]
+2025-07-05 21:15:24.393 [main] INFO  [,] org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.19]
+2025-07-05 21:15:24.458 [main] INFO  [,] o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2025-07-05 21:15:24.459 [main] INFO  [,] o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 1461 ms
+2025-07-05 21:15:25.710 [main] INFO  [,] org.redisson.Version - Redisson 3.21.3
+2025-07-05 21:15:25.876 [redisson-netty-4-4] INFO  [,] o.r.connection.pool.MasterPubSubConnectionPool - 1 connections initialized for 127.0.0.1/127.0.0.1:6379
+2025-07-05 21:15:25.954 [redisson-netty-4-19] INFO  [,] org.redisson.connection.pool.MasterConnectionPool - 24 connections initialized for 127.0.0.1/127.0.0.1:6379
+2025-07-05 21:15:26.425 [main] INFO  [,] o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat started on port 8333 (http) with context path ''
+2025-07-05 21:15:26.433 [main] INFO  [,] com.lucky.Main - Started Main in 3.882 seconds (process running for 4.536)
+2025-07-05 21:15:26.437 [main] INFO  [,] com.lucky.Main - lucky-apiServer-boot-successful
+2025-07-05 21:17:03.160 [http-nio-8333-exec-2] INFO  [,] o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-07-05 21:17:03.160 [http-nio-8333-exec-2] INFO  [,] org.springframework.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2025-07-05 21:17:03.162 [http-nio-8333-exec-2] INFO  [,] org.springframework.web.servlet.DispatcherServlet - Completed initialization in 0 ms
+2025-07-05 21:17:03.361 [http-nio-8333-exec-2] INFO  [,] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2025-07-05 21:17:03.780 [http-nio-8333-exec-2] INFO  [,] com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@3772bf95
+2025-07-05 21:17:03.781 [http-nio-8333-exec-2] INFO  [,] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2025-07-05 21:18:36.113 [SpringApplicationShutdownHook] INFO  [,] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2025-07-05 21:18:36.124 [SpringApplicationShutdownHook] INFO  [,] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2025-07-05 21:18:40.223 [main] INFO  [,] com.lucky.Main - Starting Main using Java 17.0.1 with PID 4596 (D:\lucky-apiserver-v2\target\classes started by Administrator in D:\lucky-apiserver-v2)
+2025-07-05 21:18:40.226 [main] INFO  [,] com.lucky.Main - The following 1 profile is active: "ss"
+2025-07-05 21:18:40.995 [main] INFO  [,] o.s.d.r.config.RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
+2025-07-05 21:18:40.997 [main] INFO  [,] o.s.d.r.config.RepositoryConfigurationDelegate - Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2025-07-05 21:18:41.051 [main] INFO  [,] o.s.d.r.config.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 33 ms. Found 0 Redis repository interfaces.
+2025-07-05 21:18:41.709 [main] INFO  [,] o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat initialized with port 8333 (http)
+2025-07-05 21:18:41.725 [main] INFO  [,] org.apache.catalina.core.StandardService - Starting service [Tomcat]
+2025-07-05 21:18:41.726 [main] INFO  [,] org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.19]
+2025-07-05 21:18:41.783 [main] INFO  [,] o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2025-07-05 21:18:41.784 [main] INFO  [,] o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 1504 ms
+2025-07-05 21:18:42.997 [main] INFO  [,] org.redisson.Version - Redisson 3.21.3
+2025-07-05 21:18:43.168 [redisson-netty-4-5] INFO  [,] o.r.connection.pool.MasterPubSubConnectionPool - 1 connections initialized for 127.0.0.1/127.0.0.1:6379
+2025-07-05 21:18:43.239 [redisson-netty-4-19] INFO  [,] org.redisson.connection.pool.MasterConnectionPool - 24 connections initialized for 127.0.0.1/127.0.0.1:6379
+2025-07-05 21:18:43.671 [main] INFO  [,] o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat started on port 8333 (http) with context path ''
+2025-07-05 21:18:43.682 [main] INFO  [,] com.lucky.Main - Started Main in 3.868 seconds (process running for 4.466)
+2025-07-05 21:18:43.685 [main] INFO  [,] com.lucky.Main - lucky-apiServer-boot-successful
+2025-07-05 21:19:33.133 [http-nio-8333-exec-2] INFO  [,] o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-07-05 21:19:33.134 [http-nio-8333-exec-2] INFO  [,] org.springframework.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2025-07-05 21:19:33.136 [http-nio-8333-exec-2] INFO  [,] org.springframework.web.servlet.DispatcherServlet - Completed initialization in 2 ms
+2025-07-05 21:20:04.435 [http-nio-8333-exec-1] INFO  [,] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2025-07-05 21:20:04.847 [http-nio-8333-exec-1] INFO  [,] com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@44e2c191
+2025-07-05 21:20:04.848 [http-nio-8333-exec-1] INFO  [,] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2025-07-05 21:24:08.844 [SpringApplicationShutdownHook] INFO  [,] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2025-07-05 21:24:08.853 [SpringApplicationShutdownHook] INFO  [,] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2025-07-05 21:24:12.803 [main] INFO  [,] com.lucky.Main - Starting Main using Java 17.0.1 with PID 10960 (D:\lucky-apiserver-v2\target\classes started by Administrator in D:\lucky-apiserver-v2)
+2025-07-05 21:24:12.806 [main] INFO  [,] com.lucky.Main - The following 1 profile is active: "ss"
+2025-07-05 21:24:13.671 [main] INFO  [,] o.s.d.r.config.RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
+2025-07-05 21:24:13.674 [main] INFO  [,] o.s.d.r.config.RepositoryConfigurationDelegate - Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2025-07-05 21:24:13.723 [main] INFO  [,] o.s.d.r.config.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 34 ms. Found 0 Redis repository interfaces.
+2025-07-05 21:24:14.384 [main] INFO  [,] o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat initialized with port 8333 (http)
+2025-07-05 21:24:14.393 [main] INFO  [,] org.apache.catalina.core.StandardService - Starting service [Tomcat]
+2025-07-05 21:24:14.394 [main] INFO  [,] org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.19]
+2025-07-05 21:24:14.449 [main] INFO  [,] o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2025-07-05 21:24:14.450 [main] INFO  [,] o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 1592 ms
+2025-07-05 21:24:15.629 [main] INFO  [,] org.redisson.Version - Redisson 3.21.3
+2025-07-05 21:24:15.784 [redisson-netty-4-4] INFO  [,] o.r.connection.pool.MasterPubSubConnectionPool - 1 connections initialized for 127.0.0.1/127.0.0.1:6379
+2025-07-05 21:24:15.844 [redisson-netty-4-19] INFO  [,] org.redisson.connection.pool.MasterConnectionPool - 24 connections initialized for 127.0.0.1/127.0.0.1:6379
+2025-07-05 21:24:16.252 [main] INFO  [,] o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat started on port 8333 (http) with context path ''
+2025-07-05 21:24:16.259 [main] INFO  [,] com.lucky.Main - Started Main in 3.893 seconds (process running for 4.575)
+2025-07-05 21:24:16.262 [main] INFO  [,] com.lucky.Main - lucky-apiServer-boot-successful
+2025-07-05 21:25:45.966 [http-nio-8333-exec-2] INFO  [,] o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-07-05 21:25:45.967 [http-nio-8333-exec-2] INFO  [,] org.springframework.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2025-07-05 21:25:45.969 [http-nio-8333-exec-2] INFO  [,] org.springframework.web.servlet.DispatcherServlet - Completed initialization in 1 ms
+2025-07-05 21:25:46.181 [http-nio-8333-exec-2] ERROR [,] com.lucky.api.global.ExceptionHandle - Required request body is missing: public java.util.List<com.lucky.api.controller.admin.vo.WechatUserListVO> com.lucky.api.controller.admin.AdminUserController.list(com.lucky.api.controller.admin.dto.WechatUserFindListDTO)
+org.springframework.http.converter.HttpMessageNotReadableException: Required request body is missing: public java.util.List<com.lucky.api.controller.admin.vo.WechatUserListVO> com.lucky.api.controller.admin.AdminUserController.list(com.lucky.api.controller.admin.dto.WechatUserFindListDTO)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestResponseBodyMethodProcessor.readWithMessageConverters(RequestResponseBodyMethodProcessor.java:162)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestResponseBodyMethodProcessor.resolveArgument(RequestResponseBodyMethodProcessor.java:134)
+	at org.springframework.web.method.support.HandlerMethodArgumentResolverComposite.resolveArgument(HandlerMethodArgumentResolverComposite.java:122)
+	at org.springframework.web.method.support.InvocableHandlerMethod.getMethodArgumentValues(InvocableHandlerMethod.java:228)
+	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:182)
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:118)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:920)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:830)
+	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1089)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:979)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1014)
+	at org.springframework.web.servlet.FrameworkServlet.doPut(FrameworkServlet.java:925)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:593)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:885)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:658)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:205)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:51)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:167)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:482)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:115)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:344)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:391)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:896)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1744)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1191)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:63)
 	at java.base/java.lang.Thread.run(Thread.java:833)
-Caused by: java.net.UnknownHostException: Failed to resolve 'redis' [A(1), AAAA(28)] after 6 queries 
-	at io.netty.resolver.dns.DnsResolveContext.finishResolve(DnsResolveContext.java:1125)
-	... 25 common frames omitted
-Caused by: io.netty.resolver.dns.DnsNameResolverTimeoutException: [5244: /192.168.0.1:53] DefaultDnsQuestion(redis. IN AAAA) query '5244' via UDP timed out after 5000 milliseconds (no stack trace available)
-2025-07-04 13:29:00.414 [main] INFO  [,] com.lucky.Main - Starting Main using Java 17.0.1 with PID 13612 (D:\lucky-apiserver-v2\target\classes started by Administrator in D:\lucky-apiserver-v2)
-2025-07-04 13:29:00.415 [main] INFO  [,] com.lucky.Main - The following 1 profile is active: "ss"
-2025-07-04 13:29:01.111 [main] INFO  [,] o.s.d.r.config.RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
-2025-07-04 13:29:01.114 [main] INFO  [,] o.s.d.r.config.RepositoryConfigurationDelegate - Bootstrapping Spring Data Redis repositories in DEFAULT mode.
-2025-07-04 13:29:01.167 [main] INFO  [,] o.s.d.r.config.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 42 ms. Found 0 Redis repository interfaces.
-2025-07-04 13:29:01.824 [main] INFO  [,] o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat initialized with port 8333 (http)
-2025-07-04 13:29:01.831 [main] INFO  [,] org.apache.catalina.core.StandardService - Starting service [Tomcat]
-2025-07-04 13:29:01.832 [main] INFO  [,] org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.19]
-2025-07-04 13:29:01.895 [main] INFO  [,] o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
-2025-07-04 13:29:01.895 [main] INFO  [,] o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 1440 ms
-2025-07-04 13:29:03.127 [main] INFO  [,] org.redisson.Version - Redisson 3.21.3
-2025-07-04 13:29:03.486 [redisson-netty-4-6] INFO  [,] o.r.connection.pool.MasterPubSubConnectionPool - 1 connections initialized for 39.106.21.228/39.106.21.228:6379
-2025-07-04 13:29:06.008 [redisson-netty-4-19] INFO  [,] org.redisson.connection.pool.MasterConnectionPool - 24 connections initialized for 39.106.21.228/39.106.21.228:6379
-2025-07-04 13:29:06.462 [main] INFO  [,] o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat started on port 8333 (http) with context path ''
-2025-07-04 13:29:06.472 [main] INFO  [,] com.lucky.Main - Started Main in 6.446 seconds (process running for 7.058)
-2025-07-04 13:29:06.475 [main] INFO  [,] com.lucky.Main - lucky-apiServer-boot-successful
+2025-07-05 21:26:06.864 [http-nio-8333-exec-3] INFO  [,] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2025-07-05 21:26:07.545 [http-nio-8333-exec-3] INFO  [,] com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@5129fe8
+2025-07-05 21:26:07.546 [http-nio-8333-exec-3] INFO  [,] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2025-07-05 21:27:14.543 [SpringApplicationShutdownHook] INFO  [,] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2025-07-05 21:27:14.555 [SpringApplicationShutdownHook] INFO  [,] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2025-07-05 21:27:18.433 [main] INFO  [,] com.lucky.Main - Starting Main using Java 17.0.1 with PID 15704 (D:\lucky-apiserver-v2\target\classes started by Administrator in D:\lucky-apiserver-v2)
+2025-07-05 21:27:18.436 [main] INFO  [,] com.lucky.Main - The following 1 profile is active: "ss"
+2025-07-05 21:27:19.220 [main] INFO  [,] o.s.d.r.config.RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
+2025-07-05 21:27:19.222 [main] INFO  [,] o.s.d.r.config.RepositoryConfigurationDelegate - Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2025-07-05 21:27:19.269 [main] INFO  [,] o.s.d.r.config.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 30 ms. Found 0 Redis repository interfaces.
+2025-07-05 21:27:19.903 [main] INFO  [,] o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat initialized with port 8333 (http)
+2025-07-05 21:27:19.913 [main] INFO  [,] org.apache.catalina.core.StandardService - Starting service [Tomcat]
+2025-07-05 21:27:19.914 [main] INFO  [,] org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.19]
+2025-07-05 21:27:19.968 [main] INFO  [,] o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2025-07-05 21:27:19.968 [main] INFO  [,] o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 1483 ms
+2025-07-05 21:27:21.149 [main] INFO  [,] org.redisson.Version - Redisson 3.21.3
+2025-07-05 21:27:21.314 [redisson-netty-4-5] INFO  [,] o.r.connection.pool.MasterPubSubConnectionPool - 1 connections initialized for 127.0.0.1/127.0.0.1:6379
+2025-07-05 21:27:21.380 [redisson-netty-4-19] INFO  [,] org.redisson.connection.pool.MasterConnectionPool - 24 connections initialized for 127.0.0.1/127.0.0.1:6379
+2025-07-05 21:27:21.808 [main] INFO  [,] o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat started on port 8333 (http) with context path ''
+2025-07-05 21:27:21.818 [main] INFO  [,] com.lucky.Main - Started Main in 3.779 seconds (process running for 4.389)
+2025-07-05 21:27:21.822 [main] INFO  [,] com.lucky.Main - lucky-apiServer-boot-successful
+2025-07-05 21:28:14.254 [http-nio-8333-exec-4] INFO  [,] o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-07-05 21:28:14.254 [http-nio-8333-exec-4] INFO  [,] org.springframework.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2025-07-05 21:28:14.255 [http-nio-8333-exec-4] INFO  [,] org.springframework.web.servlet.DispatcherServlet - Completed initialization in 1 ms
+2025-07-05 21:28:14.492 [http-nio-8333-exec-4] INFO  [,] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2025-07-05 21:28:14.769 [http-nio-8333-exec-4] INFO  [,] com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@46f54613
+2025-07-05 21:28:14.770 [http-nio-8333-exec-4] INFO  [,] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2025-07-05 21:33:15.670 [SpringApplicationShutdownHook] INFO  [,] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2025-07-05 21:33:15.680 [SpringApplicationShutdownHook] INFO  [,] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2025-07-05 21:33:18.146 [main] INFO  [,] com.lucky.Main - Starting Main using Java 17.0.1 with PID 15144 (D:\lucky-apiserver-v2\target\classes started by Administrator in D:\lucky-apiserver-v2)
+2025-07-05 21:33:18.148 [main] INFO  [,] com.lucky.Main - The following 1 profile is active: "ss"
+2025-07-05 21:33:18.868 [main] INFO  [,] o.s.d.r.config.RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
+2025-07-05 21:33:18.871 [main] INFO  [,] o.s.d.r.config.RepositoryConfigurationDelegate - Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2025-07-05 21:33:18.918 [main] INFO  [,] o.s.d.r.config.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 31 ms. Found 0 Redis repository interfaces.
+2025-07-05 21:33:19.556 [main] INFO  [,] o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat initialized with port 8333 (http)
+2025-07-05 21:33:19.568 [main] INFO  [,] org.apache.catalina.core.StandardService - Starting service [Tomcat]
+2025-07-05 21:33:19.568 [main] INFO  [,] org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.19]
+2025-07-05 21:33:19.627 [main] INFO  [,] o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2025-07-05 21:33:19.627 [main] INFO  [,] o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 1431 ms
+2025-07-05 21:33:20.821 [main] INFO  [,] org.redisson.Version - Redisson 3.21.3
+2025-07-05 21:33:20.983 [redisson-netty-4-4] INFO  [,] o.r.connection.pool.MasterPubSubConnectionPool - 1 connections initialized for 127.0.0.1/127.0.0.1:6379
+2025-07-05 21:33:21.054 [redisson-netty-4-19] INFO  [,] org.redisson.connection.pool.MasterConnectionPool - 24 connections initialized for 127.0.0.1/127.0.0.1:6379
+2025-07-05 21:33:21.505 [main] INFO  [,] o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat started on port 8333 (http) with context path ''
+2025-07-05 21:33:21.513 [main] INFO  [,] com.lucky.Main - Started Main in 3.756 seconds (process running for 4.353)
+2025-07-05 21:33:21.518 [main] INFO  [,] com.lucky.Main - lucky-apiServer-boot-successful
+2025-07-05 21:34:55.582 [http-nio-8333-exec-1] INFO  [,] o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-07-05 21:34:55.583 [http-nio-8333-exec-1] INFO  [,] org.springframework.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2025-07-05 21:34:55.584 [http-nio-8333-exec-1] INFO  [,] org.springframework.web.servlet.DispatcherServlet - Completed initialization in 1 ms
+2025-07-05 21:34:55.773 [http-nio-8333-exec-1] INFO  [,] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2025-07-05 21:34:56.700 [http-nio-8333-exec-1] INFO  [,] com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@7d49ffca
+2025-07-05 21:34:56.703 [http-nio-8333-exec-1] INFO  [,] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2025-07-05 21:35:22.924 [http-nio-8333-exec-2] ERROR [,] com.lucky.api.global.ExceptionHandle - Cannot invoke "com.lucky.domain.entity.DeliveryAddressEntity.getAddress()" because the return value of "com.lucky.domain.entity.LogisticsOrderEntity.getAddress()" is null
+java.lang.NullPointerException: Cannot invoke "com.lucky.domain.entity.DeliveryAddressEntity.getAddress()" because the return value of "com.lucky.domain.entity.LogisticsOrderEntity.getAddress()" is null
+	at com.lucky.application.LogisticsOrderServer.lambda$getLogisticsOrderInfos$2(LogisticsOrderServer.java:100)
+	at java.base/java.util.stream.ReferencePipeline$3$1.accept(ReferencePipeline.java:197)
+	at java.base/java.util.ArrayList$ArrayListSpliterator.forEachRemaining(ArrayList.java:1625)
+	at java.base/java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:509)
+	at java.base/java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:499)
+	at java.base/java.util.stream.ReduceOps$ReduceOp.evaluateSequential(ReduceOps.java:921)
+	at java.base/java.util.stream.AbstractPipeline.evaluate(AbstractPipeline.java:234)
+	at java.base/java.util.stream.ReferencePipeline.collect(ReferencePipeline.java:682)
+	at com.lucky.application.LogisticsOrderServer.getLogisticsOrderInfos(LogisticsOrderServer.java:103)
+	at com.lucky.application.LogisticsOrderServer.getByAdminList(LogisticsOrderServer.java:114)
+	at com.lucky.api.controller.admin.LogisticsOrderController.list(LogisticsOrderController.java:39)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:259)
+	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:192)
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:118)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:920)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:830)
+	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1089)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:979)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1014)
+	at org.springframework.web.servlet.FrameworkServlet.doPost(FrameworkServlet.java:914)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:590)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:885)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:658)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:205)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:51)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:167)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:482)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:115)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:344)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:391)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:896)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1744)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1191)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:63)
+	at java.base/java.lang.Thread.run(Thread.java:833)
+2025-07-05 21:36:22.558 [http-nio-8333-exec-3] WARN  [,] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@7d49ffca (No operations allowed after connection closed.). Possibly consider using a shorter maxLifetime value.
+2025-07-05 21:37:42.275 [SpringApplicationShutdownHook] INFO  [,] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2025-07-05 21:37:42.841 [SpringApplicationShutdownHook] INFO  [,] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2025-07-05 21:37:46.467 [main] INFO  [,] com.lucky.Main - Starting Main using Java 17.0.1 with PID 7356 (D:\lucky-apiserver-v2\target\classes started by Administrator in D:\lucky-apiserver-v2)
+2025-07-05 21:37:46.469 [main] INFO  [,] com.lucky.Main - The following 1 profile is active: "ss"
+2025-07-05 21:37:47.289 [main] INFO  [,] o.s.d.r.config.RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
+2025-07-05 21:37:47.292 [main] INFO  [,] o.s.d.r.config.RepositoryConfigurationDelegate - Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2025-07-05 21:37:47.344 [main] INFO  [,] o.s.d.r.config.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 36 ms. Found 0 Redis repository interfaces.
+2025-07-05 21:37:47.980 [main] INFO  [,] o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat initialized with port 8333 (http)
+2025-07-05 21:37:47.989 [main] INFO  [,] org.apache.catalina.core.StandardService - Starting service [Tomcat]
+2025-07-05 21:37:47.989 [main] INFO  [,] org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.19]
+2025-07-05 21:37:48.049 [main] INFO  [,] o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2025-07-05 21:37:48.050 [main] INFO  [,] o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 1533 ms
+2025-07-05 21:37:49.226 [main] INFO  [,] org.redisson.Version - Redisson 3.21.3
+2025-07-05 21:37:49.376 [redisson-netty-4-4] INFO  [,] o.r.connection.pool.MasterPubSubConnectionPool - 1 connections initialized for 127.0.0.1/127.0.0.1:6379
+2025-07-05 21:37:49.439 [redisson-netty-4-19] INFO  [,] org.redisson.connection.pool.MasterConnectionPool - 24 connections initialized for 127.0.0.1/127.0.0.1:6379
+2025-07-05 21:37:49.847 [main] INFO  [,] o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat started on port 8333 (http) with context path ''
+2025-07-05 21:37:49.855 [main] INFO  [,] com.lucky.Main - Started Main in 3.734 seconds (process running for 4.302)
+2025-07-05 21:37:49.859 [main] INFO  [,] com.lucky.Main - lucky-apiServer-boot-successful
+2025-07-05 21:37:53.309 [http-nio-8333-exec-1] INFO  [,] o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-07-05 21:37:53.310 [http-nio-8333-exec-1] INFO  [,] org.springframework.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2025-07-05 21:37:53.312 [http-nio-8333-exec-1] INFO  [,] org.springframework.web.servlet.DispatcherServlet - Completed initialization in 2 ms
+2025-07-05 21:37:53.583 [http-nio-8333-exec-1] INFO  [,] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2025-07-05 21:37:54.483 [http-nio-8333-exec-1] INFO  [,] com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@50560e72
+2025-07-05 21:37:54.486 [http-nio-8333-exec-1] INFO  [,] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2025-07-05 21:43:48.402 [SpringApplicationShutdownHook] INFO  [,] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2025-07-05 21:43:48.993 [SpringApplicationShutdownHook] INFO  [,] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2025-07-05 21:43:53.242 [main] INFO  [,] com.lucky.Main - Starting Main using Java 17.0.1 with PID 3768 (D:\lucky-apiserver-v2\target\classes started by Administrator in D:\lucky-apiserver-v2)
+2025-07-05 21:43:53.245 [main] INFO  [,] com.lucky.Main - The following 1 profile is active: "ss"
+2025-07-05 21:43:54.072 [main] INFO  [,] o.s.d.r.config.RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
+2025-07-05 21:43:54.076 [main] INFO  [,] o.s.d.r.config.RepositoryConfigurationDelegate - Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2025-07-05 21:43:54.134 [main] INFO  [,] o.s.d.r.config.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 40 ms. Found 0 Redis repository interfaces.
+2025-07-05 21:43:54.855 [main] INFO  [,] o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat initialized with port 8333 (http)
+2025-07-05 21:43:54.868 [main] INFO  [,] org.apache.catalina.core.StandardService - Starting service [Tomcat]
+2025-07-05 21:43:54.869 [main] INFO  [,] org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.19]
+2025-07-05 21:43:54.933 [main] INFO  [,] o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2025-07-05 21:43:54.935 [main] INFO  [,] o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 1634 ms
+2025-07-05 21:43:56.202 [main] INFO  [,] org.redisson.Version - Redisson 3.21.3
+2025-07-05 21:43:56.347 [redisson-netty-4-4] INFO  [,] o.r.connection.pool.MasterPubSubConnectionPool - 1 connections initialized for 127.0.0.1/127.0.0.1:6379
+2025-07-05 21:43:56.425 [redisson-netty-4-19] INFO  [,] org.redisson.connection.pool.MasterConnectionPool - 24 connections initialized for 127.0.0.1/127.0.0.1:6379
+2025-07-05 21:43:56.849 [main] INFO  [,] o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat started on port 8333 (http) with context path ''
+2025-07-05 21:43:56.858 [main] INFO  [,] com.lucky.Main - Started Main in 4.028 seconds (process running for 4.687)
+2025-07-05 21:43:56.862 [main] INFO  [,] com.lucky.Main - lucky-apiServer-boot-successful
+2025-07-05 21:44:07.013 [http-nio-8333-exec-2] INFO  [,] o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-07-05 21:44:07.014 [http-nio-8333-exec-2] INFO  [,] org.springframework.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2025-07-05 21:44:07.016 [http-nio-8333-exec-2] INFO  [,] org.springframework.web.servlet.DispatcherServlet - Completed initialization in 1 ms
+2025-07-05 21:44:07.279 [http-nio-8333-exec-2] INFO  [,] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2025-07-05 21:44:08.121 [http-nio-8333-exec-2] INFO  [,] com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@40ad834c
+2025-07-05 21:44:08.126 [http-nio-8333-exec-2] INFO  [,] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2025-07-05 21:46:37.310 [http-nio-8333-exec-7] ERROR [,] com.lucky.api.global.ExceptionHandle - JSON parse error: Cannot deserialize value of type `java.time.LocalDateTime` from String "2025-01-01 00:00:00": Failed to deserialize java.time.LocalDateTime: (java.time.format.DateTimeParseException) Text '2025-01-01 00:00:00' could not be parsed at index 10
+org.springframework.http.converter.HttpMessageNotReadableException: JSON parse error: Cannot deserialize value of type `java.time.LocalDateTime` from String "2025-01-01 00:00:00": Failed to deserialize java.time.LocalDateTime: (java.time.format.DateTimeParseException) Text '2025-01-01 00:00:00' could not be parsed at index 10
+	at org.springframework.http.converter.json.AbstractJackson2HttpMessageConverter.readJavaType(AbstractJackson2HttpMessageConverter.java:406)
+	at org.springframework.http.converter.json.AbstractJackson2HttpMessageConverter.read(AbstractJackson2HttpMessageConverter.java:354)
+	at org.springframework.web.servlet.mvc.method.annotation.AbstractMessageConverterMethodArgumentResolver.readWithMessageConverters(AbstractMessageConverterMethodArgumentResolver.java:184)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestResponseBodyMethodProcessor.readWithMessageConverters(RequestResponseBodyMethodProcessor.java:159)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestResponseBodyMethodProcessor.resolveArgument(RequestResponseBodyMethodProcessor.java:134)
+	at org.springframework.web.method.support.HandlerMethodArgumentResolverComposite.resolveArgument(HandlerMethodArgumentResolverComposite.java:122)
+	at org.springframework.web.method.support.InvocableHandlerMethod.getMethodArgumentValues(InvocableHandlerMethod.java:228)
+	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:182)
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:118)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:920)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:830)
+	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1089)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:979)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1014)
+	at org.springframework.web.servlet.FrameworkServlet.doPost(FrameworkServlet.java:914)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:590)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:885)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:658)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:205)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:51)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:167)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:482)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:115)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:344)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:391)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:896)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1744)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1191)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:63)
+	at java.base/java.lang.Thread.run(Thread.java:833)
+Caused by: com.fasterxml.jackson.databind.exc.InvalidFormatException: Cannot deserialize value of type `java.time.LocalDateTime` from String "2025-01-01 00:00:00": Failed to deserialize java.time.LocalDateTime: (java.time.format.DateTimeParseException) Text '2025-01-01 00:00:00' could not be parsed at index 10
+ at [Source: (org.springframework.util.StreamUtils$NonClosingInputStream); line: 2, column: 18] (through reference chain: com.lucky.api.controller.admin.dto.TimeDTO["startTime"])
+	at com.fasterxml.jackson.databind.exc.InvalidFormatException.from(InvalidFormatException.java:67)
+	at com.fasterxml.jackson.databind.DeserializationContext.weirdStringException(DeserializationContext.java:2002)
+	at com.fasterxml.jackson.databind.DeserializationContext.handleWeirdStringValue(DeserializationContext.java:1230)
+	at com.fasterxml.jackson.datatype.jsr310.deser.JSR310DeserializerBase._handleDateTimeException(JSR310DeserializerBase.java:176)
+	at com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer._fromString(LocalDateTimeDeserializer.java:179)
+	at com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer.deserialize(LocalDateTimeDeserializer.java:81)
+	at com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer.deserialize(LocalDateTimeDeserializer.java:40)
+	at com.fasterxml.jackson.databind.deser.impl.MethodProperty.deserializeAndSet(MethodProperty.java:129)
+	at com.fasterxml.jackson.databind.deser.BeanDeserializer.deserializeFromObject(BeanDeserializer.java:392)
+	at com.fasterxml.jackson.databind.deser.BeanDeserializer.deserialize(BeanDeserializer.java:185)
+	at com.fasterxml.jackson.databind.deser.DefaultDeserializationContext.readRootValue(DefaultDeserializationContext.java:323)
+	at com.fasterxml.jackson.databind.ObjectReader._bindAndClose(ObjectReader.java:2105)
+	at com.fasterxml.jackson.databind.ObjectReader.readValue(ObjectReader.java:1481)
+	at org.springframework.http.converter.json.AbstractJackson2HttpMessageConverter.readJavaType(AbstractJackson2HttpMessageConverter.java:395)
+	... 51 common frames omitted
+Caused by: java.time.format.DateTimeParseException: Text '2025-01-01 00:00:00' could not be parsed at index 10
+	at java.base/java.time.format.DateTimeFormatter.parseResolved0(DateTimeFormatter.java:2052)
+	at java.base/java.time.format.DateTimeFormatter.parse(DateTimeFormatter.java:1954)
+	at java.base/java.time.LocalDateTime.parse(LocalDateTime.java:494)
+	at com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer._fromString(LocalDateTimeDeserializer.java:177)
+	... 60 common frames omitted
+2025-07-05 21:53:05.678 [SpringApplicationShutdownHook] INFO  [,] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2025-07-05 21:53:06.229 [SpringApplicationShutdownHook] INFO  [,] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2025-07-05 21:53:10.420 [main] INFO  [,] com.lucky.Main - Starting Main using Java 17.0.1 with PID 11868 (D:\lucky-apiserver-v2\target\classes started by Administrator in D:\lucky-apiserver-v2)
+2025-07-05 21:53:10.424 [main] INFO  [,] com.lucky.Main - The following 1 profile is active: "ss"
+2025-07-05 21:53:11.191 [main] INFO  [,] o.s.d.r.config.RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
+2025-07-05 21:53:11.194 [main] INFO  [,] o.s.d.r.config.RepositoryConfigurationDelegate - Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2025-07-05 21:53:11.250 [main] INFO  [,] o.s.d.r.config.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 40 ms. Found 0 Redis repository interfaces.
+2025-07-05 21:53:11.881 [main] INFO  [,] o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat initialized with port 8333 (http)
+2025-07-05 21:53:11.897 [main] INFO  [,] org.apache.catalina.core.StandardService - Starting service [Tomcat]
+2025-07-05 21:53:11.898 [main] INFO  [,] org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.19]
+2025-07-05 21:53:11.961 [main] INFO  [,] o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2025-07-05 21:53:11.962 [main] INFO  [,] o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 1482 ms
+2025-07-05 21:53:13.152 [main] INFO  [,] org.redisson.Version - Redisson 3.21.3
+2025-07-05 21:53:13.310 [redisson-netty-4-4] INFO  [,] o.r.connection.pool.MasterPubSubConnectionPool - 1 connections initialized for 127.0.0.1/127.0.0.1:6379
+2025-07-05 21:53:13.373 [redisson-netty-4-19] INFO  [,] org.redisson.connection.pool.MasterConnectionPool - 24 connections initialized for 127.0.0.1/127.0.0.1:6379
+2025-07-05 21:53:13.785 [main] INFO  [,] o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat started on port 8333 (http) with context path ''
+2025-07-05 21:53:13.794 [main] INFO  [,] com.lucky.Main - Started Main in 3.761 seconds (process running for 4.37)
+2025-07-05 21:53:13.797 [main] INFO  [,] com.lucky.Main - lucky-apiServer-boot-successful
+2025-07-05 21:53:35.081 [http-nio-8333-exec-2] INFO  [,] o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-07-05 21:53:35.081 [http-nio-8333-exec-2] INFO  [,] org.springframework.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2025-07-05 21:53:35.082 [http-nio-8333-exec-2] INFO  [,] org.springframework.web.servlet.DispatcherServlet - Completed initialization in 1 ms
+2025-07-05 21:53:35.236 [http-nio-8333-exec-2] ERROR [,] com.lucky.api.global.ExceptionHandle - JSON parse error: Cannot deserialize value of type `java.time.LocalDateTime` from String "2025-01-01 00:00:00": Failed to deserialize java.time.LocalDateTime: (java.time.format.DateTimeParseException) Text '2025-01-01 00:00:00' could not be parsed at index 10
+org.springframework.http.converter.HttpMessageNotReadableException: JSON parse error: Cannot deserialize value of type `java.time.LocalDateTime` from String "2025-01-01 00:00:00": Failed to deserialize java.time.LocalDateTime: (java.time.format.DateTimeParseException) Text '2025-01-01 00:00:00' could not be parsed at index 10
+	at org.springframework.http.converter.json.AbstractJackson2HttpMessageConverter.readJavaType(AbstractJackson2HttpMessageConverter.java:406)
+	at org.springframework.http.converter.json.AbstractJackson2HttpMessageConverter.read(AbstractJackson2HttpMessageConverter.java:354)
+	at org.springframework.web.servlet.mvc.method.annotation.AbstractMessageConverterMethodArgumentResolver.readWithMessageConverters(AbstractMessageConverterMethodArgumentResolver.java:184)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestResponseBodyMethodProcessor.readWithMessageConverters(RequestResponseBodyMethodProcessor.java:159)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestResponseBodyMethodProcessor.resolveArgument(RequestResponseBodyMethodProcessor.java:134)
+	at org.springframework.web.method.support.HandlerMethodArgumentResolverComposite.resolveArgument(HandlerMethodArgumentResolverComposite.java:122)
+	at org.springframework.web.method.support.InvocableHandlerMethod.getMethodArgumentValues(InvocableHandlerMethod.java:228)
+	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:182)
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:118)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:920)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:830)
+	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1089)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:979)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1014)
+	at org.springframework.web.servlet.FrameworkServlet.doPost(FrameworkServlet.java:914)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:590)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:885)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:658)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:205)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:51)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:167)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:482)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:115)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:344)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:391)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:896)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1744)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1191)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:63)
+	at java.base/java.lang.Thread.run(Thread.java:833)
+Caused by: com.fasterxml.jackson.databind.exc.InvalidFormatException: Cannot deserialize value of type `java.time.LocalDateTime` from String "2025-01-01 00:00:00": Failed to deserialize java.time.LocalDateTime: (java.time.format.DateTimeParseException) Text '2025-01-01 00:00:00' could not be parsed at index 10
+ at [Source: (org.springframework.util.StreamUtils$NonClosingInputStream); line: 2, column: 18] (through reference chain: com.lucky.api.controller.admin.dto.TimeDTO["startTime"])
+	at com.fasterxml.jackson.databind.exc.InvalidFormatException.from(InvalidFormatException.java:67)
+	at com.fasterxml.jackson.databind.DeserializationContext.weirdStringException(DeserializationContext.java:2002)
+	at com.fasterxml.jackson.databind.DeserializationContext.handleWeirdStringValue(DeserializationContext.java:1230)
+	at com.fasterxml.jackson.datatype.jsr310.deser.JSR310DeserializerBase._handleDateTimeException(JSR310DeserializerBase.java:176)
+	at com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer._fromString(LocalDateTimeDeserializer.java:179)
+	at com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer.deserialize(LocalDateTimeDeserializer.java:81)
+	at com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer.deserialize(LocalDateTimeDeserializer.java:40)
+	at com.fasterxml.jackson.databind.deser.impl.MethodProperty.deserializeAndSet(MethodProperty.java:129)
+	at com.fasterxml.jackson.databind.deser.BeanDeserializer.deserializeFromObject(BeanDeserializer.java:392)
+	at com.fasterxml.jackson.databind.deser.BeanDeserializer.deserialize(BeanDeserializer.java:185)
+	at com.fasterxml.jackson.databind.deser.DefaultDeserializationContext.readRootValue(DefaultDeserializationContext.java:323)
+	at com.fasterxml.jackson.databind.ObjectReader._bindAndClose(ObjectReader.java:2105)
+	at com.fasterxml.jackson.databind.ObjectReader.readValue(ObjectReader.java:1481)
+	at org.springframework.http.converter.json.AbstractJackson2HttpMessageConverter.readJavaType(AbstractJackson2HttpMessageConverter.java:395)
+	... 51 common frames omitted
+Caused by: java.time.format.DateTimeParseException: Text '2025-01-01 00:00:00' could not be parsed at index 10
+	at java.base/java.time.format.DateTimeFormatter.parseResolved0(DateTimeFormatter.java:2052)
+	at java.base/java.time.format.DateTimeFormatter.parse(DateTimeFormatter.java:1954)
+	at java.base/java.time.LocalDateTime.parse(LocalDateTime.java:494)
+	at com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer._fromString(LocalDateTimeDeserializer.java:177)
+	... 60 common frames omitted
+2025-07-05 21:56:05.016 [main] INFO  [,] com.lucky.Main - Starting Main using Java 17.0.1 with PID 4628 (D:\lucky-apiserver-v2\target\classes started by Administrator in D:\lucky-apiserver-v2)
+2025-07-05 21:56:05.021 [main] INFO  [,] com.lucky.Main - The following 1 profile is active: "ss"
+2025-07-05 21:56:05.772 [main] INFO  [,] o.s.d.r.config.RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
+2025-07-05 21:56:05.780 [main] INFO  [,] o.s.d.r.config.RepositoryConfigurationDelegate - Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2025-07-05 21:56:05.825 [main] INFO  [,] o.s.d.r.config.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 30 ms. Found 0 Redis repository interfaces.
+2025-07-05 21:56:06.463 [main] INFO  [,] o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat initialized with port 8333 (http)
+2025-07-05 21:56:06.472 [main] INFO  [,] org.apache.catalina.core.StandardService - Starting service [Tomcat]
+2025-07-05 21:56:06.472 [main] INFO  [,] org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.19]
+2025-07-05 21:56:06.531 [main] INFO  [,] o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2025-07-05 21:56:06.532 [main] INFO  [,] o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 1460 ms
+2025-07-05 21:56:07.793 [main] INFO  [,] org.redisson.Version - Redisson 3.21.3
+2025-07-05 21:56:07.962 [redisson-netty-4-4] INFO  [,] o.r.connection.pool.MasterPubSubConnectionPool - 1 connections initialized for 127.0.0.1/127.0.0.1:6379
+2025-07-05 21:56:08.074 [redisson-netty-4-19] INFO  [,] org.redisson.connection.pool.MasterConnectionPool - 24 connections initialized for 127.0.0.1/127.0.0.1:6379
+2025-07-05 21:56:08.548 [main] INFO  [,] o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat started on port 8333 (http) with context path ''
+2025-07-05 21:56:08.557 [main] INFO  [,] com.lucky.Main - Started Main in 3.923 seconds (process running for 4.509)
+2025-07-05 21:56:08.560 [main] INFO  [,] com.lucky.Main - lucky-apiServer-boot-successful
+2025-07-05 21:56:33.700 [http-nio-8333-exec-1] INFO  [,] o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-07-05 21:56:33.700 [http-nio-8333-exec-1] INFO  [,] org.springframework.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2025-07-05 21:56:33.701 [http-nio-8333-exec-1] INFO  [,] org.springframework.web.servlet.DispatcherServlet - Completed initialization in 1 ms
+2025-07-05 21:56:34.020 [http-nio-8333-exec-1] INFO  [,] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2025-07-05 21:56:37.990 [http-nio-8333-exec-1] INFO  [,] com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@6813a639
+2025-07-05 21:56:37.999 [http-nio-8333-exec-1] INFO  [,] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2025-07-05 21:59:50.741 [SpringApplicationShutdownHook] INFO  [,] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2025-07-05 21:59:51.326 [SpringApplicationShutdownHook] INFO  [,] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2025-07-05 21:59:55.247 [main] INFO  [,] com.lucky.Main - Starting Main using Java 17.0.1 with PID 12308 (D:\lucky-apiserver-v2\target\classes started by Administrator in D:\lucky-apiserver-v2)
+2025-07-05 21:59:55.250 [main] INFO  [,] com.lucky.Main - The following 1 profile is active: "ss"
+2025-07-05 21:59:56.040 [main] INFO  [,] o.s.d.r.config.RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
+2025-07-05 21:59:56.043 [main] INFO  [,] o.s.d.r.config.RepositoryConfigurationDelegate - Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2025-07-05 21:59:56.097 [main] INFO  [,] o.s.d.r.config.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 31 ms. Found 0 Redis repository interfaces.
+2025-07-05 21:59:56.740 [main] INFO  [,] o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat initialized with port 8333 (http)
+2025-07-05 21:59:56.749 [main] INFO  [,] org.apache.catalina.core.StandardService - Starting service [Tomcat]
+2025-07-05 21:59:56.749 [main] INFO  [,] org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.19]
+2025-07-05 21:59:56.802 [main] INFO  [,] o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2025-07-05 21:59:56.802 [main] INFO  [,] o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 1500 ms
+2025-07-05 21:59:58.003 [main] INFO  [,] org.redisson.Version - Redisson 3.21.3
+2025-07-05 21:59:58.157 [redisson-netty-4-4] INFO  [,] o.r.connection.pool.MasterPubSubConnectionPool - 1 connections initialized for 127.0.0.1/127.0.0.1:6379
+2025-07-05 21:59:58.216 [redisson-netty-4-19] INFO  [,] org.redisson.connection.pool.MasterConnectionPool - 24 connections initialized for 127.0.0.1/127.0.0.1:6379
+2025-07-05 21:59:58.614 [main] INFO  [,] o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat started on port 8333 (http) with context path ''
+2025-07-05 21:59:58.624 [main] INFO  [,] com.lucky.Main - Started Main in 3.766 seconds (process running for 4.357)
+2025-07-05 21:59:58.628 [main] INFO  [,] com.lucky.Main - lucky-apiServer-boot-successful
+2025-07-05 22:00:05.699 [http-nio-8333-exec-2] INFO  [,] o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-07-05 22:00:05.700 [http-nio-8333-exec-2] INFO  [,] org.springframework.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2025-07-05 22:00:05.701 [http-nio-8333-exec-2] INFO  [,] org.springframework.web.servlet.DispatcherServlet - Completed initialization in 1 ms
+2025-07-05 22:00:09.254 [http-nio-8333-exec-2] INFO  [,] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2025-07-05 22:00:10.080 [http-nio-8333-exec-2] INFO  [,] com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@543eb1ba
+2025-07-05 22:00:10.083 [http-nio-8333-exec-2] INFO  [,] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2025-07-05 22:01:06.272 [SpringApplicationShutdownHook] INFO  [,] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2025-07-05 22:01:06.822 [SpringApplicationShutdownHook] INFO  [,] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2025-07-05 22:01:10.400 [main] INFO  [,] com.lucky.Main - Starting Main using Java 17.0.1 with PID 1368 (D:\lucky-apiserver-v2\target\classes started by Administrator in D:\lucky-apiserver-v2)
+2025-07-05 22:01:10.402 [main] INFO  [,] com.lucky.Main - The following 1 profile is active: "ss"
+2025-07-05 22:01:11.218 [main] INFO  [,] o.s.d.r.config.RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
+2025-07-05 22:01:11.221 [main] INFO  [,] o.s.d.r.config.RepositoryConfigurationDelegate - Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2025-07-05 22:01:11.265 [main] INFO  [,] o.s.d.r.config.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 34 ms. Found 0 Redis repository interfaces.
+2025-07-05 22:01:11.910 [main] INFO  [,] o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat initialized with port 8333 (http)
+2025-07-05 22:01:11.920 [main] INFO  [,] org.apache.catalina.core.StandardService - Starting service [Tomcat]
+2025-07-05 22:01:11.920 [main] INFO  [,] org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.19]
+2025-07-05 22:01:11.978 [main] INFO  [,] o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2025-07-05 22:01:11.978 [main] INFO  [,] o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 1530 ms
+2025-07-05 22:01:13.134 [main] INFO  [,] org.redisson.Version - Redisson 3.21.3
+2025-07-05 22:01:13.300 [redisson-netty-4-4] INFO  [,] o.r.connection.pool.MasterPubSubConnectionPool - 1 connections initialized for 127.0.0.1/127.0.0.1:6379
+2025-07-05 22:01:13.363 [redisson-netty-4-19] INFO  [,] org.redisson.connection.pool.MasterConnectionPool - 24 connections initialized for 127.0.0.1/127.0.0.1:6379
+2025-07-05 22:01:13.778 [main] INFO  [,] o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat started on port 8333 (http) with context path ''
+2025-07-05 22:01:13.787 [main] INFO  [,] com.lucky.Main - Started Main in 3.745 seconds (process running for 4.319)
+2025-07-05 22:01:13.791 [main] INFO  [,] com.lucky.Main - lucky-apiServer-boot-successful
+2025-07-05 22:01:26.221 [http-nio-8333-exec-2] INFO  [,] o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-07-05 22:01:26.222 [http-nio-8333-exec-2] INFO  [,] org.springframework.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2025-07-05 22:01:26.223 [http-nio-8333-exec-2] INFO  [,] org.springframework.web.servlet.DispatcherServlet - Completed initialization in 1 ms
+2025-07-05 22:01:26.469 [http-nio-8333-exec-2] INFO  [,] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2025-07-05 22:01:27.292 [http-nio-8333-exec-2] INFO  [,] com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@49f81141
+2025-07-05 22:01:27.295 [http-nio-8333-exec-2] INFO  [,] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2025-07-05 22:02:32.814 [http-nio-8333-exec-4] WARN  [,] com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection com.mysql.cj.jdbc.ConnectionImpl@49f81141 (No operations allowed after connection closed.). Possibly consider using a shorter maxLifetime value.
+2025-07-05 22:08:58.699 [SpringApplicationShutdownHook] INFO  [,] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2025-07-05 22:08:59.260 [SpringApplicationShutdownHook] INFO  [,] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2025-07-05 22:09:03.247 [main] INFO  [,] com.lucky.Main - Starting Main using Java 17.0.1 with PID 3964 (D:\lucky-apiserver-v2\target\classes started by Administrator in D:\lucky-apiserver-v2)
+2025-07-05 22:09:03.250 [main] INFO  [,] com.lucky.Main - The following 1 profile is active: "ss"
+2025-07-05 22:09:03.983 [main] INFO  [,] o.s.d.r.config.RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
+2025-07-05 22:09:03.985 [main] INFO  [,] o.s.d.r.config.RepositoryConfigurationDelegate - Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2025-07-05 22:09:04.037 [main] INFO  [,] o.s.d.r.config.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 38 ms. Found 0 Redis repository interfaces.
+2025-07-05 22:09:04.672 [main] INFO  [,] o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat initialized with port 8333 (http)
+2025-07-05 22:09:04.681 [main] INFO  [,] org.apache.catalina.core.StandardService - Starting service [Tomcat]
+2025-07-05 22:09:04.681 [main] INFO  [,] org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.19]
+2025-07-05 22:09:04.741 [main] INFO  [,] o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2025-07-05 22:09:04.742 [main] INFO  [,] o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 1448 ms
+2025-07-05 22:09:05.906 [main] INFO  [,] org.redisson.Version - Redisson 3.21.3
+2025-07-05 22:09:06.064 [redisson-netty-4-4] INFO  [,] o.r.connection.pool.MasterPubSubConnectionPool - 1 connections initialized for 127.0.0.1/127.0.0.1:6379
+2025-07-05 22:09:06.140 [redisson-netty-4-19] INFO  [,] org.redisson.connection.pool.MasterConnectionPool - 24 connections initialized for 127.0.0.1/127.0.0.1:6379
+2025-07-05 22:09:06.549 [main] INFO  [,] o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat started on port 8333 (http) with context path ''
+2025-07-05 22:09:06.557 [main] INFO  [,] com.lucky.Main - Started Main in 3.659 seconds (process running for 4.23)
+2025-07-05 22:09:06.561 [main] INFO  [,] com.lucky.Main - lucky-apiServer-boot-successful
+2025-07-05 22:10:43.650 [main] INFO  [,] com.lucky.Main - Starting Main using Java 17.0.1 with PID 4528 (D:\lucky-apiserver-v2\target\classes started by Administrator in D:\lucky-apiserver-v2)
+2025-07-05 22:10:43.653 [main] INFO  [,] com.lucky.Main - The following 1 profile is active: "ss"
+2025-07-05 22:10:44.544 [main] INFO  [,] o.s.d.r.config.RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
+2025-07-05 22:10:44.555 [main] INFO  [,] o.s.d.r.config.RepositoryConfigurationDelegate - Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2025-07-05 22:10:44.605 [main] INFO  [,] o.s.d.r.config.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 34 ms. Found 0 Redis repository interfaces.
+2025-07-05 22:10:45.279 [main] INFO  [,] o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat initialized with port 8333 (http)
+2025-07-05 22:10:45.289 [main] INFO  [,] org.apache.catalina.core.StandardService - Starting service [Tomcat]
+2025-07-05 22:10:45.289 [main] INFO  [,] org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.19]
+2025-07-05 22:10:45.348 [main] INFO  [,] o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2025-07-05 22:10:45.348 [main] INFO  [,] o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 1641 ms
+2025-07-05 22:10:46.614 [main] INFO  [,] org.redisson.Version - Redisson 3.21.3
+2025-07-05 22:10:46.777 [redisson-netty-4-4] INFO  [,] o.r.connection.pool.MasterPubSubConnectionPool - 1 connections initialized for 127.0.0.1/127.0.0.1:6379
+2025-07-05 22:10:46.842 [redisson-netty-4-19] INFO  [,] org.redisson.connection.pool.MasterConnectionPool - 24 connections initialized for 127.0.0.1/127.0.0.1:6379
+2025-07-05 22:10:47.371 [main] INFO  [,] o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat started on port 8333 (http) with context path ''
+2025-07-05 22:10:47.379 [main] INFO  [,] com.lucky.Main - Started Main in 4.126 seconds (process running for 4.725)
+2025-07-05 22:10:47.384 [main] INFO  [,] com.lucky.Main - lucky-apiServer-boot-successful

@@ -2,6 +2,10 @@ package com.lucky.domain.entity;
 
 import lombok.Data;
 
+import java.util.ArrayList;
+import java.util.Objects;
+import java.util.stream.Collectors;
+
 /**
  * 收货地址信息
  */
@@ -43,4 +47,20 @@ public class DeliveryAddressEntity {
      * 是否默认
      */
     private Boolean isDefault;
+
+    public static String getAddressStr(DeliveryAddressEntity entity) {
+        if (Objects.isNull(entity))
+            return null;
+
+        ArrayList<String> strings = new ArrayList<>();
+        strings.add(entity.getProvince());
+        strings.add(entity.getCity());
+        strings.add(entity.getArea());
+        strings.add(entity.getAddress());
+        return strings.stream()
+                .filter(Objects::nonNull)
+                .collect(Collectors.joining(""));
+
+
+    }
 }

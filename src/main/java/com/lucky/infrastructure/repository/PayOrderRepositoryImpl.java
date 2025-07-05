@@ -45,8 +45,8 @@ public class PayOrderRepositoryImpl extends ServiceImpl<PayOrderMapper, PayOrder
 		var wrapper = Wrappers.lambdaQuery(PayOrderPO.class)
 				.eq(Objects.nonNull(entity.getPayStatus()), PayOrderPO::getPayStatus,entity.getPayStatus())
 
-				.ge(entity.getPayTime() != null, PayOrderPO::getPayTime, startTime)
-				.le(entity.getPayTime() != null, PayOrderPO::getPayTime, endTime);
+				.ge(startTime != null, PayOrderPO::getPayTime, startTime)
+				.le(endTime != null, PayOrderPO::getPayTime, endTime);
 
 		return this.list(wrapper)
 				.stream()

@@ -21,6 +21,10 @@ public class BannerEntity {
 	 */
 	private String image;
 	/**
+	 * 排序
+	 */
+	private  Integer sort;
+	/**
 	 * 启用禁用
 	 */
 	private Boolean enabled;

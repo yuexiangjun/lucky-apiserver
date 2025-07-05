@@ -4,10 +4,7 @@ import cn.hutool.core.collection.CollectionUtil;
 import com.lucky.domain.LogisticsOrderService;
 import com.lucky.domain.PrizeInfoService;
 import com.lucky.domain.WechatUserService;
-import com.lucky.domain.entity.LogisticsOrderEntity;
-import com.lucky.domain.entity.LogisticsOrderPrizeEntity;
-import com.lucky.domain.entity.PrizeInfoEntity;
-import com.lucky.domain.entity.WechatUserEntity;
+import com.lucky.domain.entity.*;
 import com.lucky.domain.valueobject.LogisticsOrderInfo;
 import org.springframework.stereotype.Component;
 
@@ -97,7 +94,7 @@ public class LogisticsOrderServer {
 							.logisticsCompany(s.getLogisticsCompany())
 							.createTime(s.getCreateTime())
 							.goods(prizeInfoEntities)
-							.address(s.getAddress().getAddress())
+							.address(DeliveryAddressEntity.getAddressStr(s.getAddress()))
 							.phone(wechatUserMap.getOrDefault(s.getWechatUserId(), new WechatUserEntity()).getPhone())
 							.build();
 				}).collect(Collectors.toList());

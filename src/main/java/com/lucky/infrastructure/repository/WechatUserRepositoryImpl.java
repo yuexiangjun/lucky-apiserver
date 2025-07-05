@@ -18,90 +18,88 @@ import java.util.stream.Collectors;
 @Component
 public class WechatUserRepositoryImpl extends ServiceImpl<WechatUserMapper, WechatUserPO> implements WechatUserRepository {
 
-	@Override
-	public WechatUserEntity getByPhone(String phone) {
+    @Override
+    public WechatUserEntity getByPhone(String phone) {
 
-		var wrapper = Wrappers.lambdaQuery(WechatUserPO.class)
-				.eq(WechatUserPO::getPhone, phone);
+        var wrapper = Wrappers.lambdaQuery(WechatUserPO.class)
+                .eq(WechatUserPO::getPhone, phone);
 
-		var one = this.getOne(wrapper);
+        var one = this.getOne(wrapper);
 
-		return WechatUserPO.toEntity(one);
+        return WechatUserPO.toEntity(one);
 
-	}
+    }
 
-	@Override
-	public Long saveOrUpdate(WechatUserEntity entity) {
+    @Override
+    public Long saveOrUpdate(WechatUserEntity entity) {
 
-		var po = WechatUserPO.getInstance(entity);
+        var po = WechatUserPO.getInstance(entity);
 
-		if (Objects.isNull(po))
-			return null;
+        if (Objects.isNull(po))
+            return null;
 
-		this.saveOrUpdate(po);
+        this.saveOrUpdate(po);
 
-		return po.getId();
-	}
+        return po.getId();
+    }
 
-	@Override
-	public List<WechatUserEntity> list(WechatUserEntity entity) {
+    @Override
+    public List<WechatUserEntity> list(WechatUserEntity entity) {
 
-		var wrapper = Wrappers.lambdaQuery(WechatUserPO.class)
-				.eq(Strings.isNotBlank(entity.getPhone()), WechatUserPO::getPhone, entity.getPhone())
-				.eq(Strings.isNotBlank(entity.getOpenid()), WechatUserPO::getOpenid, entity.getOpenid())
-				.eq(Strings.isNotBlank(entity.getName()), WechatUserPO::getName, entity.getName())
-				.eq(Objects.nonNull(entity.getOwnerId()), WechatUserPO::getOwnerId, entity.getOwnerId())
-				.orderByDesc(WechatUserPO::getCreateTime);
+        var wrapper = Wrappers.lambdaQuery(WechatUserPO.class)
+                .like(Strings.isNotBlank(entity.getPhone()), WechatUserPO::getPhone, entity.getPhone())
+                .eq(Strings.isNotBlank(entity.getOpenid()), WechatUserPO::getOpenid, entity.getOpenid())
+                .like(Strings.isNotBlank(entity.getName()), WechatUserPO::getName, entity.getName())
+                .eq(Objects.nonNull(entity.getOwnerId()), WechatUserPO::getOwnerId, entity.getOwnerId())
+                .orderByDesc(WechatUserPO::getCreateTime);
 
-		return this.list(wrapper)
-				.stream()
-				.map(WechatUserPO::toEntity)
-				.collect(Collectors.toList());
+        return this.list(wrapper)
+                .stream()
+                .map(WechatUserPO::toEntity)
+                .collect(Collectors.toList());
 
-	}
+    }
 
-	@Override
-	public WechatUserEntity getById(Long id) {
-		var wrapper = Wrappers.lambdaQuery(WechatUserPO.class)
-				.eq(WechatUserPO::getId, id);
-		var one = this.getOne(wrapper);
+    @Override
+    public WechatUserEntity getById(Long id) {
+        var wrapper = Wrappers.lambdaQuery(WechatUserPO.class)
+                .eq(WechatUserPO::getId, id);
+        var one = this.getOne(wrapper);
 
-		return WechatUserPO.toEntity(one);
-	}
+        return WechatUserPO.toEntity(one);
+    }
 
-	@Override
-	public WechatUserEntity getByOpenId(String openId) {
-		var wrapper = Wrappers.lambdaQuery(WechatUserPO.class)
-				.eq(WechatUserPO::getOpenid, openId);
+    @Override
+    public WechatUserEntity getByOpenId(String openId) {
+        var wrapper = Wrappers.lambdaQuery(WechatUserPO.class)
+                .eq(WechatUserPO::getOpenid, openId);
 
-		var one = this.getOne(wrapper);
+        var one = this.getOne(wrapper);
 
-		return WechatUserPO.toEntity(one);
-	}
+        return WechatUserPO.toEntity(one);
+    }
 
-	@Override
-	public List<WechatUserEntity> getByIds(List<Long> wechatUserIds) {
-		if (CollectionUtils.isEmpty(wechatUserIds))
-			return List.of();
-		var wrapper = Wrappers.lambdaQuery(WechatUserPO.class)
-				.in(WechatUserPO::getId, wechatUserIds);
-		return this.list(wrapper)
-				.stream()
-				.map(WechatUserPO::toEntity)
-				.collect(Collectors.toList());
-	}
+    @Override
+    public List<WechatUserEntity> getByIds(List<Long> wechatUserIds) {
+        if (CollectionUtils.isEmpty(wechatUserIds))
+            return List.of();
+        var wrapper = Wrappers.lambdaQuery(WechatUserPO.class)
+                .in(WechatUserPO::getId, wechatUserIds);
+        return this.list(wrapper)
+                .stream()
+                .map(WechatUserPO::toEntity)
+                .collect(Collectors.toList());
+    }
 
-	@Override
-	public WechatUserEntity getWechatUserEntity(WechatUserEntity wechatUserEntity) {
-		var wrapper = Wrappers.lambdaQuery(WechatUserPO.class)
-				.eq(WechatUserPO::getOpenid, wechatUserEntity.getOpenid())
-				.eq(WechatUserPO::getPhone, wechatUserEntity.getPhone())
-				.eq(WechatUserPO::getName, wechatUserEntity.getName());
-		var one = this.getOne(wrapper, false);
-		return WechatUserPO.toEntity(one);
-	}
-
-
+    @Override
+    public WechatUserEntity getWechatUserEntity(WechatUserEntity wechatUserEntity) {
+        var wrapper = Wrappers.lambdaQuery(WechatUserPO.class)
+                .eq(WechatUserPO::getOpenid, wechatUserEntity.getOpenid())
+                .eq(WechatUserPO::getPhone, wechatUserEntity.getPhone())
+                .eq(WechatUserPO::getName, wechatUserEntity.getName());
+        var one = this.getOne(wrapper, false);
+        return WechatUserPO.toEntity(one);
+    }
 
 
     @Override
@@ -110,9 +108,9 @@ public class WechatUserRepositoryImpl extends ServiceImpl<WechatUserMapper, Wech
                 .eq(Strings.isNotBlank(entity.getPhone()), WechatUserPO::getPhone, entity.getPhone())
                 .eq(Strings.isNotBlank(entity.getOpenid()), WechatUserPO::getOpenid, entity.getOpenid())
                 .eq(Strings.isNotBlank(entity.getName()), WechatUserPO::getName, entity.getName())
-                .ge(entity.getCreateTime() != null, WechatUserPO::getCreateTime, startTime)
-                .le(entity.getCreateTime() != null, WechatUserPO::getCreateTime, endTime);
 
+                .ge(startTime != null, WechatUserPO::getCreateTime, startTime)
+                .le(endTime != null, WechatUserPO::getCreateTime, endTime);
         return this.list(wrapper)
                 .stream()
                 .map(WechatUserPO::toEntity)

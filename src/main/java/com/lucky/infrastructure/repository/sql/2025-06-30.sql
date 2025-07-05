@@ -29,3 +29,5 @@ CREATE TABLE `banner` (
   `update_time` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
 )COMMENT = 'banner';
+
+ALTER TABLE `lucky-star`.`banner` ADD COLUMN `sort` int(20) NULL DEFAULT '0' COMMENT '排序' ;

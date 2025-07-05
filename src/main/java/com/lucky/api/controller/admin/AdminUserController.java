@@ -106,11 +106,11 @@ public class AdminUserController extends BaseController {
 
 
 	/**
-	 * 用户列表
+	 * 微信用户-列表
 	 */
-	@PutMapping("api/admin/wechat-user")
+	@PostMapping("api/admin/wechat-user")
 	@ResponseFormat
-	public List<WechatUserListVO> list(WechatUserFindListDTO dto) {
+	public List<WechatUserListVO> list(@RequestBody  WechatUserFindListDTO dto) {
 
 		var wechatUserEntity = WechatUserEntity.builder()
 				.phone(dto.getPhone())
@@ -124,11 +124,11 @@ public class AdminUserController extends BaseController {
 	}
 
 	/**
-	 * 增加用户余额
+	 *  微信用户-增加用户余额
 	 */
 	@PutMapping("api/admin/wechat-user/balance")
 	@ResponseFormat
-	public void balanceAdd(BalanceDTO dto) {
+	public void balanceAdd(@RequestBody BalanceDTO dto) {
 		wechatUserServer.balanceAdd(dto.getWechatUserId(), dto.getMoney(), this.getAdminUserId());
 	}
 

@@ -28,7 +28,9 @@ public class BannerRepositoryImpl extends ServiceImpl<BannerMapper, BannerPO> im
 	public List<BannerEntity> getBanner(BannerEntity entity) {
 
 		var  wrapper= Wrappers.lambdaQuery(BannerPO.class)
-				.eq(Objects.nonNull(entity.getEnabled()),BannerPO::getEnabled, entity.getEnabled());
+				.eq(Objects.nonNull(entity.getEnabled()),BannerPO::getEnabled, entity.getEnabled())
+				.orderByAsc(BannerPO::getSort)
+				.orderByDesc(BannerPO::getCreateTime);
 
 		return this.list(wrapper)
 				.stream()
