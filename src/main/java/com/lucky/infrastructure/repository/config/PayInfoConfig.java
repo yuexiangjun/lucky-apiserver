@@ -22,7 +22,7 @@ public class PayInfoConfig {
     //api秘钥
     private String apikey;
     //回调接口地址
-    private String notifyurl="/wechat/pay/callback";
+    private String notifyurl;
     //证书地址
     private String keypath;
     private String notifyhost;

@@ -97,25 +97,32 @@ public class WechatServer {
 		//获取openId
 		var code2Session = this.code2Session(jsCode);
 
-		var entity = WechatUserEntity
-				.builder()
-				.openid(code2Session.getOpenid())
-				.phone(phone.getPurePhoneNumber())
-				.createTime(LocalDateTime.now())
-				.enabled(true)
-				.ownerId(ownerId)
-				.build();
-		entity.setLastLoginTime(LocalDateTime.now());
-		var id = wechatUserServer.saveOrUpdate(entity);
+		//根据手机号码查询
+		var entity = wechatUserServer.getByPhone(phone.getPurePhoneNumber());
+		if (Objects.isNull(entity)) {
 
-		entity.setId(id);
+			entity = WechatUserEntity
+					.builder()
+					.openid(code2Session.getOpenid())
+					.phone(phone.getPurePhoneNumber())
+					.createTime(LocalDateTime.now())
+					.enabled(true)
+					.ownerId(ownerId)
+					.build();
+			entity.setLastLoginTime(LocalDateTime.now());
+
+			var id = wechatUserServer.saveOrUpdate(entity);
+
+			entity.setId(id);
+		}
+
 
 		String token = getToken(entity);
 
 		return Code2Session.builder()
 				.authorization(token)
 				.openid(code2Session.getOpenid())
-				.wechatUserId(id)
+				.wechatUserId(entity.getId())
 				.build();
 
 

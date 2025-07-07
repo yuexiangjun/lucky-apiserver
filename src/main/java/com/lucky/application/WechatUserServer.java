@@ -159,4 +159,12 @@ public class WechatUserServer {
 		wechatUserService.balanceAdd(wechatUserId, money, userId);
 	}
 
+	/**
+	 * 更据手机号码获取用户
+	 */
+	public WechatUserEntity getByPhone(String phone) {
+		if (Strings.isBlank(phone))
+			return null;
+		return wechatUserService.getByPhone(phone);
+	}
 }

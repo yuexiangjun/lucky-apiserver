@@ -78,7 +78,7 @@ public class PayOrderPO {
 	/**
 	 * 三方支付id
 	 */
-	private String ThirdPayId;
+	private String thirdPayId;
 	/**
 	 * 商品id
 	 */

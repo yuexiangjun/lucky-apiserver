@@ -9,7 +9,6 @@ import com.lucky.infrastructure.repository.config.PayInfoConfig;
 import com.lucky.infrastructure.repository.utils.AesUtil;
 import com.wechat.pay.java.core.Config;
 import com.wechat.pay.java.core.RSAAutoCertificateConfig;
-import com.wechat.pay.java.core.util.PemUtil;
 import com.wechat.pay.java.service.payments.jsapi.JsapiServiceExtension;
 import com.wechat.pay.java.service.payments.jsapi.model.Amount;
 import com.wechat.pay.java.service.payments.jsapi.model.Payer;
@@ -21,128 +20,126 @@ import org.springframework.stereotype.Component;
 
 import java.io.InputStream;
 import java.math.BigDecimal;
-import java.net.URL;
-import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 
 @Component
 @Slf4j
 public class WeChatPayRepositoryImpl implements WeChatPayRepository {
-    private final PayInfoConfig payInfoConfig;
+	private final PayInfoConfig payInfoConfig;
 
-    public WeChatPayRepositoryImpl(PayInfoConfig payInfoConfig) {
-        this.payInfoConfig = payInfoConfig;
-    }
+	public WeChatPayRepositoryImpl(PayInfoConfig payInfoConfig) {
+		this.payInfoConfig = payInfoConfig;
+	}
 
-    @Override
-    public PayInfo pay(PayOrderPram payOrderPram) {
-        var service = this.getJsapiServiceExtension();
+	@Override
+	public PayInfo pay(PayOrderPram payOrderPram) {
+		var service = this.getJsapiServiceExtension();
 
-        var request = new PrepayRequest();
-        var amount = new Amount();
+		var request = new PrepayRequest();
+		var amount = new Amount();
 
-        var total = payOrderPram.getPayMoney()
-                .multiply(BigDecimal.valueOf(100))
-                .setScale(0, BigDecimal.ROUND_HALF_UP)
-                .toBigInteger().intValue();
+		var total = payOrderPram.getPayMoney()
+				.multiply(BigDecimal.valueOf(100))
+				.setScale(0, BigDecimal.ROUND_HALF_UP)
+				.toBigInteger().intValue();
 
-        amount.setTotal(total);
-        request.setAmount(amount);
-        request.setAppid(payInfoConfig.getAppid());
-        Payer payer = new Payer();
-        payer.setOpenid(payOrderPram.getOpenId());
-        request.setPayer(payer);
-        request.setMchid(payInfoConfig.getMachid());
-        request.setDescription(payOrderPram.getPayDesc());
-        request.setNotifyUrl(payInfoConfig.getNotifyhost().concat(payInfoConfig.getNotifyurl()));
-        request.setOutTradeNo(String.valueOf(payOrderPram.getPayOrderId()));
-        // 调用下单方法，得到应答
-        var prepayWithRequestPaymentResponse = service.prepayWithRequestPayment(request);
+		amount.setTotal(total);
+		request.setAmount(amount);
+		request.setAppid(payInfoConfig.getAppid());
+		Payer payer = new Payer();
+		payer.setOpenid(payOrderPram.getOpenId());
+		request.setPayer(payer);
+		request.setMchid(payInfoConfig.getMachid());
+		request.setDescription(payOrderPram.getPayDesc());
+		String concat = payInfoConfig.getNotifyhost().concat(payInfoConfig.getNotifyurl());
+		log.info("回调地址：{}", concat);
+		request.setNotifyUrl(concat);
+		request.setOutTradeNo(String.valueOf(payOrderPram.getPayOrderId()));
+		// 调用下单方法，得到应答
+		var prepayWithRequestPaymentResponse = service.prepayWithRequestPayment(request);
 
-        var response = JSONObject.parseObject(JSONObject.toJSONString(prepayWithRequestPaymentResponse));
+		var response = JSONObject.parseObject(JSONObject.toJSONString(prepayWithRequestPaymentResponse));
 
-        return PayInfo.builder()
-                .payParams(response)
-                .payOrderId(payOrderPram.getPayOrderId())
-                .build();
+		return PayInfo.builder()
+				.payParams(response)
+				.payOrderId(payOrderPram.getPayOrderId())
+				.build();
 
-    }
+	}
 
-    @SneakyThrows
-    private JsapiServiceExtension getJsapiServiceExtension() {
-        //构建微信支付参数
+	@SneakyThrows
+	private JsapiServiceExtension getJsapiServiceExtension() {
+		//构建微信支付参数
 
-        InputStream inputStream =getClass().getClassLoader().getResourceAsStream("apiclient_key.pem");
-        if (inputStream == null) {
-                throw new RuntimeException("支付鉴权文件未读取到");
-            }
-        // 读取文件内容
-        byte[] bytes = inputStream.readAllBytes();
-        String content = new String(bytes);
+		InputStream inputStream = getClass().getClassLoader().getResourceAsStream("apiclient_key.pem");
+		if (inputStream == null) {
+			throw new RuntimeException("支付鉴权文件未读取到");
+		}
+		// 读取文件内容
+		byte[] bytes = inputStream.readAllBytes();
+		String content = new String(bytes);
 
-        // 使用微信支付公钥的RSA配置
-        Config config = new RSAAutoCertificateConfig.Builder()
-                .merchantId(payInfoConfig.getMachid())
+		// 使用微信支付公钥的RSA配置
+		Config config = new RSAAutoCertificateConfig.Builder()
+				.merchantId(payInfoConfig.getMachid())
 //                .privateKeyFromPath(payInfoConfig.getKeypath())
-                .privateKey(content)
-                .merchantSerialNumber(payInfoConfig.getMchserialno())
-                .apiV3Key(payInfoConfig.getApikey())
-                .build();
+				.privateKey(content)
+				.merchantSerialNumber(payInfoConfig.getMchserialno())
+				.apiV3Key(payInfoConfig.getApikey())
+				.build();
 
-        // 构建service
-        return new JsapiServiceExtension.Builder().config(config).build();
+		// 构建service
+		return new JsapiServiceExtension.Builder().config(config).build();
 
-    }
+	}
 
-    /**
-     * 支付订单查询
-     */
-    public PayOrderReturnValue payQueryOrder(Long payOrderId) {
-        var service = this.getJsapiServiceExtension();
-        var request = new QueryOrderByOutTradeNoRequest();
-        request.setOutTradeNo(String.valueOf(payOrderId));
-        request.setMchid(payInfoConfig.getMachid());
-        // 调用接口
-        var transaction = service.queryOrderByOutTradeNo(request);
+	/**
+	 * 支付订单查询
+	 */
+	public PayOrderReturnValue payQueryOrder(Long payOrderId) {
+		var service = this.getJsapiServiceExtension();
+		var request = new QueryOrderByOutTradeNoRequest();
+		request.setOutTradeNo(String.valueOf(payOrderId));
+		request.setMchid(payInfoConfig.getMachid());
+		// 调用接口
+		var transaction = service.queryOrderByOutTradeNo(request);
 
-        return PayOrderReturnValue.builder()
-                .payOrderId(payOrderId)
-                .payResult(transaction.getTradeState().name())
-                .thirdPayId(transaction.getTransactionId())
-                .build();
+		return PayOrderReturnValue.builder()
+				.payOrderId(payOrderId)
+				.payResult(transaction.getTradeState().name())
+				.thirdPayId(transaction.getTransactionId())
+				.build();
 
-    }
+	}
 
-    /**
-     * 支付回调
-     */
-    @SneakyThrows
-    public PayOrderReturnValue payCallBack(JSONObject jsonObject) {
+	/**
+	 * 支付回调
+	 */
+	@SneakyThrows
+	public PayOrderReturnValue payCallBack(JSONObject jsonObject) {
 
-        var resource = jsonObject.getJSONObject("resource");
-        var associatedData = resource.getString("associated_data");
-        var nonce = resource.getString("nonce");
-        var ciphertext = resource.getString("ciphertext");
-        var text = new AesUtil(payInfoConfig.getApikey().getBytes(StandardCharsets.UTF_8))
-                .decryptToString(
-                        associatedData.getBytes(StandardCharsets.UTF_8),
-                        nonce.getBytes(StandardCharsets.UTF_8),
-                        ciphertext);
+		var resource = jsonObject.getJSONObject("resource");
+		var associatedData = resource.getString("associated_data");
+		var nonce = resource.getString("nonce");
+		var ciphertext = resource.getString("ciphertext");
+		var text = new AesUtil(payInfoConfig.getApikey().getBytes(StandardCharsets.UTF_8))
+				.decryptToString(
+						associatedData.getBytes(StandardCharsets.UTF_8),
+						nonce.getBytes(StandardCharsets.UTF_8),
+						ciphertext);
 
-        var parse = JSONObject.parseObject(text);
-        var outTradeNo = parse.getLong("out_trade_no");
-        var transactionId = parse.getString("transaction_id");
-        var tradeState = parse.getString("trade_state");
+		var parse = JSONObject.parseObject(text);
+		var outTradeNo = parse.getLong("out_trade_no");
+		var transactionId = parse.getString("transaction_id");
+		var tradeState = parse.getString("trade_state");
 
-        return PayOrderReturnValue.builder()
-                .payOrderId(outTradeNo)
-                .payResult(tradeState)
-                .thirdPayId(transactionId)
-                .build();
+		return PayOrderReturnValue.builder()
+				.payOrderId(outTradeNo)
+				.payResult(tradeState)
+				.thirdPayId(transactionId)
+				.build();
 
-    }
+	}
 
 
 }
