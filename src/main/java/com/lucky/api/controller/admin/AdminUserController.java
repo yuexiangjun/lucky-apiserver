@@ -108,7 +108,7 @@ public class AdminUserController extends BaseController {
 	/**
 	 * 微信用户-列表
 	 */
-	@PostMapping("api/admin/wechat-user")
+	@PutMapping("api/admin/wechat-user")
 	@ResponseFormat
 	public List<WechatUserListVO> list(@RequestBody  WechatUserFindListDTO dto) {
 

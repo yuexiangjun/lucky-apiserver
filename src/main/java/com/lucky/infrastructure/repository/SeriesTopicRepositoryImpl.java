@@ -85,4 +85,15 @@ public class SeriesTopicRepositoryImpl extends ServiceImpl<SeriesTopicMapper, Se
 				.collect(Collectors.toList());
 	}
 
+	@Override
+	public List<SeriesTopicEntity> getByName(String seriesName) {
+		var wrapper = Wrappers.<SeriesTopicPO>lambdaQuery()
+				.like(SeriesTopicPO::getName, seriesName);
+
+		return seriesTopicMapper.selectList(wrapper)
+				.stream()
+				.map(SeriesTopicPO::toEntity)
+				.collect(Collectors.toList());
+	}
+
 }

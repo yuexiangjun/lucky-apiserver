@@ -16,5 +16,7 @@ public interface OrderRepository {
 
 	Boolean saveBatch(List<OrderEntity> orderEntities);
 
-	void getByWechatUserId(Long wechatUserId);
+
+
+	List<OrderEntity> listIds(OrderEntity entity, List<Long> wechatUserIds, List<Long> seriesIds);
 }

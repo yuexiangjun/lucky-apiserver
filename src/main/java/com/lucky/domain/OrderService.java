@@ -215,4 +215,8 @@ public class OrderService {
     }
 
 
+    public List<OrderEntity> listIds(OrderEntity entity, List<Long> wechatUserIds, List<Long> seriesIds) {
+        var orderEntities = orderRepository.listIds(entity, wechatUserIds, seriesIds);
+        return this.getOrderEntities(orderEntities);
+    }
 }

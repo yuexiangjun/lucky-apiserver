@@ -42,8 +42,8 @@ public class AdminUserRepositoryImpl extends ServiceImpl<AdminUserMapper, AdminU
 	@Override
 	public List<AdminUserEntity> list(AdminUserEntity entity) {
 		var wrapper = Wrappers.lambdaQuery(AdminUserPO.class)
-				.eq(Strings.isNotBlank(entity.getPhone()), AdminUserPO::getPhone, entity.getPhone())
-				.eq(Strings.isNotBlank(entity.getName()), AdminUserPO::getName, entity.getName());
+				.like(Strings.isNotBlank(entity.getPhone()), AdminUserPO::getPhone, entity.getPhone())
+				.like(Strings.isNotBlank(entity.getName()), AdminUserPO::getName, entity.getName());
 
 		return this.list(wrapper)
 				.stream()

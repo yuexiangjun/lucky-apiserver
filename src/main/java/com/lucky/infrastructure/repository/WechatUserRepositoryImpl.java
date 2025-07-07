@@ -116,4 +116,18 @@ public class WechatUserRepositoryImpl extends ServiceImpl<WechatUserMapper, Wech
                 .map(WechatUserPO::toEntity)
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public List<WechatUserEntity> getUserNameOrPhone(String userNameOrPhone) {
+
+
+        var wrapper = Wrappers.lambdaQuery(WechatUserPO.class)
+                .and(wrapper1 -> wrapper1.like(Strings.isNotBlank(userNameOrPhone), WechatUserPO::getName, userNameOrPhone).or()
+                        .like(Strings.isNotBlank(userNameOrPhone), WechatUserPO::getPhone, userNameOrPhone));
+
+        return this.list(wrapper)
+                .stream()
+                .map(WechatUserPO::toEntity)
+                .collect(Collectors.toList());
+    }
 }

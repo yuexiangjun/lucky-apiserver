@@ -95,10 +95,18 @@ public class OrderRepositoryImpl extends ServiceImpl<OrderMapper, OrderPO> imple
 
 	}
 
+
+
 	@Override
-	public void getByWechatUserId(Long wechatUserId) {
-
-
-
+	public List<OrderEntity> listIds(OrderEntity entity, List<Long> wechatUserIds, List<Long> seriesIds) {
+		var wrapper = Wrappers.lambdaQuery(OrderPO.class)
+				.eq(Objects.nonNull(entity.getWechatUserId()), OrderPO::getWechatUserId, entity.getWechatUserId())
+				.eq(Objects.nonNull(entity.getTopicId()), OrderPO::getTopicId, entity.getTopicId())
+				.eq(Objects.nonNull(entity.getSessionId()), OrderPO::getSessionId, entity.getSessionId())
+				.eq(Objects.nonNull(entity.getStatus()), OrderPO::getStatus, entity.getStatus())
+				.in (!CollectionUtils.isEmpty(wechatUserIds), OrderPO::getWechatUserId, wechatUserIds)
+				.in (!CollectionUtils.isEmpty(seriesIds), OrderPO::getTopicId, seriesIds)
+				.orderByDesc(OrderPO::getCreateTime);
+		return List.of();
 	}
 }

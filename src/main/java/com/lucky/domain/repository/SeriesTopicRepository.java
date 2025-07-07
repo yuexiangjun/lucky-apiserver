@@ -14,4 +14,6 @@ public interface SeriesTopicRepository {
     SeriesTopicEntity findById(Long id);
 
     List<SeriesTopicEntity> findByIds(List<Long> topicIds);
+
+	List<SeriesTopicEntity> getByName(String seriesName);
 }

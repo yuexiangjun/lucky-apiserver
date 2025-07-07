@@ -13,6 +13,14 @@ import java.util.Objects;
 @AllArgsConstructor
 @Builder
 public class OrderDTO {
+	/**
+	 * 用户名字或者电话号码
+	 */
+	private String userNameOrPhone;
+	/**
+	 * 系列名字
+	 */
+	private String seriesName;
 
 	/**
 	 * 微信用户id
