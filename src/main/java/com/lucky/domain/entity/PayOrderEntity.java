@@ -1,9 +1,6 @@
 package com.lucky.domain.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -13,6 +10,7 @@ import java.util.List;
 @NoArgsConstructor
 @Setter
 @Getter
+@Builder
 public class PayOrderEntity {
 	/**
 	 * id
@@ -72,10 +70,15 @@ public class PayOrderEntity {
 	 * 商品id
 	 */
 
-	private List<Long > prizeId;
+	private List<Long> prizeId;
 	/**
 	 * 支付前端需要的参数
 	 */
 	private String payParams;
+	/**
+	 * 业务参数
+	 */
+
+	private String businessParams;
 
 }

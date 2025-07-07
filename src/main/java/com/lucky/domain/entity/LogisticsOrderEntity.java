@@ -55,5 +55,13 @@ public class LogisticsOrderEntity {
      * 商品
      */
     private List<LogisticsOrderPrizeEntity> goods;
+    /**
+     * 发货时间
+     */
+    private LocalDateTime sendTime;
+    /**
+     * 完成时间
+     */
+    private LocalDateTime completeTime;
 
 }

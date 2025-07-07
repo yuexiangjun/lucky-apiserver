@@ -8,7 +8,9 @@ import com.lucky.domain.entity.*;
 import com.lucky.domain.valueobject.LogisticsOrderInfo;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -93,6 +95,8 @@ public class LogisticsOrderServer {
 							.logisticsNumber(s.getLogisticsNumber())
 							.logisticsCompany(s.getLogisticsCompany())
 							.createTime(s.getCreateTime())
+							.sendTime(s.getSendTime())
+							.completeTime(s.getCompleteTime())
 							.goods(prizeInfoEntities)
 							.address(DeliveryAddressEntity.getAddressStr(s.getAddress()))
 							.phone(wechatUserMap.getOrDefault(s.getWechatUserId(), new WechatUserEntity()).getPhone())
@@ -116,6 +120,14 @@ public class LogisticsOrderServer {
 	 * 修改物流订单
 	 */
 	public void updateLogisticsOrder(LogisticsOrderEntity logisticsOrderEntity) {
+		if (Objects.nonNull(logisticsOrderEntity.getStatus())) {
+			if (logisticsOrderEntity.getStatus() == 1) {
+				logisticsOrderEntity.setSendTime(LocalDateTime.now());
+			}
+			if (logisticsOrderEntity.getStatus() == 2) {
+				logisticsOrderEntity.setCompleteTime(LocalDateTime.now());
+			}
+		}
 
 		logisticsOrderService.updateLogisticsOrder(logisticsOrderEntity);
 	}

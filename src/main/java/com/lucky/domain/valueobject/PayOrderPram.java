@@ -27,12 +27,12 @@ public class PayOrderPram {
     private String payDesc;
     public static PayOrderPram getInstance(Long payOrderId,
                                            BigDecimal payMoney,
-                                           String openId){
+                                           String openId, String payDesc){
         return PayOrderPram.builder()
                 .payOrderId(payOrderId)
                 .payMoney(payMoney)
                 .openId(openId)
-                .payDesc("福星抽奖支付订单")
+                .payDesc(payDesc)
                 .build();
     }
 

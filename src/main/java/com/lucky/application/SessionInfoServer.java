@@ -87,7 +87,7 @@ public class SessionInfoServer {
                                     .prizeName(s.getPrizeName())
                                     .gradeName(gradeEntity.getName())
                                     .sort(gradeEntity.getSort())
-                                    .probability(probability.toPlainString().concat("‰"))
+                                    .probability(InventoryInfo.removeTrailingZeros(probability.toPlainString()).concat("‰"))
                                     .build();
                         }
                 )
@@ -125,7 +125,7 @@ public class SessionInfoServer {
 										.prizeUrl(prizeInfoEntity.getPrizeUrl())
 										.prizeName(prizeInfoEntity.getPrizeName())
 										.gradeName(gradeEntity.getName())
-										.probability(probability.toPlainString().concat("%"))
+										.probability(InventoryInfo.removeTrailingZeros(probability.toPlainString()).concat("%"))
 										.sort(gradeEntity.getSort())
 										.build();
 							})

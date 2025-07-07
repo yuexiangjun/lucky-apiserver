@@ -55,4 +55,6 @@ public class BoxCabinetsController extends BaseController {
         orderServer.generateLogisticsOrder(logisticsOrder);
     }
 
+
+
 }

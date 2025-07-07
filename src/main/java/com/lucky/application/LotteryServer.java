@@ -9,6 +9,7 @@ import com.lucky.domain.WechatUserService;
 import com.lucky.domain.config.RedissionConfig;
 import com.lucky.domain.entity.PayOrderEntity;
 import com.lucky.domain.exception.BusinessException;
+import com.lucky.domain.valueobject.LogisticsOrder;
 import com.lucky.domain.valueobject.PayInfo;
 import com.lucky.domain.valueobject.PayOrderPram;
 import com.lucky.domain.valueobject.SuccessProducts;
@@ -24,282 +25,343 @@ import java.util.stream.Collectors;
 
 @Component
 public class LotteryServer {
-    private final PayOrderService payOrderService;
-    private final OrderServer orderServer;
-    private final SeriesTopicService topicService;
-    private final RedissionConfig redissionConfig;
-    private final WeChatPayServer weChatPayServer;
-    private final WechatUserService wechatUserService;
-    private final RedisService redisService;
-
-    private final static String PAY_LOCK_NAME = "PAY_LOCK_NAME:";
-    private final static String LOCATION = "LOCATION:";
-
-    public LotteryServer(PayOrderService payOrderService, OrderServer orderServer,
-                         SeriesTopicService topicService,
-                         RedissionConfig redissionConfig, WeChatPayServer weChatPayServer, WechatUserService wechatUserService, RedisService redisService) {
-        this.payOrderService = payOrderService;
-        this.orderServer = orderServer;
-
-        this.topicService = topicService;
-        this.redissionConfig = redissionConfig;
-        this.weChatPayServer = weChatPayServer;
-        this.wechatUserService = wechatUserService;
-        this.redisService = redisService;
-    }
-
-    /**
-     * 获取准备上面的排队人数
-     */
-    public Integer getQueueNum(Long topicId, Long sessionId) {
+	private final PayOrderService payOrderService;
+	private final OrderServer orderServer;
+	private final SeriesTopicService topicService;
+	private final RedissionConfig redissionConfig;
+	private final WeChatPayServer weChatPayServer;
+	private final WechatUserService wechatUserService;
+	private final RedisService redisService;
 
-        this.verifySession(sessionId);
-
-        var key = getByBuyKey(topicId, sessionId);
-        return redisService.getCacheObject(key) == null ? 0 : 1;
-    }
-
-    private void verifySession(Long sessionId) {
-        var sessionInfoEntity = orderServer.getSessionInfoService().findById(sessionId);
 
-        if (Objects.equals(sessionInfoEntity.getStatus(), 2))
-            throw BusinessException.newInstance("本场已结束，请选择下一场");
-    }
-
-    /**
-     * 购买同意场次 排队
-     */
-    public Boolean buy(Long topicId, Long sessionId, Long wechatUserId) {
-
-        this.verifySession(sessionId);
+	private final static String PAY_LOCK_NAME = "PAY_LOCK_NAME:";
+	private final static String LOCATION = "LOCATION:";
 
-        var key = this.getByBuyKey(topicId, sessionId);
-
-        var cacheObject = redisService.getCacheObject(key);
-        if (Objects.nonNull(cacheObject) && !Objects.equals(cacheObject, String.valueOf(wechatUserId))) {
-            return false;
-        }
-        //去掉上一场排队信息 设置当前人排队信息
-        this.putLocation(topicId, sessionId, wechatUserId);
-        //设置当前场次
-        this.putRedisKey(key, String.valueOf(wechatUserId));
-        return true;
-    }
-
-    /**
-     * 去掉上一场的排队信息
-     * 设置新得排队信息
-     */
-    private void putLocation(Long topicId, Long sessionId, Long wechatUserId) {
-        var key = LOCATION.concat(wechatUserId.toString());
+	public LotteryServer(PayOrderService payOrderService, OrderServer orderServer,
+	                     SeriesTopicService topicService,
+	                     RedissionConfig redissionConfig, WeChatPayServer weChatPayServer, WechatUserService wechatUserService, RedisService redisService) {
+		this.payOrderService = payOrderService;
+		this.orderServer = orderServer;
+
+		this.topicService = topicService;
+		this.redissionConfig = redissionConfig;
+		this.weChatPayServer = weChatPayServer;
+		this.wechatUserService = wechatUserService;
+		this.redisService = redisService;
+	}
 
-
-        var cacheObject = redisService.getCacheObject(key);
-        var oldValue = String.valueOf(cacheObject);
-        var split = oldValue.split("-");
-
-        if (split.length == 2) {
-            var topicId1 = Long.valueOf(split[0]);
-            var sessionId1 = Long.valueOf(split[1]);
-
-            this.end(topicId1, sessionId1);
-        }
-
-        var value = String.valueOf(topicId).concat("-").concat(String.valueOf(sessionId));
-        redisService.setCacheObject(key, value);
-    }
-
-
-    /**
-     * 抽奖结束
-     */
-    public void end(Long topicId, Long sessionId) {
+	/**
+	 * 获取准备上面的排队人数
+	 */
+	public Integer getQueueNum(Long topicId, Long sessionId) {
 
-        var key = this.getByBuyKey(topicId, sessionId);
+		this.verifySession(sessionId);
 
-        redisService.deleteObject(key);
-    }
+		var key = getByBuyKey(topicId, sessionId);
+		return redisService.getCacheObject(key) == null ? 0 : 1;
+	}
 
+	private void verifySession(Long sessionId) {
+		var sessionInfoEntity = orderServer.getSessionInfoService().findById(sessionId);
 
-    /**
-     * 支付
-     */
-    @Transactional(rollbackFor = Exception.class)
-    public PayInfo pay(PayOrderEntity entity) {
+		if (Objects.equals(sessionInfoEntity.getStatus(), 2))
+			throw BusinessException.newInstance("本场已结束，请选择下一场");
+	}
 
-        this.verifySession(entity.getSessionId());
+	/**
+	 * 购买同意场次 排队
+	 */
+	public Boolean buy(Long topicId, Long sessionId, Long wechatUserId) {
 
-        var key = getRedisKey(entity);
-        //获取是否本场有人在操作
-        String cacheObject = redisService.getCacheObject(key);
+		this.verifySession(sessionId);
 
-        if (Objects.nonNull(cacheObject) && !Objects.equals(cacheObject, String.valueOf(entity.getWechatUserId()))) {
-            throw BusinessException.newInstance("本场有人在操作,请稍等...");
-        }
+		var key = this.getByBuyKey(topicId, sessionId);
 
-        var lock = redissionConfig.redissonClient().getLock(key);
-        lock.lock();
-        try {
-            //获取支付金额
-            var seriesTopic = topicService.findById(entity.getTopicId());
-
-            var totalMoney = seriesTopic.getPrice().multiply(BigDecimal.valueOf(entity.getTimes()));
-
-            entity.setPayMoney(totalMoney);
-            entity.setPayStatus(0);
-            entity.setPayTime(LocalDateTime.now());
-
-            var payOrderId = payOrderService.saveOrUpdate(entity);
-
-            var wechatUserEntity = wechatUserService.getById(entity.getWechatUserId());
-            //调取三方支付接口
-            var payOrderPram = PayOrderPram.getInstance(payOrderId, totalMoney, wechatUserEntity.getOpenid());
-            var pay = weChatPayServer.pay(payOrderPram);
+		var cacheObject = redisService.getCacheObject(key);
+		if (Objects.nonNull(cacheObject) && !Objects.equals(cacheObject, String.valueOf(wechatUserId))) {
+			return false;
+		}
+		//去掉上一场排队信息 设置当前人排队信息
+		this.putLocation(topicId, sessionId, wechatUserId);
+		//设置当前场次
+		this.putRedisKey(key, String.valueOf(wechatUserId));
+		return true;
+	}
 
-            entity.setId(payOrderId);
-            entity.setPayParams(JSONObject.toJSONString(pay.getPayParams()));
-
-            payOrderService.saveOrUpdate(entity);
+	/**
+	 * 去掉上一场的排队信息
+	 * 设置新得排队信息
+	 */
+	private void putLocation(Long topicId, Long sessionId, Long wechatUserId) {
+		var key = LOCATION.concat(wechatUserId.toString());
 
-            return PayInfo.builder()
-                    .payOrderId(payOrderId)
-                    .payParams(pay.getPayParams())
-                    .build();
-
-        } finally {
-            if (lock.isLocked())
-                lock.unlock();
-        }
-    }
 
-    private void putRedisKey(String PAY_LOCK_NAME, String entity) {
-        redisService.setCacheObject(PAY_LOCK_NAME, entity, 180, TimeUnit.SECONDS);
-    }
+		var cacheObject = redisService.getCacheObject(key);
+		var oldValue = String.valueOf(cacheObject);
+		var split = oldValue.split("-");
+
+		if (split.length == 2) {
+			var topicId1 = Long.valueOf(split[0]);
+			var sessionId1 = Long.valueOf(split[1]);
+
+			this.end(topicId1, sessionId1);
+		}
+
+		var value = String.valueOf(topicId).concat("-").concat(String.valueOf(sessionId));
+		redisService.setCacheObject(key, value);
+	}
+
 
-    private static String getRedisKey(PayOrderEntity entity) {
-        var suffix = List.of(entity.getTopicId(), entity.getSessionId())
-                .stream()
-                .map(String::valueOf)
-                .collect(Collectors.joining(","));
-        return PAY_LOCK_NAME.concat(suffix);
+	/**
+	 * 抽奖结束
+	 */
+	public void end(Long topicId, Long sessionId) {
 
-    }
+		var key = this.getByBuyKey(topicId, sessionId);
 
+		redisService.deleteObject(key);
+	}
 
-    /**
-     * 支付成功 抽取的奖品
-     */
-    @Transactional(rollbackFor = Exception.class)
-    public List<SuccessProducts> successByPrizeInfo(Long payOrderId) {
 
-        var payOrder = payOrderService.getById(payOrderId);
-        if (Objects.equals(payOrder.getPayStatus(), 0)) {
-            var payOrderReturnValue = weChatPayServer.payQueryOrder(payOrderId);
-            payOrder.setPayStatus(Objects.equals(payOrderReturnValue.getPayResult(), "SUCCESS") ? 1 : 2);
-            payOrder.setThirdPayId(payOrderReturnValue.getThirdPayId());
-            payOrder.setCompleteTime(LocalDateTime.now());
-            //延长控场
-            if (Objects.equals(payOrder.getPayStatus(), 1))
-                this.delayBuy(payOrder.getTopicId(), payOrder.getSessionId(), payOrder.getWechatUserId());
-        }
+	/**
+	 * 支付
+	 */
+	@Transactional(rollbackFor = Exception.class)
+	public PayInfo pay(PayOrderEntity entity) {
 
-        var payOrderEntity = orderServer.getByPrizeInfo(payOrder);
+		this.verifySession(entity.getSessionId());
 
-        payOrderService.saveOrUpdate(payOrderEntity);
+		var key = getRedisKey(entity);
+		//获取是否本场有人在操作
+		String cacheObject = redisService.getCacheObject(key);
 
-        return orderServer.getPrizeInfoByNum(payOrderEntity.getPrizeId());
+		if (Objects.nonNull(cacheObject) && !Objects.equals(cacheObject, String.valueOf(entity.getWechatUserId()))) {
+			throw BusinessException.newInstance("本场有人在操作,请稍等...");
+		}
 
+		var lock = redissionConfig.redissonClient().getLock(key);
+		lock.lock();
+		try {
+			//获取支付金额
+			var seriesTopic = topicService.findById(entity.getTopicId());
 
-    }
+			var totalMoney = seriesTopic.getPrice().multiply(BigDecimal.valueOf(entity.getTimes()));
 
+			entity.setPayMoney(totalMoney);
+			entity.setPayStatus(0);
+			entity.setPayTime(LocalDateTime.now());
 
-    /**
-     * 支付回调
-     */
-    @Transactional(rollbackFor = Exception.class)
-    public String payCallBack(JSONObject jsonObject) {
+			var payOrderId = payOrderService.saveOrUpdate(entity);
 
+			var wechatUserEntity = wechatUserService.getById(entity.getWechatUserId());
+			//调取三方支付接口
+			var payOrderPram = PayOrderPram.getInstance(payOrderId, totalMoney, wechatUserEntity.getOpenid(), "福星抽奖支付订单");
+			var pay = weChatPayServer.pay(payOrderPram);
 
-        var payOrderReturnValue = weChatPayServer.payCallBack(jsonObject);
-        var payOrder = payOrderService.getById(payOrderReturnValue.getPayOrderId());
-        if (Objects.isNull(payOrder))
-            return "FAIL";
-        payOrder.setPayStatus(Objects.equals(payOrderReturnValue.getPayResult(), "SUCCESS") ? 1 : 2);
-        payOrder.setThirdPayId(payOrderReturnValue.getThirdPayId());
-        payOrder.setCompleteTime(LocalDateTime.now());
-        payOrderService.saveOrUpdate(payOrder);
-        //延长控场
-        this.delayBuy(payOrder.getTopicId(), payOrder.getSessionId(), payOrder.getWechatUserId());
-        return "SUCCESS";
-    }
+			entity.setId(payOrderId);
+			entity.setPayParams(JSONObject.toJSONString(pay.getPayParams()));
 
-    private void delayBuy(Long topicId, Long sessionId, Long wechatUserId) {
-        var key = getByBuyKey(topicId, sessionId);
-        putRedisKey(key, String.valueOf(wechatUserId));
-    }
+			payOrderService.saveOrUpdate(entity);
 
-    private static String getByBuyKey(Long topicId, Long sessionId) {
-        var key = PAY_LOCK_NAME.concat("buy:")
-                .concat(String.valueOf(topicId))
-                .concat(":")
-                .concat(String.valueOf(sessionId));
-        return key;
-    }
+			return PayInfo.builder()
+					.payOrderId(payOrderId)
+					.payParams(pay.getPayParams())
+					.build();
 
-    @Transactional(rollbackFor = Exception.class)
-    public List<SuccessProducts> balancePay(PayOrderEntity entity) {
+		} finally {
+			if (lock.isLocked())
+				lock.unlock();
+		}
+	}
 
-        this.verifySession(entity.getSessionId());
+	private void putRedisKey(String PAY_LOCK_NAME, String entity) {
+		redisService.setCacheObject(PAY_LOCK_NAME, entity, 180, TimeUnit.SECONDS);
+	}
 
-        var key = getRedisKey(entity);
-        //获取是否本场有人在操作
-        String cacheObject = redisService.getCacheObject(key);
+	private static String getRedisKey(PayOrderEntity entity) {
+		var suffix = List.of(entity.getTopicId(), entity.getSessionId())
+				.stream()
+				.map(String::valueOf)
+				.collect(Collectors.joining(","));
+		return PAY_LOCK_NAME.concat(suffix);
 
-        if (Objects.nonNull(cacheObject) && !Objects.equals(cacheObject, String.valueOf(entity.getWechatUserId()))) {
-            throw BusinessException.newInstance("本场有人在操作,请稍等...");
-        }
+	}
 
-        var lock = redissionConfig.redissonClient().getLock(key);
-        lock.lock();
-        try {
-            //获取支付金额
-            var seriesTopic = topicService.findById(entity.getTopicId());
 
-            var totalMoney = seriesTopic.getPrice().multiply(BigDecimal.valueOf(entity.getTimes()));
+	/**
+	 * 支付成功 抽取的奖品
+	 */
+	@Transactional(rollbackFor = Exception.class)
+	public List<SuccessProducts> successByPrizeInfo(Long payOrderId) {
 
-            entity.setPayMoney(totalMoney);
-            entity.setPayStatus(0);
-            entity.setPayTime(LocalDateTime.now());
+		var payOrder = payOrderService.getById(payOrderId);
+		if (Objects.equals(payOrder.getPayStatus(), 0)) {
+			var payOrderReturnValue = weChatPayServer.payQueryOrder(payOrderId);
+			payOrder.setPayStatus(Objects.equals(payOrderReturnValue.getPayResult(), "SUCCESS") ? 1 : 2);
+			payOrder.setThirdPayId(payOrderReturnValue.getThirdPayId());
+			payOrder.setCompleteTime(LocalDateTime.now());
+			//延长控场
+			if (Objects.equals(payOrder.getPayStatus(), 1))
+				this.delayBuy(payOrder.getTopicId(), payOrder.getSessionId(), payOrder.getWechatUserId());
+		}
 
-            var payOrderId = payOrderService.saveOrUpdate(entity);
+		var payOrderEntity = orderServer.getByPrizeInfo(payOrder);
 
-            entity.setId(payOrderId);
+		payOrderService.saveOrUpdate(payOrderEntity);
 
-            //TODO：账户余额得扣除
-            wechatUserService.balanceReduce(entity.getWechatUserId(), totalMoney, "福袋抽奖");
+		return orderServer.getPrizeInfoByNum(payOrderEntity.getPrizeId());
 
-            //抽取奖品
-            var payOrderEntity = orderServer.getByPrizeInfo(entity);
-            payOrderEntity.setPayStatus(1);
-            payOrderService.saveOrUpdate(payOrderEntity);
 
-            //延长控场
-            this.delayBuy(payOrderEntity.getTopicId(), payOrderEntity.getSessionId(), payOrderEntity.getWechatUserId());
+	}
 
-            return orderServer.getPrizeInfoByNum(payOrderEntity.getPrizeId());
 
+	/**
+	 * 支付回调
+	 */
+	@Transactional(rollbackFor = Exception.class)
+	public String payCallBack(JSONObject jsonObject) {
 
-        } finally {
-            if (lock.isLocked())
-                lock.unlock();
-        }
 
+		var payOrderReturnValue = weChatPayServer.payCallBack(jsonObject);
+		var payOrder = payOrderService.getById(payOrderReturnValue.getPayOrderId());
 
-    }
+		if (Objects.isNull(payOrder))
+			return "FAIL";
 
-    public Integer getControlTime(Long topicId, Long sessionId) {
-        long expire = redisService.getExpire(getByBuyKey(topicId, sessionId));
 
-        return expire > 0 ? (int) expire : 0;
-    }
+		payOrder.setPayStatus(Objects.equals(payOrderReturnValue.getPayResult(), "SUCCESS") ? 1 : 2);
+		payOrder.setThirdPayId(payOrderReturnValue.getThirdPayId());
+		payOrder.setCompleteTime(LocalDateTime.now());
+		payOrderService.saveOrUpdate(payOrder);
+		if (Objects.equals(payOrder.getOrderType(), 1)) {
+			//延长控场
+			this.delayBuy(payOrder.getTopicId(), payOrder.getSessionId(), payOrder.getWechatUserId());
+
+
+		} else if (Objects.equals(payOrder.getOrderType(), 3)) {
+
+			var businessParams = payOrder.getBusinessParams();
+
+			var logisticsOrder = JSONObject.parseObject(businessParams, LogisticsOrder.class);
+
+			orderServer.generateLogisticsOrder(logisticsOrder);
+
+
+		}
+
+		return "SUCCESS";
+	}
+
+	private void delayBuy(Long topicId, Long sessionId, Long wechatUserId) {
+		var key = getByBuyKey(topicId, sessionId);
+		putRedisKey(key, String.valueOf(wechatUserId));
+	}
+
+	private static String getByBuyKey(Long topicId, Long sessionId) {
+		var key = PAY_LOCK_NAME.concat("buy:")
+				.concat(String.valueOf(topicId))
+				.concat(":")
+				.concat(String.valueOf(sessionId));
+		return key;
+	}
+
+	@Transactional(rollbackFor = Exception.class)
+	public List<SuccessProducts> balancePay(PayOrderEntity entity) {
+
+		this.verifySession(entity.getSessionId());
+
+		var key = getRedisKey(entity);
+		//获取是否本场有人在操作
+		String cacheObject = redisService.getCacheObject(key);
+
+		if (Objects.nonNull(cacheObject) && !Objects.equals(cacheObject, String.valueOf(entity.getWechatUserId()))) {
+			throw BusinessException.newInstance("本场有人在操作,请稍等...");
+		}
+
+		var lock = redissionConfig.redissonClient().getLock(key);
+		lock.lock();
+		try {
+			//获取支付金额
+			var seriesTopic = topicService.findById(entity.getTopicId());
+
+			var totalMoney = seriesTopic.getPrice().multiply(BigDecimal.valueOf(entity.getTimes()));
+
+			entity.setPayMoney(totalMoney);
+			entity.setPayStatus(0);
+			entity.setPayTime(LocalDateTime.now());
+
+			var payOrderId = payOrderService.saveOrUpdate(entity);
+
+			entity.setId(payOrderId);
+
+			//TODO：账户余额得扣除
+			wechatUserService.balanceReduce(entity.getWechatUserId(), totalMoney, "福袋抽奖");
+
+			//抽取奖品
+			var payOrderEntity = orderServer.getByPrizeInfo(entity);
+			payOrderEntity.setPayStatus(1);
+			payOrderService.saveOrUpdate(payOrderEntity);
+
+			//延长控场
+			this.delayBuy(payOrderEntity.getTopicId(), payOrderEntity.getSessionId(), payOrderEntity.getWechatUserId());
+
+			return orderServer.getPrizeInfoByNum(payOrderEntity.getPrizeId());
+
+
+		} finally {
+			if (lock.isLocked())
+				lock.unlock();
+		}
+
+
+	}
+
+	public Integer getControlTime(Long topicId, Long sessionId) {
+		long expire = redisService.getExpire(getByBuyKey(topicId, sessionId));
+
+		return expire > 0 ? (int) expire : 0;
+	}
+
+
+	public PayInfo generateLogisticsOrderPay(LogisticsOrder logisticsOrder) {
+
+
+		var payOrderEntity = PayOrderEntity.builder()
+				.payMoney(logisticsOrder.getExpressMoney())
+				.payStatus(0)
+				.orderType(3)
+				.payType(logisticsOrder.getPayType())
+				.payTime(LocalDateTime.now())
+				.wechatUserId(logisticsOrder.getWechatUserId())
+				.businessParams(JSONObject.toJSONString(logisticsOrder))
+				.build();
+
+		var payOrderId = payOrderService.saveOrUpdate(payOrderEntity);
+
+		if (Objects.equals(payOrderEntity.getPayType(), 1)) {
+			var wechatUserEntity = wechatUserService.getById(logisticsOrder.getWechatUserId());
+			//调取三方支付接口
+			var payOrderPram = PayOrderPram.getInstance(payOrderId, logisticsOrder.getExpressMoney(), wechatUserEntity.getOpenid(), "物流费用支付定单");
+			var pay = weChatPayServer.pay(payOrderPram);
+			payOrderEntity.setId(payOrderId);
+			payOrderEntity.setPayParams(JSONObject.toJSONString(pay.getPayParams()));
+
+			payOrderService.saveOrUpdate(payOrderEntity);
+
+
+			return PayInfo.builder()
+					.payOrderId(payOrderId)
+					.payParams(pay.getPayParams())
+					.build();
+		} else {
+			//TODO：账户余额得扣除
+			wechatUserService.balanceReduce(logisticsOrder.getWechatUserId(), logisticsOrder.getExpressMoney(), "物流费用支付定单");
+
+			orderServer.generateLogisticsOrder(logisticsOrder);
+
+			return PayInfo.builder()
+					.payOrderId(payOrderEntity.getId())
+					.build();
+		}
+	}
 }

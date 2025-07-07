@@ -31,3 +31,10 @@ CREATE TABLE `banner` (
 )COMMENT = 'banner';
 
 ALTER TABLE `lucky-star`.`banner` ADD COLUMN `sort` int(20) NULL DEFAULT '0' COMMENT '排序' ;
+
+ALTER TABLE `lucky-star`.`logistics_order` ADD COLUMN `send_time` datetime(0) NULL DEFAULT NULL COMMENT '发货时间' ;
+
+ALTER TABLE `lucky-star`.`logistics_order` ADD COLUMN `complete_time` datetime(0) NULL DEFAULT NULL COMMENT '完成时间' ;
+
+
+ALTER TABLE `lucky-star`.`pay_order` ADD COLUMN `business_params` json DEFAULT NULL COMMENT '业务参数' ;

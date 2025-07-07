@@ -11,6 +11,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import netscape.javascript.JSObject;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -87,6 +88,21 @@ public class PayOrderPO {
 	 * 支付前端需要的参数
 	 */
 	private String payParams;
+
+	/**
+	 * 业务参数
+	 */
+	@TableField(typeHandler = JacksonTypeHandler.class)
+	private String  businessParams;
+
+
+	/**
+	 *
+	 * @param entity
+	 * @return
+	 */
+
+
 
 	public static PayOrderPO getInstance(PayOrderEntity entity) {
 		if (Objects.isNull(entity))

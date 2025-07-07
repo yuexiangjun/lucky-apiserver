@@ -56,6 +56,14 @@ public class LogisticsOrderInfoVO {
      * 收货地址
      */
     private String  address;
+    /**
+     * 发货时间
+     */
+    private LocalDateTime sendTime;
+    /**
+     * 完成时间
+     */
+    private LocalDateTime completeTime;
 
     /**
      *

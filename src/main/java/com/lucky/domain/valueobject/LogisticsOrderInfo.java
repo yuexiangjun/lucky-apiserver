@@ -51,5 +51,13 @@ public class LogisticsOrderInfo {
      * 手机号码
      */
     private String phone;
+    /**
+     * 发货时间
+     */
+    private LocalDateTime sendTime;
+    /**
+     * 完成时间
+     */
+    private LocalDateTime completeTime;
 
 }

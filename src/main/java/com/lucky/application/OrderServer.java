@@ -1,6 +1,8 @@
 package com.lucky.application;
 
 import cn.hutool.core.collection.CollectionUtil;
+import com.alibaba.fastjson.JSONObject;
+import com.lucky.application.tripartite.WeChatPayServer;
 import com.lucky.domain.*;
 import com.lucky.domain.config.RedissionConfig;
 import com.lucky.domain.entity.*;
@@ -38,12 +40,13 @@ public class OrderServer {
 
 	private final RedissionConfig redissionConfig;
 	private final static String DEDUCTION = "DEDUCTION:";
+	private final WeChatPayServer weChatPayServer;
 
 	public OrderServer(OrderService orderService,
 	                   PrizeInfoService prizeInfoService,
 	                   GradeService gradeService,
 	                   SeriesTopicService seriesTopicService,
-	                   WechatUserService wechatUserService, SessionInfoService sessionInfoService, LogisticsOrderService logisticsOrderService, PayOrderService payOrderService, RedissionConfig redissionConfig) {
+	                   WechatUserService wechatUserService, SessionInfoService sessionInfoService, LogisticsOrderService logisticsOrderService, PayOrderService payOrderService, RedissionConfig redissionConfig, WeChatPayServer weChatPayServer) {
 		this.orderService = orderService;
 		this.prizeInfoService = prizeInfoService;
 		this.gradeService = gradeService;
@@ -55,6 +58,7 @@ public class OrderServer {
 		this.payOrderService = payOrderService;
 
 		this.redissionConfig = redissionConfig;
+		this.weChatPayServer = weChatPayServer;
 	}
 
 
@@ -865,4 +869,6 @@ public class OrderServer {
 
 
 	}
+
+
 }

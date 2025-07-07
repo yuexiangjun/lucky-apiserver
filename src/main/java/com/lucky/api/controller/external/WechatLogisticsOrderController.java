@@ -36,7 +36,9 @@ public class WechatLogisticsOrderController extends BaseController {
      */
     @GetMapping("/list")
     @ResponseFormat
-    public List<LogisticsOrderInfoVO> list(@RequestParam(value = "wechatUserId", required = false) Long wechatUserId, @RequestParam(value = "status", required = false) Integer status) {
+    public List<LogisticsOrderInfoVO> list(
+            @RequestParam(value = "wechatUserId", required = false) Long wechatUserId,
+            @RequestParam(value = "status", required = false) Integer status) {
 
         if (Objects.isNull(wechatUserId))
             wechatUserId = this.getWechatUserId();
