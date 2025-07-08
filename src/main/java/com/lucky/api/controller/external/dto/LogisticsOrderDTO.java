@@ -28,6 +28,10 @@ public class LogisticsOrderDTO {
      * 快递费
      */
     private BigDecimal expressMoney;
+    /**
+     * 支付类型 1 微信支付 2：平台积分支付
+     */
+    private Integer payType;
 
     /**
      *
@@ -47,6 +51,7 @@ public class LogisticsOrderDTO {
                 .wechatUserId(dto.getWechatUserId())
                 .addressId(dto.getAddressId())
                 .expressMoney(dto.getExpressMoney())
+                .payType( dto.getPayType())
                 .goods(prizeInfos)
                 .build();
 
