@@ -71,7 +71,7 @@ public class WeChatPayRepositoryImpl implements WeChatPayRepository {
 	private JsapiServiceExtension getJsapiServiceExtension() {
 		//构建微信支付参数
 
-		InputStream inputStream = getClass().getClassLoader().getResourceAsStream("apiclient_key.pem");
+		InputStream inputStream = getClass().getClassLoader().getResourceAsStream(payInfoConfig.getKeypath());
 		if (inputStream == null) {
 			throw new RuntimeException("支付鉴权文件未读取到");
 		}

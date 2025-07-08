@@ -1,0 +1,38 @@
+
+spring:
+  springProfile: public
+  datasource:
+     url: jdbc:mysql://39.106.21.228:3306/lucky-star
+     username: root
+     password: fx1234@
+#     url: jdbc:mysql://127.0.0.1:3306/lucky-star
+#     username: root
+#     password: 1998
+     driver-class-name: com.mysql.cj.jdbc.Driver
+  redis:
+    host: redis
+    port: 6379
+    password: fx1234@
+wechat:
+  appid: wxd827da4ada3486fd
+  secret: bc2d8696bf75e4d2c077a74499018813
+  accessTokenUrl: https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=APPID&secret=SECRET
+  phoneNumberUrl: https://api.weixin.qq.com/wxa/business/getuserphonenumber?access_token=ACCESS_TOKEN
+  code2SessionUrl: https://api.weixin.qq.com/sns/jscode2session?appid=APPID&secret=SECRET&js_code=JSCODE&grant_type=authorization_code
+huawei:
+  endpoint: obs.cn-east-3.myhuaweicloud.com
+  ak: HPUASOL8WDLFLFNDMI6K
+  sk: MYjO9I9W26wEExH0XHv5TwXSMAbJYIym73s7pK53
+  bucketname: lucky-wxcd
+  BASEURL1: https://lucky-wxcd.obs.cn-east-3.myhuaweicloud.com/
+wx:
+  pay:
+    appid: wxd827da4ada3486fd
+    machid: 1719160947
+    mchserialno:  55B81111D0E04C5F96504101EF000BAB18645575
+    appsecret: bc2d8696bf75e4d2c077a74499018813
+    apikey: Fuxing1719160947Fuxing1719160947
+    notifyurl: "/api/wechat/pay/callback"
+    keypath: apiclient_key_dev.pem
+    notifyhost: http://39.106.21.228:8333
+
