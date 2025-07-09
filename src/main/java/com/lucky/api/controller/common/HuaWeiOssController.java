@@ -2,7 +2,7 @@ package com.lucky.api.controller.common;
 
 import com.lucky.api.utils.ResponseFormat;
 import com.lucky.application.tripartite.HuaWeiOssServer;
-
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
@@ -16,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
  */
 @RestController
 @RequestMapping("/api/oss")
+@Slf4j
 public class HuaWeiOssController {
 	private final HuaWeiOssServer HuaWeiOssServer;
 
@@ -32,7 +33,9 @@ public class HuaWeiOssController {
 	 */
 	@PostMapping("/upload")
 	@ResponseFormat
-	public String upload(@RequestPart("file")MultipartFile file) {
+	public String upload(@RequestPart("file") MultipartFile file) {
+		log.info("上传图片");
+
 		return HuaWeiOssServer.upload(file);
 	}
 
