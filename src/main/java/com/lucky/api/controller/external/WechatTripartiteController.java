@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Objects;
+
 /**
  * 小程序的三方接口
  *
@@ -37,6 +39,7 @@ public class WechatTripartiteController {
 	@ResponseFormat
 	public Code2SessionVO code2Session(@RequestParam String jsCode,
 	                                   @RequestParam(value = "ownerId", required = false) Long ownerId) {
+
 		var code2Session = wechatServer.code2Session(jsCode);
 		return Code2SessionVO.builder()
 				.authorization(code2Session.getAuthorization())
@@ -57,8 +60,19 @@ public class WechatTripartiteController {
 	@ResponseFormat
 	public Code2SessionVO register(@RequestParam String jsCode,
 	                               @RequestParam String phoneCode,
-	                               @RequestParam(value = "ownerId", required = false) Long ownerId) {
-		var code2Session = wechatServer.register2(jsCode, phoneCode, ownerId);
+	                               @RequestParam(value = "ownerId", required = false) String ownerId) {
+
+		if (Objects.equals(ownerId, "undefined")) {
+			ownerId = null;
+		}
+
+		Long ownerIdLong = null;
+
+		if (Objects.nonNull(ownerId)) {
+			ownerIdLong = Long.valueOf(ownerId);
+		}
+
+		var code2Session = wechatServer.register2(jsCode, phoneCode, ownerIdLong);
 		return Code2SessionVO.builder()
 				.authorization(code2Session.getAuthorization())
 				.wechatUserId(code2Session.getWechatUserId())

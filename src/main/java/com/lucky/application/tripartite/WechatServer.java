@@ -99,6 +99,7 @@ public class WechatServer {
 
 		//根据手机号码查询
 		var entity = wechatUserServer.getByPhone(phone.getPurePhoneNumber());
+
 		if (Objects.isNull(entity)) {
 
 			entity = WechatUserEntity
@@ -114,6 +115,16 @@ public class WechatServer {
 			var id = wechatUserServer.saveOrUpdate(entity);
 
 			entity.setId(id);
+		}
+
+		if (!Objects.equals(entity.getOpenid(), code2Session.getOpenid())) {
+
+			entity.setOpenid(code2Session.getOpenid());
+			entity.setLastLoginTime(LocalDateTime.now());
+
+			wechatUserServer.saveOrUpdate(entity);
+
+
 		}
 
 
