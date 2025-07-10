@@ -107,6 +107,9 @@ public class OrderRepositoryImpl extends ServiceImpl<OrderMapper, OrderPO> imple
 				.in (!CollectionUtils.isEmpty(wechatUserIds), OrderPO::getWechatUserId, wechatUserIds)
 				.in (!CollectionUtils.isEmpty(seriesIds), OrderPO::getTopicId, seriesIds)
 				.orderByDesc(OrderPO::getCreateTime);
-		return List.of();
+		return this.list(wrapper)
+				.stream()
+				.map(OrderPO::toEntity)
+				.collect(Collectors.toList());
 	}
 }
