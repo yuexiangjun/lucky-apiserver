@@ -3,7 +3,7 @@ server:
 spring:
   springProfile: ss
   datasource:
-     url: jdbc:mysql://39.106.21.228:3306/lucky-star
+     url: jdbc:mysql://117.72.202.165:3306/lucky-star
      username: root
      password: fx1234@
      driver-class-name: com.mysql.cj.jdbc.Driver
