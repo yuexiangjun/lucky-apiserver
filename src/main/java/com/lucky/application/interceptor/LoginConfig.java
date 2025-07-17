@@ -23,7 +23,8 @@ public class LoginConfig implements WebMvcConfigurer {
                 "/**/login",
                 "/api/wechat/pay/callback",
                 "/api/wechat/banner/list" ,
-                "/api/wechat/series-topic/list"
+                "/api/wechat/series-topic/**",
+                "/api/wechat/detail/**"
 
 
                 );
