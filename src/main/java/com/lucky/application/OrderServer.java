@@ -1,7 +1,6 @@
 package com.lucky.application;
 
 import cn.hutool.core.collection.CollectionUtil;
-import com.alibaba.fastjson.JSONObject;
 import com.lucky.application.tripartite.WeChatPayServer;
 import com.lucky.domain.*;
 import com.lucky.domain.config.RedissionConfig;
@@ -567,34 +566,56 @@ public class OrderServer {
 		//获取订单
 		var orderEntityList = orderService.findByTopicId(topicId);
 
-		if (CollectionUtils.isEmpty(orderEntityList))
-			return new Sales();
-		//成本
-		var costPrice = orderEntityList
-				.stream()
-				.map(orderEntity ->
-						orderEntity.getOrderPrizeEntities()
-								.stream()
-								.map(orderPrizeEntity -> prizeMapPrice.get(orderPrizeEntity.getProductId()))
-								.reduce(BigDecimal.ZERO, BigDecimal::add)
 
-				)
-				.reduce(BigDecimal.ZERO, BigDecimal::add);
-		//销售单量
-		var orderNumber = orderEntityList.size();
-		//销售金额
-		var salesAmount = BigDecimal.valueOf(orderNumber).multiply(seriesTopicEntity.getPrice());
-		//实际利润
-		var actualProfit = salesAmount.subtract(costPrice);
+		//商品总价值
+		var costPrice = prizeInfoEntities.stream()
+				.map(s -> s.getPrice().multiply(BigDecimal.valueOf(s.getInventory())))
+				.reduce(BigDecimal.ZERO, BigDecimal::add).multiply(BigDecimal.valueOf(seriesTopicEntity.getSession()));
 
 
-		return Sales.builder()
-				.salesAmount(salesAmount)
+		var salesBuilder = Sales.builder()
 				.productTotalValue(costPrice)
-				.orderNumber(orderNumber)
-				.topicName(seriesTopicEntity.getName())
-				.actualProfit(actualProfit)
-				.build();
+				.topicName(seriesTopicEntity.getName());
+
+		if (!CollectionUtils.isEmpty(orderEntityList)) {
+
+			//商品销售成本金额
+			var costPriceAmount = orderEntityList
+					.stream()
+					.map(orderEntity ->
+							orderEntity.getOrderPrizeEntities()
+									.stream()
+									.map(orderPrizeEntity -> prizeMapPrice.get(orderPrizeEntity.getProductId()))
+									.reduce(BigDecimal.ZERO, BigDecimal::add)
+
+					)
+					.reduce(BigDecimal.ZERO, BigDecimal::add);
+
+			//商品销售商品数
+			var costPriceNumber = orderEntityList
+					.stream()
+					.map(orderEntity -> CollectionUtil.isEmpty(orderEntity.getOrderPrizeEntities()) ? 0 : orderEntity.getOrderPrizeEntities().size()
+
+					)
+					.reduce(0, Integer::sum);
+
+
+			//销售单量
+			var orderNumber = orderEntityList.size();
+			//销售金额
+			var salesAmount = BigDecimal.valueOf(costPriceNumber).multiply(seriesTopicEntity.getPrice());
+			//实际利润
+			var actualProfit = salesAmount.subtract(costPriceAmount);
+
+			return salesBuilder
+					.salesAmount(salesAmount)
+					.orderNumber(orderNumber)
+					.actualProfit(actualProfit)
+					.build();
+		}
+		return salesBuilder.build();
+
+
 	}
 
 	public List<PrizePublicity> prizePublicity(Integer gradeType, Long topicId) {
