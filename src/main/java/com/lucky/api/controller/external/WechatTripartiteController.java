@@ -38,7 +38,7 @@ public class WechatTripartiteController {
 	@GetMapping("/login/js-code")
 	@ResponseFormat
 	public Code2SessionVO code2Session(@RequestParam String jsCode,
-	                                   @RequestParam(value = "ownerId", required = false) Long ownerId) {
+	                                   @RequestParam(value = "ownerId", required = false) String ownerId) {
 
 		var code2Session = wechatServer.code2Session(jsCode);
 		return Code2SessionVO.builder()
@@ -66,13 +66,9 @@ public class WechatTripartiteController {
 			ownerId = null;
 		}
 
-		Long ownerIdLong = null;
 
-		if (Objects.nonNull(ownerId)) {
-			ownerIdLong = Long.valueOf(ownerId);
-		}
 
-		var code2Session = wechatServer.register2(jsCode, phoneCode, ownerIdLong);
+		var code2Session = wechatServer.register2(jsCode, phoneCode, ownerId);
 		return Code2SessionVO.builder()
 				.authorization(code2Session.getAuthorization())
 				.wechatUserId(code2Session.getWechatUserId())

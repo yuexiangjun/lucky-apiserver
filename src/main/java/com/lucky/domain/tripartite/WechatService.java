@@ -51,4 +51,5 @@ public class WechatService {
 		return wechatRepository.code2Session(jsCode);
 	}
 
+
 }
