@@ -1,6 +1,10 @@
 server:
   port: 8333
 spring:
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
   springProfile: ss
   datasource:
      url: jdbc:mysql://117.72.202.165:3306/lucky-star
@@ -36,5 +40,5 @@ wx:
     apikey: Fuxing1721561196Fuxing1721561196
     notifyurl: /api/wechat/pay/callback
     keypath: apiclient_key_prod.pem
-    notifyhost: http://39.106.21.228:8333
+    notifyhost: http://117.72.202.165:8333
 

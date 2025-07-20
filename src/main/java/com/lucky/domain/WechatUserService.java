@@ -109,7 +109,7 @@ public class WechatUserService {
 		if (Objects.isNull(wechatUserEntity))
 			throw BusinessException.newInstance("用户不存在");
 
-		wechatUserEntity.setBalance(wechatUserEntity.getBalance().add(money));
+		wechatUserEntity.setBalance(Objects.isNull(wechatUserEntity.getBalance())?BigDecimal.ZERO.add(money):wechatUserEntity.getBalance().add(money));
 
 		wechatUserRepository.saveOrUpdate(wechatUserEntity);
 
