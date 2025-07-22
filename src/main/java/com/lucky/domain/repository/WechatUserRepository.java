@@ -23,4 +23,6 @@ public interface WechatUserRepository  {
 	List<WechatUserEntity> listByTime(WechatUserEntity wechatUserEntity, LocalDateTime startTime, LocalDateTime endTime);
 
 	List<WechatUserEntity> getUserNameOrPhone(String userNameOrPhone);
+
+	Integer wechatcount();
 }

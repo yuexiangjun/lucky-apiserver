@@ -712,7 +712,7 @@ public class OrderServer {
 	public void generateLogisticsOrder(LogisticsOrder logisticsOrder) {
 
 		//订单
-		var orderPrizeEntities = orderService.deductionInventory(logisticsOrder.getGoods());
+		var orderPrizeEntities = orderService.deductionInventory(logisticsOrder.getGoods(), logisticsOrder.getWechatUserId());
 		logisticsOrderService.generateLogisticsOrder(logisticsOrder.getAddressId(), orderPrizeEntities, logisticsOrder.getWechatUserId());
 
 
@@ -791,14 +791,13 @@ public class OrderServer {
 
 		//获取用户总数
 		var wechatUserEntities = wechatUserService.listByTime(new WechatUserEntity(), startTime, endTime);
-
-		Integer userCount = 0;
+		//获取用户总数
+		Integer userCount =wechatUserService.count();
 
 		Integer userAddCount = 0;
 
 		if (CollectionUtil.isNotEmpty(wechatUserEntities)) {
 
-			userCount = wechatUserEntities.size();
 			List<WechatUserEntity> collect = wechatUserEntities
 					.stream()
 					.filter(s -> startTime.toLocalDate().compareTo(now) <= 0 && endTime.toLocalDate().compareTo(now) >= 0)
@@ -811,7 +810,10 @@ public class OrderServer {
 		Integer orderCount = 0;
 		BigDecimal orderAmount = BigDecimal.ZERO;
 		//获取订单数
-		var payOrderEntities = payOrderService.listByTime(new PayOrderEntity(), startTime, endTime);
+		var payOrderEntity = new PayOrderEntity();
+		payOrderEntity.setPayStatus(1);
+		payOrderEntity.setOrderType(1);
+		var payOrderEntities = payOrderService.listByTime(payOrderEntity, startTime, endTime);
 		if (CollectionUtil.isNotEmpty(payOrderEntities)) {
 			orderCount = payOrderEntities.size();
 			orderAmount = payOrderEntities.stream()
@@ -829,7 +831,11 @@ public class OrderServer {
 
 	public List<ConsumeRank> consumeRank(LocalDateTime startTime, LocalDateTime endTime) {
 		//获取订单数
-		var payOrderEntities = payOrderService.listByTime(new PayOrderEntity(), startTime, endTime);
+		PayOrderEntity payOrderEntity = new PayOrderEntity();
+		payOrderEntity.setPayStatus(1);
+		payOrderEntity.setOrderType(1);
+
+		var payOrderEntities = payOrderService.listByTime(payOrderEntity, startTime, endTime);
 
 		if (CollectionUtil.isEmpty(payOrderEntities))
 			return Collections.emptyList();

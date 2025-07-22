@@ -140,4 +140,9 @@ public class WechatUserService {
 		return userNameOrPhone1;
 
 	}
+
+	public Integer count() {
+		return wechatUserRepository.wechatcount();
+
+	}
 }

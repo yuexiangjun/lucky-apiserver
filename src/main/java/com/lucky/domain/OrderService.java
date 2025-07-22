@@ -163,7 +163,7 @@ public class OrderService {
         return orderPrizeRepository.findByWechatUserId(wechatUserId, isDelivery);
     }
 
-    public List<OrderPrizeEntity> deductionInventory(List<PrizeInfoNum> goods) {
+    public List<OrderPrizeEntity> deductionInventory(List<PrizeInfoNum> goods, Long wechatUserId) {
 
         var prizeInfoNumMap = goods.stream()
                 .collect(Collectors.toMap(PrizeInfoNum::getId, PrizeInfoNum::getNum));
@@ -172,7 +172,7 @@ public class OrderService {
         var prizeInfoIds = prizeInfoNumMap.keySet().stream()
                 .collect(Collectors.toList());
 
-        var orderPrizeEntities = orderPrizeRepository.findByPrizeIds(prizeInfoIds, false);
+        var orderPrizeEntities = orderPrizeRepository.findByPrizeIdsAndWechatUserId(prizeInfoIds, false,wechatUserId);
 
         var deductionOrderPrize = new ArrayList<List<OrderPrizeEntity>>();
 

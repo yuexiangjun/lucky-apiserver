@@ -154,6 +154,10 @@ public class LotteryServer {
 			var payOrderId = payOrderService.saveOrUpdate(entity);
 
 			var wechatUserEntity = wechatUserService.getById(entity.getWechatUserId());
+
+			if (Objects.isNull(wechatUserEntity))
+				throw BusinessException.newInstance("用户不存在");
+
 			//调取三方支付接口
 			var payOrderPram = PayOrderPram.getInstance(payOrderId, totalMoney, wechatUserEntity.getOpenid(), "福星抽奖支付订单");
 			var pay = weChatPayServer.pay(payOrderPram);
@@ -299,6 +303,7 @@ public class LotteryServer {
 
 			//抽取奖品
 			var payOrderEntity = orderServer.getByPrizeInfo(entity);
+
 			payOrderEntity.setPayStatus(1);
 			payOrderService.saveOrUpdate(payOrderEntity);
 
@@ -358,6 +363,10 @@ public class LotteryServer {
 			wechatUserService.balanceReduce(logisticsOrder.getWechatUserId(), logisticsOrder.getExpressMoney(), "物流费用支付定单");
 
 			orderServer.generateLogisticsOrder(logisticsOrder);
+
+			payOrderEntity.setPayStatus(1);
+
+			payOrderService.saveOrUpdate(payOrderEntity);
 
 			return PayInfo.builder()
 					.payOrderId(payOrderEntity.getId())

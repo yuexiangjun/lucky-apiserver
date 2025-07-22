@@ -52,14 +52,15 @@ public class NoCounterService {
 
 		var belongDay = noCounterPo.getBelongDay();
 
+		noCounterPo.setValue(noCounterPo.getValue() + 1);
+
 		var formatter = DateTimeFormatter.ofPattern("yyyy-MMdd"); // 定义格式
 		var formattedDate = belongDay.format(formatter); // 格式化日期
 
 		return type.getPrefix()
 				.concat(
 						formattedDate.concat("-")
-								.concat(noCounterPo.getValue().toString()
-								)
+								.concat(noCounterPo.getValue().toString())
 				);
 	}
 }
