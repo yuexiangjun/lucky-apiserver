@@ -22,6 +22,18 @@ public class LogisticsOrderInfoDTO {
      */
     private String logisticsNumber;
 
+    /**
+     * 手机号码
+     */
+    private String phone;
+
+
+    /**
+     *
+     * @param dto
+     * @return
+     */
+
     public static LogisticsOrderEntity toEntity(LogisticsOrderInfoDTO dto ) {
         if (Objects.isNull(dto))
             return null;

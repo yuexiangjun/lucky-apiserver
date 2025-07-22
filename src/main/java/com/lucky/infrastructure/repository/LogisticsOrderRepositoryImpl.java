@@ -20,41 +20,43 @@ import java.util.stream.Collectors;
 @Component
 public class LogisticsOrderRepositoryImpl extends ServiceImpl<LogisticsOrderMapper, LogisticsOrderPO> implements LogisticsOrderRepository {
 
-    @Override
-    public Long saveOrUpdate(LogisticsOrderEntity logisticsOrderEntity) {
+	@Override
+	public Long saveOrUpdate(LogisticsOrderEntity logisticsOrderEntity) {
 
-        var bean = LogisticsOrderPO.getInstance(logisticsOrderEntity);
-        this.saveOrUpdate(bean);
-        return bean.getId();
+		var bean = LogisticsOrderPO.getInstance(logisticsOrderEntity);
+		this.saveOrUpdate(bean);
+		return bean.getId();
 
-    }
+	}
 
-    @Override
-    public List<LogisticsOrderEntity> getByWechatUserId(Long wechatUserId) {
-        var eq = Wrappers.lambdaQuery(LogisticsOrderPO.class)
-                .eq(LogisticsOrderPO::getWechatUserId, wechatUserId)
-                .orderByAsc(LogisticsOrderPO::getStatus)
-                .orderByDesc(LogisticsOrderPO::getCreateTime);
-        return
-                this.list(eq)
-                        .stream()
-                        .map(LogisticsOrderPO::toEntity)
-                        .collect(Collectors.toList());
+	@Override
+	public List<LogisticsOrderEntity> getByWechatUserId(Long wechatUserId) {
+		var eq = Wrappers.lambdaQuery(LogisticsOrderPO.class)
+				.eq(LogisticsOrderPO::getWechatUserId, wechatUserId)
+				.orderByAsc(LogisticsOrderPO::getStatus)
+				.orderByDesc(LogisticsOrderPO::getCreateTime);
+		return
+				this.list(eq)
+						.stream()
+						.map(LogisticsOrderPO::toEntity)
+						.collect(Collectors.toList());
 
 
-    }
+	}
 
-    @Override
-    public List<LogisticsOrderEntity> getByAdminList(LogisticsOrderEntity entity) {
-        var queryWrapper = new LambdaQueryWrapper<LogisticsOrderPO>()
-                .eq(Objects.nonNull(entity.getStatus()), LogisticsOrderPO::getStatus, entity.getStatus())
-                .eq(Objects.nonNull(entity.getWechatUserId()), LogisticsOrderPO::getWechatUserId, entity.getWechatUserId())
-                .like(Objects.nonNull(entity.getNumber()), LogisticsOrderPO::getNumber, entity.getNumber())
-                .like(Objects.nonNull(entity.getLogisticsNumber()), LogisticsOrderPO::getLogisticsNumber, entity.getLogisticsNumber());
-        return
-                this.list(queryWrapper)
-                        .stream()
-                        .map(LogisticsOrderPO::toEntity)
-                        .collect(Collectors.toList());
-    }
+	@Override
+	public List<LogisticsOrderEntity> getByAdminList(LogisticsOrderEntity entity) {
+		var queryWrapper = new LambdaQueryWrapper<LogisticsOrderPO>()
+				.eq(Objects.nonNull(entity.getStatus()), LogisticsOrderPO::getStatus, entity.getStatus())
+				.eq(Objects.nonNull(entity.getWechatUserId()), LogisticsOrderPO::getWechatUserId, entity.getWechatUserId())
+				.like(Objects.nonNull(entity.getNumber()), LogisticsOrderPO::getNumber, entity.getNumber())
+				.like(Objects.nonNull(entity.getLogisticsNumber()), LogisticsOrderPO::getLogisticsNumber, entity.getLogisticsNumber())
+				.orderByAsc(LogisticsOrderPO::getStatus)
+				.orderByDesc(LogisticsOrderPO::getCreateTime);
+		return
+				this.list(queryWrapper)
+						.stream()
+						.map(LogisticsOrderPO::toEntity)
+						.collect(Collectors.toList());
+	}
 }

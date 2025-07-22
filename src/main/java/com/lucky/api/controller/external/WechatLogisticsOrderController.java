@@ -47,7 +47,7 @@ public class WechatLogisticsOrderController extends BaseController {
                 .wechatUserId(wechatUserId)
                 .status(status)
                 .build();
-        return logisticsOrderServer.getByAdminList(logisticsOrderEntity)
+        return logisticsOrderServer.getByAdminList(logisticsOrderEntity,null)
                 .stream()
                 .map(LogisticsOrderInfoVO::getInstance)
                 .collect(Collectors.toList());
