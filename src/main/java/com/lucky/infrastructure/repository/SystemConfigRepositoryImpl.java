@@ -65,4 +65,10 @@ public class SystemConfigRepositoryImpl extends ServiceImpl<SystemConfigMapper, 
 				.collect(Collectors.toList());
 
 	}
+
+	@Override
+	public void deleteById(Long id) {
+
+		this.removeById(id);
+	}
 }

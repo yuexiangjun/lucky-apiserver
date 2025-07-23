@@ -16,6 +16,10 @@ public class SystemConfigEntity {
 	 */
 	private Long gradeId;
 	/**
+	 * 奖项名称
+	 */
+	private String gradeName;
+	/**
 	 * 最低消费金额
 	 */
 	private BigDecimal minConsume;

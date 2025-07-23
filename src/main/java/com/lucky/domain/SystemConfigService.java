@@ -42,5 +42,10 @@ public class SystemConfigService {
 	public List<SystemConfigEntity> findAll() {
 		return systemConfigRepository.findAll();
 	}
-
+	/**
+	 * 删除
+	 */
+	public void deleteById(Long id) {
+		systemConfigRepository.deleteById(id);
+	}
 }

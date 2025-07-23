@@ -25,4 +25,6 @@ public interface SystemConfigRepository {
 	 * 列表
 	 */
 	List<SystemConfigEntity> findAll();
+
+	void deleteById(Long id);
 }
