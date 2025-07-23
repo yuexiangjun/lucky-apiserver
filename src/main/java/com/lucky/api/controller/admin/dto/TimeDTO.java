@@ -1,29 +1,40 @@
 package com.lucky.api.controller.admin.dto;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
-import com.lucky.api.utils.LocalDateTimeDeserializer;
-import lombok.Data;
+import lombok.Setter;
+import org.apache.logging.log4j.util.Strings;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 
-@Data
+@Setter
 public class TimeDTO {
 	/**
 	 * 开始时间
 	 */
-	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-	@JsonDeserialize(using = LocalDateTimeDeserializer.class)
-	@JsonSerialize(using = LocalDateTimeSerializer.class)
 
-	private LocalDateTime startTime;
+	private String startTime;
 	/**
 	 * 结束时间
 	 */
-	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-	@JsonDeserialize(using = LocalDateTimeDeserializer.class)
-	@JsonSerialize(using = LocalDateTimeSerializer.class)
-	private LocalDateTime endTime;
+	private String endTime;
+
+
+	public static LocalDateTime parseLDT(String time) {
+
+		if (Strings.isBlank(time))
+			return null;
+
+		var instant = Instant.parse(time);
+		return instant.atZone(ZoneId.of("Asia/Shanghai")).toLocalDateTime();
+	}
+
+	public LocalDateTime getStartTime() {
+		return parseLDT(startTime);
+	}
+
+	public LocalDateTime getEndTime() {
+		return parseLDT(endTime);
+	}
+
 }

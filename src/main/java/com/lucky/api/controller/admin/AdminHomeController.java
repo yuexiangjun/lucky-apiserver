@@ -33,6 +33,7 @@ public class AdminHomeController {
     @RequestMapping("/metrics")
     @ResponseFormat
     public MetricsVO metrics(@RequestBody TimeDTO timeDTO) {
+
         Metrics metrics = orderServer.metrics(timeDTO.getStartTime(), timeDTO.getEndTime());
         return MetricsVO.getInstance(metrics);
     }
