@@ -30,6 +30,10 @@ public class BalanceLogEntity {
 	 */
 	private Long operatorId;
 	/**
+	 * 操作类型 1:充值 2:商品兑换积分
+	 */
+	private Integer operateType;
+	/**
 	 * 操作时间
 	 */
 	private LocalDateTime operateTime;

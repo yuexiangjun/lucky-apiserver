@@ -22,11 +22,20 @@ public class BannerDTO {
 	/**
 	 * 排序
 	 */
-	private  Integer sort;
+	private Integer sort;
 	/**
 	 * 启用禁用
 	 */
 	private Boolean enabled;
+	/**
+	 * path
+	 */
+	private String path;
+
+	/**
+	 * @param dto
+	 * @return
+	 */
 
 	public static BannerEntity toEntity(BannerDTO dto) {
 

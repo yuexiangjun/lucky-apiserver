@@ -14,4 +14,6 @@ public interface PayOrderRepository {
     List<PayOrderEntity> findByWechatUserIds(List<Long> wechatUserIds);
 
 	List<PayOrderEntity> listByTime(PayOrderEntity payOrderEntity, LocalDateTime startTime, LocalDateTime endTime);
+
+	List<PayOrderEntity>  findByWechatUserId(Long wechatUserId);
 }

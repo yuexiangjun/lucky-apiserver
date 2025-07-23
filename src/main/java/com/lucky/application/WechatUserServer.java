@@ -156,7 +156,7 @@ public class WechatUserServer {
 	 * 增加用户余额
 	 */
 	public void balanceAdd(Long wechatUserId, BigDecimal money, Long userId) {
-		wechatUserService.balanceAdd(wechatUserId, money, userId);
+		wechatUserService.balanceAdd(wechatUserId, money, userId,1);
 	}
 
 	/**

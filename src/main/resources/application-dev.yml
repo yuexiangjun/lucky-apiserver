@@ -2,19 +2,19 @@
 spring:
   springProfile: public
   datasource:
-     url: jdbc:mysql://39.106.21.228:3306/lucky-star
-     username: root
-     password: fx1234@
-#     url: jdbc:mysql://127.0.0.1:3306/lucky-star
+#     url: jdbc:mysql://39.106.21.228:3306/lucky-star
 #     username: root
-#     password: 1998
+#     password: fx1234@
+     url: jdbc:mysql://127.0.0.1:3306/lucky-star
+     username: root
+     password: yue199625
      driver-class-name: com.mysql.cj.jdbc.Driver
   redis:
-    host: redis
-#    host: 127.0.0.1
+#    host: redis
+    host: 127.0.0.1
     port: 6379
-    password: fx1234@
-#    password:
+#    password: fx1234@
+    password:
 wechat:
   appid: wxd827da4ada3486fd
   secret: bc2d8696bf75e4d2c077a74499018813

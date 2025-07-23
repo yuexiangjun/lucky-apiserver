@@ -34,6 +34,10 @@ public class BannerPO {
      * 排序
      */
     private Integer sort;
+    /**
+     * path
+     */
+    private String path;
 
     /**
      * 创建时间

@@ -55,6 +55,21 @@ public class BoxCabinetsController extends BaseController {
         orderServer.generateLogisticsOrder(logisticsOrder);
     }
 
+    /**
+     * 分解
+     */
+    @ResponseFormat
+    @PostMapping("/decompose")
+    public void decompose(@RequestBody LogisticsOrderDTO dto) {
+        if (Objects.isNull(dto.getWechatUserId()))
+            dto.setWechatUserId(this.getWechatUserId());
+
+        var logisticsOrder = LogisticsOrderDTO.toLogisticsOrder(dto);
+        orderServer.decompose(logisticsOrder);
+    }
+
+
+
 
 
 }

@@ -41,11 +41,13 @@ public class OrderServer {
 	private final static String DEDUCTION = "DEDUCTION:";
 	private final WeChatPayServer weChatPayServer;
 
+	private final SystemConfigService systemConfigService;
+
 	public OrderServer(OrderService orderService,
 	                   PrizeInfoService prizeInfoService,
 	                   GradeService gradeService,
 	                   SeriesTopicService seriesTopicService,
-	                   WechatUserService wechatUserService, SessionInfoService sessionInfoService, LogisticsOrderService logisticsOrderService, PayOrderService payOrderService, RedissionConfig redissionConfig, WeChatPayServer weChatPayServer) {
+	                   WechatUserService wechatUserService, SessionInfoService sessionInfoService, LogisticsOrderService logisticsOrderService, PayOrderService payOrderService, RedissionConfig redissionConfig, WeChatPayServer weChatPayServer, SystemConfigService systemConfigService) {
 		this.orderService = orderService;
 		this.prizeInfoService = prizeInfoService;
 		this.gradeService = gradeService;
@@ -58,6 +60,7 @@ public class OrderServer {
 
 		this.redissionConfig = redissionConfig;
 		this.weChatPayServer = weChatPayServer;
+		this.systemConfigService = systemConfigService;
 	}
 
 
@@ -257,6 +260,13 @@ public class OrderServer {
 	}
 
 	public PayOrderEntity getByPrizeInfo(PayOrderEntity payOrderEntity) {
+
+		//获取到当前用户的消费金额
+		var amountSpent = payOrderService.findByWechatUserIdAndPayMoney(payOrderEntity.getWechatUserId());
+		//获取系列的单价
+		var seriesTopicEntity = seriesTopicService.findById(payOrderEntity.getTopicId());
+
+
 		RLock lock = redissionConfig.redissonClient().getLock(DEDUCTION + payOrderEntity.getId());
 		lock.lock();
 		try {
@@ -302,14 +312,30 @@ public class OrderServer {
 
 
 			for (Integer i = 0; i < payOrderEntity.getTimes(); i++) {
-				//当前库存
-				currentInventory = prizeInventory
-						.stream()
-						.map(Inventory::getInventory)
-						.reduce(0, Integer::sum);
 
+				amountSpent = amountSpent.add(seriesTopicEntity.getPrice());
 
-				var prizeId = this.getaPrizeId(hide, gradeEntityMap, prizeInventory, currentInventory);
+				Long prizeId;
+
+				//不能参加的奖品
+				var noPrizeIds = this.getNoParticipatePrize(gradeIds, amountSpent, prizeInfoEntities);
+				if (!CollectionUtils.isEmpty(noPrizeIds)) {
+
+					var prizeInventories = prizeInventory
+							.stream()
+							.filter(entry -> !noPrizeIds.contains(entry.getPrizeId()))
+							.collect(Collectors.toList());
+
+					var hides = hide
+							.stream()
+							.filter(entry -> !noPrizeIds.contains(entry.getId()))
+							.collect(Collectors.toList());
+
+					prizeId = this.getaPrizeId(hides, gradeEntityMap, prizeInventories);
+
+				} else {
+					prizeId = this.getaPrizeId(hide, gradeEntityMap, prizeInventory);
+				}
 
 				prizeInventory = prizeInventory
 						.stream()
@@ -322,9 +348,22 @@ public class OrderServer {
 
 				prizeIds.add(prizeId);
 			}
-			//检查是否存在隐藏存在就再补一次普通奖品
+          //检查是否存在隐藏存在就再补一次普通奖品
+			//不能参加的奖品
+			var noPrizeIds = this.getNoParticipatePrize(gradeIds, amountSpent, prizeInfoEntities);
 
-			prizeInventory = this.checkSupplements(prizeIds, hide, prizeInventory);
+			if (!CollectionUtils.isEmpty(noPrizeIds)) {
+				var prizeInventories = prizeInventory
+						.stream()
+						.filter(entry -> !noPrizeIds.contains(entry.getPrizeId()))
+						.collect(Collectors.toList());
+
+
+				prizeInventory = this.checkSupplements(prizeIds, hide, prizeInventories);
+
+			} else {
+				prizeInventory = this.checkSupplements(prizeIds, hide, prizeInventory);
+			}
 
 
 			//库存等于0则修改状态为已抽完
@@ -361,6 +400,30 @@ public class OrderServer {
 	}
 
 	/**
+	 * 获取不能参与的奖项
+	 */
+	private List<Long> getNoParticipatePrize(List<Long> gradeIds, BigDecimal amountSpent, List<PrizeInfoEntity> prizeInfoEntities) {
+
+		var systemConfigEntities = systemConfigService.findByGradeIds(gradeIds);
+
+		if (CollectionUtils.isEmpty(systemConfigEntities))
+			return List.of();
+
+		var noParticipatePrize = systemConfigEntities.stream()
+				.filter(s -> amountSpent.compareTo(s.getMinConsume()) < 0)
+				.map(SystemConfigEntity::getGradeId)
+				.collect(Collectors.toList());
+
+		return prizeInfoEntities.stream()
+				.filter(s -> noParticipatePrize.contains(s.getGradeId()))
+				.map(PrizeInfoEntity::getId)
+				.collect(Collectors.toList());
+
+
+	}
+
+
+	/**
 	 * 检查是否存在隐藏奖品 存在就再次补充普通奖品
 	 *
 	 * @param prizeIds
@@ -384,14 +447,8 @@ public class OrderServer {
 
 		for (int i = 0; i < contains.size(); i++) {
 
-			//当前库存
-			var currentInventory = prizeInventory
-					.stream()
-					.map(Inventory::getInventory)
-					.reduce(0, Integer::sum);
 
-
-			var prizeId = this.getaPrizeId(null, null, prizeInventory, currentInventory);
+			var prizeId = this.getaPrizeId(null, null, prizeInventory);
 
 			prizeInventory = prizeInventory
 					.stream()
@@ -446,11 +503,17 @@ public class OrderServer {
 	 * @param hide
 	 * @param gradeEntityMap
 	 * @param prizeInventory
-	 * @param commonInventory
 	 * @return
 	 */
 
-	private Long getaPrizeId(List<PrizeInfoEntity> hide, Map<Long, GradeEntity> gradeEntityMap, List<Inventory> prizeInventory, Integer commonInventory) {
+	private Long getaPrizeId(List<PrizeInfoEntity> hide, Map<Long, GradeEntity> gradeEntityMap, List<Inventory> prizeInventory) {
+
+
+		//当前库存
+		var currentInventory = prizeInventory
+				.stream()
+				.map(Inventory::getInventory)
+				.reduce(0, Integer::sum);
 
 		Map<Long, BigDecimal> probability = new HashMap<>();
 
@@ -476,10 +539,12 @@ public class OrderServer {
 							if (inventory <= 0)
 								return BigDecimal.ZERO;
 							return BigDecimal.valueOf(inventory)
-									.divide(BigDecimal.valueOf(commonInventory), 3, RoundingMode.HALF_UP);
+									.divide(BigDecimal.valueOf(currentInventory), 3, RoundingMode.HALF_UP);
 						}
 				));
 		probability.putAll(normal);
+		if (CollectionUtils.isEmpty( probability))
+			throw BusinessException.newInstance("没达到消费目标，没有奖品可抽");
 
 
 		return this.selectProduct(probability);
@@ -792,7 +857,7 @@ public class OrderServer {
 		//获取用户总数
 		var wechatUserEntities = wechatUserService.listByTime(new WechatUserEntity(), startTime, endTime);
 		//获取用户总数
-		Integer userCount =wechatUserService.count();
+		Integer userCount = wechatUserService.count();
 
 		Integer userAddCount = 0;
 
@@ -898,4 +963,39 @@ public class OrderServer {
 	}
 
 
+	public void decompose(LogisticsOrder logisticsOrder) {
+
+		//订单
+		var orderPrizeEntities = orderService.deductionInventory(logisticsOrder.getGoods(), logisticsOrder.getWechatUserId());
+
+		if (CollectionUtil.isEmpty(orderPrizeEntities))
+			return;
+
+		//兑换成福币
+		var productIds = orderPrizeEntities.stream()
+				.map(OrderPrizeEntity::getProductId)
+				.collect(Collectors.toList());
+		//获取到商品的价格
+
+		var prizeInfoMap = prizeInfoService.findByIds(productIds)
+				.stream()
+				.collect(Collectors.toMap(PrizeInfoEntity::getId, Function.identity()));
+
+		var price = orderPrizeEntities
+				.stream()
+				.map(s -> {
+					var prizeInfoEntity = prizeInfoMap.get(s.getProductId());
+
+					if (Objects.nonNull(prizeInfoEntity))
+						return prizeInfoEntity.getPrice();
+					return BigDecimal.ZERO;
+
+
+				})
+				.reduce(BigDecimal.ZERO, BigDecimal::add);
+
+		wechatUserService.balanceAdd(logisticsOrder.getWechatUserId(), price, 0l, 2);
+
+
+	}
 }
