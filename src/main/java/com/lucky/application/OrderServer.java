@@ -685,7 +685,7 @@ public class OrderServer {
 
 	public List<PrizePublicity> prizePublicity(Integer gradeType, Long topicId) {
 
-		var gradeEntities = gradeService.findByList(GradeEntity.builder().type(gradeType).build());
+		var gradeEntities = gradeService.findByList(GradeEntity.builder().type(1).build());
 
 		if (CollectionUtils.isEmpty(gradeEntities))
 			return Collections.emptyList();
@@ -702,7 +702,7 @@ public class OrderServer {
 		var prizeInfoIds = prizeInfoEntities
 				.stream()
 				.filter(s -> {
-					if (Objects.isNull(topicId))
+					if (!Objects.isNull(topicId))
 						return Objects.equals(s.getTopicId(), topicId);
 					return true;
 				})
