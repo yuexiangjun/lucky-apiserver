@@ -91,7 +91,7 @@ public class WechatServer {
 	}
 
 
-	public Code2Session register2(String jsCode, String phoneCode, Long ownerId) {
+	public Code2Session register2(String jsCode, String phoneCode, String ownerOpenId) {
 		//获取手机号码
 		var phone = this.getPhoneNumberToken(phoneCode);
 		//获取openId
@@ -99,6 +99,8 @@ public class WechatServer {
 
 		//根据手机号码查询
 		var entity = wechatUserServer.getByPhone(phone.getPurePhoneNumber());
+
+		var wechatUser = wechatUserServer.getByOpenId(ownerOpenId);
 
 		if (Objects.isNull(entity)) {
 
@@ -108,7 +110,7 @@ public class WechatServer {
 					.phone(phone.getPurePhoneNumber())
 					.createTime(LocalDateTime.now())
 					.enabled(true)
-					.ownerId(ownerId)
+					.ownerId(Objects.nonNull(wechatUser) ? wechatUser.getId() : null)
 					.build();
 			entity.setLastLoginTime(LocalDateTime.now());
 

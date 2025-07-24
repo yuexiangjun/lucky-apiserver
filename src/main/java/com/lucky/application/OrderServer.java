@@ -267,9 +267,9 @@ public class OrderServer {
 		var seriesTopicEntity = seriesTopicService.findById(payOrderEntity.getTopicId());
 
 
-		RLock lock = redissionConfig.redissonClient().getLock(DEDUCTION + payOrderEntity.getId());
-		lock.lock();
-		try {
+//		RLock lock = redissionConfig.redissonClient().getLock(DEDUCTION + payOrderEntity.getId());
+//		lock.lock();
+//		try {
 			//获取主题下的商品
 			var prizeInfoEntities = prizeInfoService.findByTopicId(payOrderEntity.getTopicId());
 
@@ -389,12 +389,12 @@ public class OrderServer {
 
 			return payOrderEntity;
 
-		} finally {
-
-			if (lock.isLocked())
-				lock.unlock();
-
-		}
+//		} finally {
+//
+//			if (lock.isLocked())
+//				lock.unlock();
+//
+//		}
 
 
 	}

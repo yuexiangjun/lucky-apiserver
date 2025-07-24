@@ -131,7 +131,7 @@ public class LotteryServer {
 
 		this.verifySession(entity.getSessionId());
 
-		var key = getRedisKey(entity);
+		var key = getByBuyKey(entity.getTopicId(), entity.getSessionId());
 		//获取是否本场有人在操作
 		String cacheObject = redisService.getCacheObject(key);
 
@@ -139,43 +139,44 @@ public class LotteryServer {
 			throw BusinessException.newInstance("本场有人在操作,请稍等...");
 		}
 
-		var lock = redissionConfig.redissonClient().getLock(key);
-		lock.lock();
-		try {
-			//获取支付金额
-			var seriesTopic = topicService.findById(entity.getTopicId());
+		//获取支付金额
+		var seriesTopic = topicService.findById(entity.getTopicId());
 
-			var totalMoney = seriesTopic.getPrice().multiply(BigDecimal.valueOf(entity.getTimes()));
+		var totalMoney = seriesTopic.getPrice().multiply(BigDecimal.valueOf(entity.getTimes()));
 
-			entity.setPayMoney(totalMoney);
-			entity.setPayStatus(0);
-			entity.setPayTime(LocalDateTime.now());
+		entity.setPayMoney(totalMoney);
+		entity.setPayStatus(0);
+		entity.setPayTime(LocalDateTime.now());
 
-			var payOrderId = payOrderService.saveOrUpdate(entity);
+		var payOrderId = payOrderService.saveOrUpdate(entity);
 
-			var wechatUserEntity = wechatUserService.getById(entity.getWechatUserId());
+//		var lock = redissionConfig.redissonClient().getLock(getRedisKey(entity));
+//		lock.lock();
+//		try {
 
-			if (Objects.isNull(wechatUserEntity))
-				throw BusinessException.newInstance("用户不存在");
+		var wechatUserEntity = wechatUserService.getById(entity.getWechatUserId());
 
-			//调取三方支付接口
-			var payOrderPram = PayOrderPram.getInstance(payOrderId, totalMoney, wechatUserEntity.getOpenid(), "福星抽奖支付订单");
-			var pay = weChatPayServer.pay(payOrderPram);
+		if (Objects.isNull(wechatUserEntity))
+			throw BusinessException.newInstance("用户不存在");
 
-			entity.setId(payOrderId);
-			entity.setPayParams(JSONObject.toJSONString(pay.getPayParams()));
+		//调取三方支付接口
+		var payOrderPram = PayOrderPram.getInstance(payOrderId, totalMoney, wechatUserEntity.getOpenid(), "福星抽奖支付订单");
+		var pay = weChatPayServer.pay(payOrderPram);
 
-			payOrderService.saveOrUpdate(entity);
+		entity.setId(payOrderId);
+		entity.setPayParams(JSONObject.toJSONString(pay.getPayParams()));
 
-			return PayInfo.builder()
-					.payOrderId(payOrderId)
-					.payParams(pay.getPayParams())
-					.build();
+		payOrderService.saveOrUpdate(entity);
 
-		} finally {
-			if (lock.isLocked())
-				lock.unlock();
-		}
+		return PayInfo.builder()
+				.payOrderId(payOrderId)
+				.payParams(pay.getPayParams())
+				.build();
+
+//		} finally {
+//			if (lock.isLocked())
+//				lock.unlock();
+//		}
 	}
 
 	private void putRedisKey(String PAY_LOCK_NAME, String entity) {
@@ -274,27 +275,27 @@ public class LotteryServer {
 
 		this.verifySession(entity.getSessionId());
 
-		var key = getRedisKey(entity);
+		var key = getByBuyKey(entity.getTopicId(), entity.getSessionId());
 		//获取是否本场有人在操作
 		String cacheObject = redisService.getCacheObject(key);
 
 		if (Objects.nonNull(cacheObject) && !Objects.equals(cacheObject, String.valueOf(entity.getWechatUserId()))) {
 			throw BusinessException.newInstance("本场有人在操作,请稍等...");
 		}
+		//获取支付金额
+		var seriesTopic = topicService.findById(entity.getTopicId());
 
-		var lock = redissionConfig.redissonClient().getLock(key);
-		lock.lock();
-		try {
-			//获取支付金额
-			var seriesTopic = topicService.findById(entity.getTopicId());
+		var totalMoney = seriesTopic.getPrice().multiply(BigDecimal.valueOf(entity.getTimes()));
 
-			var totalMoney = seriesTopic.getPrice().multiply(BigDecimal.valueOf(entity.getTimes()));
+		entity.setPayMoney(totalMoney);
+		entity.setPayStatus(0);
+		entity.setPayTime(LocalDateTime.now());
 
-			entity.setPayMoney(totalMoney);
-			entity.setPayStatus(0);
-			entity.setPayTime(LocalDateTime.now());
+		var payOrderId = payOrderService.saveOrUpdate(entity);
 
-			var payOrderId = payOrderService.saveOrUpdate(entity);
+//		var lock = redissionConfig.redissonClient().getLock(getRedisKey(entity));
+//		lock.lock();
+//		try {
 
 			entity.setId(payOrderId);
 
@@ -313,10 +314,10 @@ public class LotteryServer {
 			return orderServer.getPrizeInfoByNum(payOrderEntity.getPrizeId());
 
 
-		} finally {
-			if (lock.isLocked())
-				lock.unlock();
-		}
+//		} finally {
+//			if (lock.isLocked())
+//				lock.unlock();
+//		}
 
 
 	}
