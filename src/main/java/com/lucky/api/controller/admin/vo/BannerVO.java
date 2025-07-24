@@ -27,6 +27,10 @@ public class BannerVO {
      * 启用禁用
      */
     private Boolean enabled;
+    /**
+     * path
+     */
+    private String path;
 
     public static BannerVO getInstance(BannerEntity entity) {
 

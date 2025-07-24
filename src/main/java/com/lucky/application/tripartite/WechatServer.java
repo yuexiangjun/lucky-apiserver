@@ -15,129 +15,129 @@ import java.util.Objects;
 
 @Component
 public class WechatServer {
-    private final WechatService wechatService;
-    private final WechatUserServer wechatUserServer;
+	private final WechatService wechatService;
+	private final WechatUserServer wechatUserServer;
 
-    public WechatServer(WechatService wechatService, WechatUserServer wechatUserServer) {
-        this.wechatService = wechatService;
-        this.wechatUserServer = wechatUserServer;
-    }
-
-
-    /**
-     * 获取微信配置
-     *
-     * @return
-     */
-    public WechatConfigValueObject getConfig() {
-        return wechatService.getConfig();
-    }
+	public WechatServer(WechatService wechatService, WechatUserServer wechatUserServer) {
+		this.wechatService = wechatService;
+		this.wechatUserServer = wechatUserServer;
+	}
 
 
-    /**
-     * 获取微信accessToken
-     *
-     * @return
-     */
-    public String getAccessToken() {
-        return wechatService.getAccessToken();
-    }
+	/**
+	 * 获取微信配置
+	 *
+	 * @return
+	 */
+	public WechatConfigValueObject getConfig() {
+		return wechatService.getConfig();
+	}
 
 
-    /**
-     * 根据获取手机号码的组件code获取手机号码
-     *
-     * @param code
-     * @return
-     */
-
-    public WechatPhone getPhoneNumberToken(String code) {
-        return wechatService.getPhoneNumberToken(code);
-    }
-
-    /**
-     * 小程序登录参数
-     */
-    public Code2Session code2Session(String jsCode) {
-        var code2Session = wechatService.code2Session(jsCode);
-        var wechatUserEntity = wechatUserServer.getByOpenId(code2Session.getOpenid());
-
-        if (Objects.nonNull(wechatUserEntity)) {
-
-            var token = getToken(wechatUserEntity);
-
-            code2Session.setAuthorization(token);
-            code2Session.setWechatUserId(wechatUserEntity.getId());
+	/**
+	 * 获取微信accessToken
+	 *
+	 * @return
+	 */
+	public String getAccessToken() {
+		return wechatService.getAccessToken();
+	}
 
 
-            wechatUserEntity.setLastLoginTime(LocalDateTime.now());
-            wechatUserServer.saveOrUpdate(wechatUserEntity);
-        }
+	/**
+	 * 根据获取手机号码的组件code获取手机号码
+	 *
+	 * @param code
+	 * @return
+	 */
+
+	public WechatPhone getPhoneNumberToken(String code) {
+		return wechatService.getPhoneNumberToken(code);
+	}
+
+	/**
+	 * 小程序登录参数
+	 */
+	public Code2Session code2Session(String jsCode) {
+		var code2Session = wechatService.code2Session(jsCode);
+		var wechatUserEntity = wechatUserServer.getByOpenId(code2Session.getOpenid());
+
+		if (Objects.nonNull(wechatUserEntity)) {
+
+			var token = getToken(wechatUserEntity);
+
+			code2Session.setAuthorization(token);
+			code2Session.setWechatUserId(wechatUserEntity.getId());
 
 
-        return code2Session;
-    }
-
-    private static String getToken(WechatUserEntity wechatUserEntity) {
-        var tokenEntity = TokenEntity.builder()
-                .userId(String.valueOf(wechatUserEntity.getId()))
-                .username(wechatUserEntity.getOpenid())
-                .client(2)
-                .createTime(String.valueOf(System.currentTimeMillis()))
-                .build();
-
-        var token = JwtUtils.createToken(tokenEntity);
-        return token;
-    }
+			wechatUserEntity.setLastLoginTime(LocalDateTime.now());
+			wechatUserServer.saveOrUpdate(wechatUserEntity);
+		}
 
 
-    public Code2Session register2(String jsCode, String phoneCode, String ownerOpenId) {
-        //获取手机号码
-        var phone = this.getPhoneNumberToken(phoneCode);
-        //获取openId
-        var code2Session = this.code2Session(jsCode);
+		return code2Session;
+	}
 
-        //根据手机号码查询
-        var entity = wechatUserServer.getByPhone(phone.getPurePhoneNumber());
+	private static String getToken(WechatUserEntity wechatUserEntity) {
+		var tokenEntity = TokenEntity.builder()
+				.userId(String.valueOf(wechatUserEntity.getId()))
+				.username(wechatUserEntity.getOpenid())
+				.client(2)
+				.createTime(String.valueOf(System.currentTimeMillis()))
+				.build();
 
-        if (Objects.isNull(entity)) {
-
-            var wechatUser = wechatUserServer.getByOpenId(ownerOpenId);
-
-            entity = WechatUserEntity
-                    .builder()
-                    .openid(code2Session.getOpenid())
-                    .phone(phone.getPurePhoneNumber())
-                    .createTime(LocalDateTime.now())
-                    .enabled(true)
-                    .ownerId(Objects.nonNull(wechatUser) ? wechatUser.getId() : null)
-                    .build();
-            entity.setLastLoginTime(LocalDateTime.now());
-
-            var id = wechatUserServer.saveOrUpdate(entity);
-
-            entity.setId(id);
-        }
-
-        if (!Objects.equals(entity.getOpenid(), code2Session.getOpenid())) {
-
-            entity.setOpenid(code2Session.getOpenid());
-            entity.setLastLoginTime(LocalDateTime.now());
-
-            wechatUserServer.saveOrUpdate(entity);
+		var token = JwtUtils.createToken(tokenEntity);
+		return token;
+	}
 
 
-        }
+	public Code2Session register2(String jsCode, String phoneCode, String ownerOpenId) {
+		//获取手机号码
+		var phone = this.getPhoneNumberToken(phoneCode);
+		//获取openId
+		var code2Session = this.code2Session(jsCode);
+
+		//根据手机号码查询
+		var entity = wechatUserServer.getByPhone(phone.getPurePhoneNumber());
+
+		var wechatUser = wechatUserServer.getByOpenId(ownerOpenId);
+
+		if (Objects.isNull(entity)) {
+
+			entity = WechatUserEntity
+					.builder()
+					.openid(code2Session.getOpenid())
+					.phone(phone.getPurePhoneNumber())
+					.createTime(LocalDateTime.now())
+					.enabled(true)
+					.ownerId(Objects.nonNull(wechatUser) ? wechatUser.getId() : null)
+					.build();
+			entity.setLastLoginTime(LocalDateTime.now());
+
+			var id = wechatUserServer.saveOrUpdate(entity);
+
+			entity.setId(id);
+		}
+
+		if (!Objects.equals(entity.getOpenid(), code2Session.getOpenid())) {
+
+			entity.setOpenid(code2Session.getOpenid());
+			entity.setLastLoginTime(LocalDateTime.now());
+
+			wechatUserServer.saveOrUpdate(entity);
 
 
-        String token = getToken(entity);
-
-        return Code2Session.builder()
-                .authorization(token)
-                .openid(code2Session.getOpenid())
-                .wechatUserId(entity.getId())
-                .build();
+		}
 
 
-    }
+		String token = getToken(entity);
+
+		return Code2Session.builder()
+				.authorization(token)
+				.openid(code2Session.getOpenid())
+				.wechatUserId(entity.getId())
+				.build();
+
+
+	}
 }

@@ -17,4 +17,5 @@ public  interface OrderPrizeRepository {
     List<OrderPrizeEntity> findByPrizeIds(List<Long> prizeInfoIds,Boolean isDelivery);
 
     List<OrderPrizeEntity> findByWechatUserId(Long wechatUserId, Boolean isDelivery);
+    List<OrderPrizeEntity>   findByPrizeIdsAndWechatUserId(List<Long> prizeInfoIds,Boolean isDelivery,Long wechatUserId);
 }

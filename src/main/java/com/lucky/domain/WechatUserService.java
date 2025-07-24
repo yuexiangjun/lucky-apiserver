@@ -103,13 +103,13 @@ public class WechatUserService {
 	 * 添加余额
 	 */
 	@Transactional
-	public void balanceAdd(Long wechatUserId, BigDecimal money, Long userId) {
+	public void balanceAdd(Long wechatUserId, BigDecimal money, Long userId, Integer operateType) {
 		var wechatUserEntity = wechatUserRepository.getById(wechatUserId);
 
 		if (Objects.isNull(wechatUserEntity))
 			throw BusinessException.newInstance("用户不存在");
 
-		wechatUserEntity.setBalance(Objects.isNull(wechatUserEntity.getBalance())?BigDecimal.ZERO.add(money):wechatUserEntity.getBalance().add(money));
+		wechatUserEntity.setBalance(Objects.isNull(wechatUserEntity.getBalance()) ? BigDecimal.ZERO.add(money) : wechatUserEntity.getBalance().add(money));
 
 		wechatUserRepository.saveOrUpdate(wechatUserEntity);
 
@@ -118,6 +118,7 @@ public class WechatUserService {
 				.wechatUserId(wechatUserId)
 				.money(money)
 				.operateTime(LocalDateTime.now())
+				.operateType(operateType)
 				.operatorId(userId)
 				.build();
 
@@ -138,6 +139,11 @@ public class WechatUserService {
 			return List.of(entity);
 		}
 		return userNameOrPhone1;
+
+	}
+
+	public Integer count() {
+		return wechatUserRepository.wechatcount();
 
 	}
 }

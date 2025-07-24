@@ -131,7 +131,7 @@ public class LotteryServer {
 
 		this.verifySession(entity.getSessionId());
 
-		var key = getRedisKey(entity);
+		var key = getByBuyKey(entity.getTopicId(), entity.getSessionId());
 		//获取是否本场有人在操作
 		String cacheObject = redisService.getCacheObject(key);
 
@@ -139,39 +139,44 @@ public class LotteryServer {
 			throw BusinessException.newInstance("本场有人在操作,请稍等...");
 		}
 
-		var lock = redissionConfig.redissonClient().getLock(key);
-		lock.lock();
-		try {
-			//获取支付金额
-			var seriesTopic = topicService.findById(entity.getTopicId());
+		//获取支付金额
+		var seriesTopic = topicService.findById(entity.getTopicId());
 
-			var totalMoney = seriesTopic.getPrice().multiply(BigDecimal.valueOf(entity.getTimes()));
+		var totalMoney = seriesTopic.getPrice().multiply(BigDecimal.valueOf(entity.getTimes()));
 
-			entity.setPayMoney(totalMoney);
-			entity.setPayStatus(0);
-			entity.setPayTime(LocalDateTime.now());
+		entity.setPayMoney(totalMoney);
+		entity.setPayStatus(0);
+		entity.setPayTime(LocalDateTime.now());
 
-			var payOrderId = payOrderService.saveOrUpdate(entity);
+		var payOrderId = payOrderService.saveOrUpdate(entity);
 
-			var wechatUserEntity = wechatUserService.getById(entity.getWechatUserId());
-			//调取三方支付接口
-			var payOrderPram = PayOrderPram.getInstance(payOrderId, totalMoney, wechatUserEntity.getOpenid(), "福星抽奖支付订单");
-			var pay = weChatPayServer.pay(payOrderPram);
+//		var lock = redissionConfig.redissonClient().getLock(getRedisKey(entity));
+//		lock.lock();
+//		try {
 
-			entity.setId(payOrderId);
-			entity.setPayParams(JSONObject.toJSONString(pay.getPayParams()));
+		var wechatUserEntity = wechatUserService.getById(entity.getWechatUserId());
 
-			payOrderService.saveOrUpdate(entity);
+		if (Objects.isNull(wechatUserEntity))
+			throw BusinessException.newInstance("用户不存在");
 
-			return PayInfo.builder()
-					.payOrderId(payOrderId)
-					.payParams(pay.getPayParams())
-					.build();
+		//调取三方支付接口
+		var payOrderPram = PayOrderPram.getInstance(payOrderId, totalMoney, wechatUserEntity.getOpenid(), "福星抽奖支付订单");
+		var pay = weChatPayServer.pay(payOrderPram);
 
-		} finally {
-			if (lock.isLocked())
-				lock.unlock();
-		}
+		entity.setId(payOrderId);
+		entity.setPayParams(JSONObject.toJSONString(pay.getPayParams()));
+
+		payOrderService.saveOrUpdate(entity);
+
+		return PayInfo.builder()
+				.payOrderId(payOrderId)
+				.payParams(pay.getPayParams())
+				.build();
+
+//		} finally {
+//			if (lock.isLocked())
+//				lock.unlock();
+//		}
 	}
 
 	private void putRedisKey(String PAY_LOCK_NAME, String entity) {
@@ -270,27 +275,27 @@ public class LotteryServer {
 
 		this.verifySession(entity.getSessionId());
 
-		var key = getRedisKey(entity);
+		var key = getByBuyKey(entity.getTopicId(), entity.getSessionId());
 		//获取是否本场有人在操作
 		String cacheObject = redisService.getCacheObject(key);
 
 		if (Objects.nonNull(cacheObject) && !Objects.equals(cacheObject, String.valueOf(entity.getWechatUserId()))) {
 			throw BusinessException.newInstance("本场有人在操作,请稍等...");
 		}
+		//获取支付金额
+		var seriesTopic = topicService.findById(entity.getTopicId());
 
-		var lock = redissionConfig.redissonClient().getLock(key);
-		lock.lock();
-		try {
-			//获取支付金额
-			var seriesTopic = topicService.findById(entity.getTopicId());
+		var totalMoney = seriesTopic.getPrice().multiply(BigDecimal.valueOf(entity.getTimes()));
 
-			var totalMoney = seriesTopic.getPrice().multiply(BigDecimal.valueOf(entity.getTimes()));
+		entity.setPayMoney(totalMoney);
+		entity.setPayStatus(0);
+		entity.setPayTime(LocalDateTime.now());
 
-			entity.setPayMoney(totalMoney);
-			entity.setPayStatus(0);
-			entity.setPayTime(LocalDateTime.now());
+		var payOrderId = payOrderService.saveOrUpdate(entity);
 
-			var payOrderId = payOrderService.saveOrUpdate(entity);
+//		var lock = redissionConfig.redissonClient().getLock(getRedisKey(entity));
+//		lock.lock();
+//		try {
 
 			entity.setId(payOrderId);
 
@@ -299,6 +304,7 @@ public class LotteryServer {
 
 			//抽取奖品
 			var payOrderEntity = orderServer.getByPrizeInfo(entity);
+
 			payOrderEntity.setPayStatus(1);
 			payOrderService.saveOrUpdate(payOrderEntity);
 
@@ -308,10 +314,10 @@ public class LotteryServer {
 			return orderServer.getPrizeInfoByNum(payOrderEntity.getPrizeId());
 
 
-		} finally {
-			if (lock.isLocked())
-				lock.unlock();
-		}
+//		} finally {
+//			if (lock.isLocked())
+//				lock.unlock();
+//		}
 
 
 	}
@@ -358,6 +364,10 @@ public class LotteryServer {
 			wechatUserService.balanceReduce(logisticsOrder.getWechatUserId(), logisticsOrder.getExpressMoney(), "物流费用支付定单");
 
 			orderServer.generateLogisticsOrder(logisticsOrder);
+
+			payOrderEntity.setPayStatus(1);
+
+			payOrderService.saveOrUpdate(payOrderEntity);
 
 			return PayInfo.builder()
 					.payOrderId(payOrderEntity.getId())

@@ -66,7 +66,11 @@ public class WechatTripartiteController {
 			ownerId = null;
 		}
 
-
+//		Long ownerIdLong = null;
+//
+//		if (Objects.nonNull(ownerId)) {
+//			ownerIdLong = Long.valueOf(ownerId);
+//		}
 
 		var code2Session = wechatServer.register2(jsCode, phoneCode, ownerId);
 		return Code2SessionVO.builder()

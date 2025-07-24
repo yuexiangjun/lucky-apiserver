@@ -6,6 +6,7 @@ import com.lucky.domain.PrizeInfoService;
 import com.lucky.domain.WechatUserService;
 import com.lucky.domain.entity.*;
 import com.lucky.domain.valueobject.LogisticsOrderInfo;
+import org.apache.logging.log4j.util.Strings;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
@@ -107,7 +108,15 @@ public class LogisticsOrderServer {
 	/**
 	 * 后台查询物流订单
 	 */
-	public List<LogisticsOrderInfo> getByAdminList(LogisticsOrderEntity entity) {
+	public List<LogisticsOrderInfo> getByAdminList(LogisticsOrderEntity entity, String phone) {
+
+
+		if (Strings.isNotBlank(phone)) {
+			var wechatUserEntity = wechatUserService.getByPhone(phone);
+			if (!Objects.isNull(wechatUserEntity))
+				entity.setWechatUserId(wechatUserEntity.getId());
+		}
+
 
 		var logisticsOrderEntities = logisticsOrderService.getByAdminList(entity);
 

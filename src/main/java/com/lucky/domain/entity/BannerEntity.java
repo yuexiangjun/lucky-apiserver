@@ -36,6 +36,10 @@ public class BannerEntity {
 	 * 修改时间
 	 */
 	private LocalDateTime updateTime;
+	/**
+	 * path
+	 */
+	private String path;
 
 
 }

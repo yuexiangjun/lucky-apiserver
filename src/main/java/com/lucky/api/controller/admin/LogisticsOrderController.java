@@ -36,7 +36,7 @@ public class LogisticsOrderController {
     @ResponseFormat
     public List<LogisticsOrderInfoVO> list(@RequestBody LogisticsOrderInfoDTO logisticsOrderInfo) {
         var logisticsOrderEntity = LogisticsOrderInfoDTO.toEntity(logisticsOrderInfo);
-        return logisticsOrderServer.getByAdminList(logisticsOrderEntity)
+        return logisticsOrderServer.getByAdminList(logisticsOrderEntity, logisticsOrderInfo.getPhone())
                 .stream()
                 .map(LogisticsOrderInfoVO::getInstance)
                 .collect(Collectors.toList());
