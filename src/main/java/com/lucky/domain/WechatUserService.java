@@ -85,10 +85,10 @@ public class WechatUserService {
 			throw BusinessException.newInstance("用户不存在");
 
 		if (Objects.isNull(wechatUserEntity.getBalance()))
-			throw BusinessException.newInstance("用户积分余额不足");
+			throw BusinessException.newInstance("福币余额不足");
 
 		if (wechatUserEntity.getBalance().compareTo(money) < 0)
-			throw BusinessException.newInstance("用户积分余额不足");
+			throw BusinessException.newInstance("福币余额不足");
 
 		wechatUserEntity.setBalance(wechatUserEntity.getBalance().subtract(money));
 
