@@ -6,6 +6,7 @@ import com.lucky.api.controller.external.vo.WechatPrizeInfoVO;
 import com.lucky.api.utils.ResponseFormat;
 import com.lucky.application.OrderServer;
 
+import com.lucky.domain.exception.BusinessException;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -50,6 +51,9 @@ public class BoxCabinetsController extends BaseController {
 
         if (Objects.isNull(dto.getWechatUserId()))
             dto.setWechatUserId(this.getWechatUserId());
+
+        if (Objects.isNull(dto.getAddressId()))
+            throw   BusinessException.newInstance("发货缺少收货地址id");
 
         var logisticsOrder = LogisticsOrderDTO.toLogisticsOrder(dto);
         orderServer.generateLogisticsOrder(logisticsOrder);
