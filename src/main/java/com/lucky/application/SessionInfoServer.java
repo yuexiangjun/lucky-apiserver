@@ -117,7 +117,7 @@ public class SessionInfoServer {
 								GradeEntity gradeEntity = gradeEntityMap.get(prizeInfoEntity.getGradeId());
 								var probability = new BigDecimal(0);
 								if (new BigDecimal(p.getInventory()).compareTo(BigDecimal.ZERO) > 0)
-									probability = new BigDecimal(p.getInventory()).divide(new BigDecimal(remainInventory), 2, BigDecimal.ROUND_HALF_UP).multiply(BigDecimal.valueOf(100));
+									probability = new BigDecimal(p.getInventory()).divide(new BigDecimal(remainInventory), 5, BigDecimal.ROUND_HALF_UP).multiply(BigDecimal.valueOf(100));
 								return InventoryInfo.builder()
 										.prizeId(p.getPrizeId())
 										.totalInventory(totalInventoryMap.get(p.getPrizeId()))
