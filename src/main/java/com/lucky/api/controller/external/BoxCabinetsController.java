@@ -62,7 +62,8 @@ public class BoxCabinetsController extends BaseController {
     @PostMapping("/decompose")
     public void decompose(@RequestBody LogisticsOrderDTO dto) {
         if (Objects.isNull(dto.getWechatUserId()))
-            dto.setWechatUserId(this.getWechatUserId());
+//            dto.setWechatUserId(this.getWechatUserId());
+            dto.setWechatUserId(1925139088620285954l);
 
         var logisticsOrder = LogisticsOrderDTO.toLogisticsOrder(dto);
         orderServer.decompose(logisticsOrder);

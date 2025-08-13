@@ -44,7 +44,7 @@ public class JwtUtils {
 	 * @return 数据声明
 	 */
 	public static Claims parseToken(String token) {
-		checkToken(token);
+
 
 		return Jwts.parser()
 				.setSigningKey(secret)
@@ -140,38 +140,4 @@ public class JwtUtils {
 	}
 
 
-	private static void checkToken(String token) {
-		if (Objects.isNull(token)) {
-			throw BusinessException.newInstance("令牌不能为空");
-
-		}
-		Claims claims = null;
-		try {
-			claims = JwtUtils.parseToken(token);
-		} catch (ExpiredJwtException e) {
-
-			throw BusinessException.newInstance("token过期");
-
-		} catch (MalformedJwtException e) {
-
-			throw BusinessException.newInstance("json web token格式错误");
-
-		} catch (Exception e) {
-
-			throw BusinessException.newInstance("token解析异常");
-		}
-		if (claims == null) {
-			throw BusinessException.newInstance("令牌已过期或验证不正确");
-		}
-		String userId = JwtUtils.getUserId(claims);
-		String username = JwtUtils.getUserName(claims);
-		Integer client = JwtUtils.getClient(claims);
-
-		if (Strings.isBlank(userId) ||
-				Strings.isBlank(username) ||
-				Objects.isNull(client) || !List.of(1, 2).contains(client)
-		) {
-			throw BusinessException.newInstance("令牌验证失败");
-		}
-	}
 }

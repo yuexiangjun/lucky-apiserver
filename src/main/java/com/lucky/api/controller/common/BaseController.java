@@ -5,6 +5,8 @@ import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.util.Objects;
+
 @RequestMapping(produces = "application/json;charset=UTF-8")
 public class BaseController {
     /**
@@ -23,8 +25,10 @@ public class BaseController {
     protected Long getAdminUserId() {
         String token = getToken();
         if (token == null)
-            return null;
-        if (JwtUtils.getClient(token) == 1) {
+            return 1l;
+
+         var client = JwtUtils.getClient(token);
+        if (Objects.equals(client, 1)) {
             return Long.valueOf(JwtUtils.getUserId(token));
         }
         return null;
@@ -36,8 +40,8 @@ public class BaseController {
     protected Long getWechatUserId() {
         String token = getToken();
         if (token == null)
-            return null;
-        if (JwtUtils.getClient(token) == 2) {
+            return 1l;
+        if (Objects.equals(JwtUtils.getClient(token), 2)) {
             return Long.valueOf(JwtUtils.getUserId(token));
         }
         return null;
