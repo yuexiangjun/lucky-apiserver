@@ -156,7 +156,7 @@ public class OrderService {
 
     public List<OrderPrizeEntity> findByPrizeIds(List<Long> prizeInfoIds) {
 
-        return orderPrizeRepository.findByPrizeIds(prizeInfoIds, false);
+        return orderPrizeRepository.findByPrizeIds(prizeInfoIds, null);
     }
 
     public List<OrderPrizeEntity> findByWechatUserId(Long wechatUserId, Boolean isDelivery) {
