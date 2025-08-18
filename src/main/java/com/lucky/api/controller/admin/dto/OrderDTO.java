@@ -39,6 +39,10 @@ public class OrderDTO {
 	 * 订单状态  0-待发货 1-待收货 2-完成
 	 */
 	private Integer status;
+	/**
+	 * 支付方式 1：微信 2 ：福币
+	 */
+	private Integer payType;
 
 	/**
 	 * 页

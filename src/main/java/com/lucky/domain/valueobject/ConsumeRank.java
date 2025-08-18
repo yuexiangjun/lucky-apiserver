@@ -36,4 +36,14 @@ public class ConsumeRank {
      * 加入时间
      */
     private LocalDateTime joinTime;
+    /**
+     * 微信消费
+     */
+    private BigDecimal wechatConsume;
+    /**
+     * 福币消费
+     */
+    private BigDecimal coinConsume;
+
+
 }

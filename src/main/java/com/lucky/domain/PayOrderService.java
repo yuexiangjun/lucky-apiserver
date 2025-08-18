@@ -62,4 +62,11 @@ public class PayOrderService {
 				.reduce(BigDecimal.ZERO, BigDecimal::add);
 
 	}
+
+	public  List<PayOrderEntity> findByIdsList(List<Long> payOrderIds) {
+		if (CollectionUtils.isEmpty(payOrderIds))
+			return List.of();
+		return payOrderRepository.findByIdsList(payOrderIds);
+
+	}
 }

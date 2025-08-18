@@ -34,6 +34,16 @@ public class ConsumeRankVO {
      * 加入时间
      */
     private LocalDateTime joinTime;
+    /**
+     * 微信消费
+     */
+    private BigDecimal wechatConsume;
+    /**
+     * 福币消费
+     */
+    private BigDecimal coinConsume;
+
+
 
     public static ConsumeRankVO getInstance(ConsumeRank consumeRank){
         if (Objects.isNull(consumeRank))

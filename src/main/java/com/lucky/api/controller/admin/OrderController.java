@@ -37,7 +37,7 @@ public class OrderController {
 
         var entity = OrderDTO.toEntity(dto);
 
-        return orderServer.list(entity,dto.getUserNameOrPhone(),dto.getSeriesName())
+        return orderServer.list(entity,dto.getUserNameOrPhone(),dto.getSeriesName(),dto.getPayType())
                 .stream()
                 .map(OrderVO::getInstance)
                 .collect(Collectors.toList());

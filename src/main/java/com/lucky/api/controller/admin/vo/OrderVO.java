@@ -55,6 +55,10 @@ public class OrderVO {
 	 * 发货时间
 	 */
 	private LocalDateTime sendTime;
+	/**
+	 * 支付方式 1：微信 2 ：福币
+	 */
+	private Integer payType;
 
 	public static OrderVO getInstance(Order entity) {
 		if (Objects.isNull(entity))

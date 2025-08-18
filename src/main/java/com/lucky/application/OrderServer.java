@@ -9,7 +9,6 @@ import com.lucky.domain.exception.BusinessException;
 import com.lucky.domain.valueobject.*;
 import lombok.Getter;
 import org.apache.logging.log4j.util.Strings;
-import org.redisson.api.RLock;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -67,7 +66,7 @@ public class OrderServer {
 	/**
 	 * 列表
 	 */
-	public List<Order> list(OrderEntity entity, String userNameOrPhone, String seriesName) {
+	public List<Order> list(OrderEntity entity, String userNameOrPhone, String seriesName, Integer payType) {
 		List<Long> findWechatUserIds = new ArrayList<Long>();
 		if (Strings.isNotBlank(userNameOrPhone)) {
 			var wechatUserEntities = wechatUserService.getUserNameOrPhone(userNameOrPhone);
@@ -90,6 +89,16 @@ public class OrderServer {
 
 		if (CollectionUtils.isEmpty(list))
 			return List.of();
+
+		var payOrderIds = list.stream()
+				.map(OrderEntity::getPayOrderId)
+				.distinct()
+				.collect(Collectors.toList());
+
+		var payOrderEntities = payOrderService.findByIdsList(payOrderIds);
+		var payOrderMap = payOrderEntities.stream()
+				.collect(Collectors.toMap(PayOrderEntity::getId, PayOrderEntity::getPayType));
+
 
 		//主题id
 		var topicIds = list.stream()
@@ -146,6 +155,7 @@ public class OrderServer {
 									return Order
 											.builder()
 											.id(orderEntity.getId())
+											.payType(payOrderMap.get(orderEntity.getPayOrderId()))
 											.finishTime(orderEntity.getFinishTime())
 											.createTime(orderEntity.getCreateTime())
 											.sendTime(orderEntity.getSendTime())
@@ -160,6 +170,11 @@ public class OrderServer {
 
 				)
 				.flatMap(List::stream)
+				.filter(s -> {
+					if (Objects.isNull(payType))
+						return true;
+					return Objects.equals(s.getPayType(), payType);
+				})
 				.collect(Collectors.toList());
 
 
@@ -270,124 +285,124 @@ public class OrderServer {
 //		RLock lock = redissionConfig.redissonClient().getLock(DEDUCTION + payOrderEntity.getId());
 //		lock.lock();
 //		try {
-			//获取主题下的商品
-			var prizeInfoEntities = prizeInfoService.findByTopicId(payOrderEntity.getTopicId());
+		//获取主题下的商品
+		var prizeInfoEntities = prizeInfoService.findByTopicId(payOrderEntity.getTopicId());
 
-			var gradeIds = prizeInfoEntities.stream()
-					.map(PrizeInfoEntity::getGradeId)
-					.collect(Collectors.toList());
+		var gradeIds = prizeInfoEntities.stream()
+				.map(PrizeInfoEntity::getGradeId)
+				.collect(Collectors.toList());
 
-			List<GradeEntity> gradeEntities = gradeService.findByIds(gradeIds);
+		List<GradeEntity> gradeEntities = gradeService.findByIds(gradeIds);
 
-			var gradeEntityMap = gradeEntities.stream()
-					.collect(Collectors.toMap(GradeEntity::getId, Function.identity()));
-
-
-			var sessionInfoEntity = sessionInfoService.findById(payOrderEntity.getSessionId());
+		var gradeEntityMap = gradeEntities.stream()
+				.collect(Collectors.toMap(GradeEntity::getId, Function.identity()));
 
 
-			var prizeInfoMap = prizeInfoEntities.stream()
-					.collect(Collectors.groupingBy(PrizeInfoEntity::getType));
+		var sessionInfoEntity = sessionInfoService.findById(payOrderEntity.getSessionId());
 
 
-			//获取隐藏级的概率
-			var hide = prizeInfoMap.get(1);
-
-			//获取普通级的概率
-			var common = prizeInfoMap.get(2);
-			//获取总库存
-			var prizeInventory = sessionInfoEntity.getPrizeInventory();
-			//当前库存
-			var currentInventory = prizeInventory
-					.stream()
-					.map(Inventory::getInventory)
-					.reduce(0, Integer::sum);
-
-			if (currentInventory < payOrderEntity.getTimes())
-				throw BusinessException.newInstance("库存小于次数");
-
-			//抽中的奖品id
-
-			var prizeIds = new ArrayList<Long>();
+		var prizeInfoMap = prizeInfoEntities.stream()
+				.collect(Collectors.groupingBy(PrizeInfoEntity::getType));
 
 
-			for (Integer i = 0; i < payOrderEntity.getTimes(); i++) {
+		//获取隐藏级的概率
+		var hide = prizeInfoMap.get(1);
 
-				amountSpent = amountSpent.add(seriesTopicEntity.getPrice());
+		//获取普通级的概率
+		var common = prizeInfoMap.get(2);
+		//获取总库存
+		var prizeInventory = sessionInfoEntity.getPrizeInventory();
+		//当前库存
+		var currentInventory = prizeInventory
+				.stream()
+				.map(Inventory::getInventory)
+				.reduce(0, Integer::sum);
 
-				Long prizeId;
+		if (currentInventory < payOrderEntity.getTimes())
+			throw BusinessException.newInstance("库存小于次数");
 
-				//不能参加的奖品
-				var noPrizeIds = this.getNoParticipatePrize(gradeIds, amountSpent, prizeInfoEntities);
-				if (!CollectionUtils.isEmpty(noPrizeIds)) {
+		//抽中的奖品id
 
-					var prizeInventories = prizeInventory
-							.stream()
-							.filter(entry -> !noPrizeIds.contains(entry.getPrizeId()))
-							.collect(Collectors.toList());
+		var prizeIds = new ArrayList<Long>();
 
-					var hides = hide
-							.stream()
-							.filter(entry -> !noPrizeIds.contains(entry.getId()))
-							.collect(Collectors.toList());
 
-					prizeId = this.getaPrizeId(hides, gradeEntityMap, prizeInventories);
+		for (Integer i = 0; i < payOrderEntity.getTimes(); i++) {
 
-				} else {
-					prizeId = this.getaPrizeId(hide, gradeEntityMap, prizeInventory);
-				}
+			amountSpent = amountSpent.add(seriesTopicEntity.getPrice());
 
-				prizeInventory = prizeInventory
-						.stream()
-						.map(entry -> {
-							if (Objects.equals(entry.getPrizeId(), prizeId))
-								entry.setInventory(entry.getInventory() - 1);
-							return entry;
-						})
-						.collect(Collectors.toList());
+			Long prizeId;
 
-				prizeIds.add(prizeId);
-			}
-          //检查是否存在隐藏存在就再补一次普通奖品
 			//不能参加的奖品
 			var noPrizeIds = this.getNoParticipatePrize(gradeIds, amountSpent, prizeInfoEntities);
-
 			if (!CollectionUtils.isEmpty(noPrizeIds)) {
+
 				var prizeInventories = prizeInventory
 						.stream()
 						.filter(entry -> !noPrizeIds.contains(entry.getPrizeId()))
 						.collect(Collectors.toList());
 
+				var hides = hide
+						.stream()
+						.filter(entry -> !noPrizeIds.contains(entry.getId()))
+						.collect(Collectors.toList());
 
-				prizeInventory = this.checkSupplements(prizeIds, hide, prizeInventories);
+				prizeId = this.getaPrizeId(hides, gradeEntityMap, prizeInventories);
 
 			} else {
-				prizeInventory = this.checkSupplements(prizeIds, hide, prizeInventory);
+				prizeId = this.getaPrizeId(hide, gradeEntityMap, prizeInventory);
 			}
 
+			prizeInventory = prizeInventory
+					.stream()
+					.map(entry -> {
+						if (Objects.equals(entry.getPrizeId(), prizeId))
+							entry.setInventory(entry.getInventory() - 1);
+						return entry;
+					})
+					.collect(Collectors.toList());
 
-			//库存等于0则修改状态为已抽完
-			var reduce = prizeInventory.stream()
-					.map(Inventory::getInventory)
-					.reduce(0, Integer::sum);
+			prizeIds.add(prizeId);
+		}
+		//检查是否存在隐藏存在就再补一次普通奖品
+		//不能参加的奖品
+		var noPrizeIds = this.getNoParticipatePrize(gradeIds, amountSpent, prizeInfoEntities);
 
-			if (Objects.equals(reduce, 0))
-				sessionInfoEntity.setStatus(2);
-
-			sessionInfoEntity.setPrizeInventory(prizeInventory);
-
-			sessionInfoService.saveOrUpdate(sessionInfoEntity);
-
-			orderService.save(prizeIds,
-					payOrderEntity.getTopicId(),
-					payOrderEntity.getSessionId(),
-					payOrderEntity.getWechatUserId(),
-					payOrderEntity.getId());
-
-			payOrderEntity.setPrizeId(prizeIds);
+		if (!CollectionUtils.isEmpty(noPrizeIds)) {
+			var prizeInventories = prizeInventory
+					.stream()
+					.filter(entry -> !noPrizeIds.contains(entry.getPrizeId()))
+					.collect(Collectors.toList());
 
 
-			return payOrderEntity;
+			prizeInventory = this.checkSupplements(prizeIds, hide, prizeInventories);
+
+		} else {
+			prizeInventory = this.checkSupplements(prizeIds, hide, prizeInventory);
+		}
+
+
+		//库存等于0则修改状态为已抽完
+		var reduce = prizeInventory.stream()
+				.map(Inventory::getInventory)
+				.reduce(0, Integer::sum);
+
+		if (Objects.equals(reduce, 0))
+			sessionInfoEntity.setStatus(2);
+
+		sessionInfoEntity.setPrizeInventory(prizeInventory);
+
+		sessionInfoService.saveOrUpdate(sessionInfoEntity);
+
+		orderService.save(prizeIds,
+				payOrderEntity.getTopicId(),
+				payOrderEntity.getSessionId(),
+				payOrderEntity.getWechatUserId(),
+				payOrderEntity.getId());
+
+		payOrderEntity.setPrizeId(prizeIds);
+
+
+		return payOrderEntity;
 
 //		} finally {
 //
@@ -543,7 +558,7 @@ public class OrderServer {
 						}
 				));
 		probability.putAll(normal);
-		if (CollectionUtils.isEmpty( probability))
+		if (CollectionUtils.isEmpty(probability))
 			throw BusinessException.newInstance("没达到消费目标，没有奖品可抽");
 
 
@@ -874,6 +889,7 @@ public class OrderServer {
 
 		Integer orderCount = 0;
 		BigDecimal orderAmount = BigDecimal.ZERO;
+		Map<Integer, BigDecimal> typePayMoney = new HashMap<>();
 		//获取订单数
 		var payOrderEntity = new PayOrderEntity();
 		payOrderEntity.setPayStatus(1);
@@ -884,12 +900,20 @@ public class OrderServer {
 			orderAmount = payOrderEntities.stream()
 					.map(PayOrderEntity::getPayMoney)
 					.reduce(BigDecimal.ZERO, BigDecimal::add);
+
+			typePayMoney = payOrderEntities.stream()
+					.collect(
+							Collectors.groupingBy(PayOrderEntity::getPayType, Collectors.reducing(BigDecimal.ZERO, PayOrderEntity::getPayMoney, BigDecimal::add)));
+
+
 		}
 		return Metrics.builder()
 				.userCount(userCount)
 				.userAddCount(userAddCount)
 				.orderCount(orderCount)
 				.orderAmount(orderAmount)
+				.wechatConsume(typePayMoney.getOrDefault(1, BigDecimal.ZERO))
+				.coinConsume(typePayMoney.getOrDefault(2, BigDecimal.ZERO))
 				.build();
 
 	}
@@ -947,11 +971,22 @@ public class OrderServer {
 					List<PayOrderEntity> value = s.getValue();
 					if (!CollectionUtils.isEmpty(value)) {
 						BigDecimal reduce = value.stream().map(PayOrderEntity::getPayMoney).reduce(BigDecimal.ZERO, BigDecimal::add);
-						return consumeRankBuilder.amount(reduce)
+
+						var typePayMoney = value.stream()
+								.collect(
+										Collectors.groupingBy(PayOrderEntity::getPayType, Collectors.reducing(BigDecimal.ZERO, PayOrderEntity::getPayMoney, BigDecimal::add)));
+
+						return consumeRankBuilder
+								.amount(reduce)
+								.wechatConsume(typePayMoney.getOrDefault(1, BigDecimal.ZERO))
+								.coinConsume(typePayMoney.getOrDefault(2, BigDecimal.ZERO))
 								.orderCount(value.size())
 								.build();
 					} else
-						return consumeRankBuilder.amount(BigDecimal.ZERO)
+						return consumeRankBuilder
+								.amount(BigDecimal.ZERO)
+								.wechatConsume(BigDecimal.ZERO)
+								.coinConsume(BigDecimal.ZERO)
 								.orderCount(0)
 								.build();
 

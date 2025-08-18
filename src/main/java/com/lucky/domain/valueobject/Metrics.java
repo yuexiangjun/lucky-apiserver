@@ -28,5 +28,13 @@ public class Metrics {
      * 订单金额
      */
     private BigDecimal orderAmount;
+    /**
+     * 微信消费
+     */
+    private BigDecimal wechatConsume;
+    /**
+     * 福币消费
+     */
+    private BigDecimal coinConsume;
 
 }

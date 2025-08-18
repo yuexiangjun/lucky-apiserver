@@ -52,6 +52,11 @@ public class Order {
 	 */
 	private LocalDateTime sendTime;
 
+	/**
+	 * 支付方式
+	 */
+	private Integer payType;
+
 
 
 }

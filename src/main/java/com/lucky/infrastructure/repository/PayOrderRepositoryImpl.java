@@ -66,6 +66,17 @@ public class PayOrderRepositoryImpl extends ServiceImpl<PayOrderMapper, PayOrder
 	}
 
 	@Override
+	public List<PayOrderEntity> findByIdsList(List<Long> payOrderIds) {
+		var wrapper = Wrappers.lambdaQuery(PayOrderPO.class)
+				.in( PayOrderPO::getId, payOrderIds);
+
+		return this.list(wrapper)
+				.stream()
+				.map(PayOrderPO::toEntity)
+				.collect(Collectors.toList());
+	}
+
+	@Override
 	public List<PayOrderEntity> findByWechatUserIds(List<Long> wechatUserIds) {
 		if (CollectionUtils.isEmpty(wechatUserIds))
 			return List.of();
