@@ -51,4 +51,8 @@ public class PrizeInfoService {
     public List<PrizeInfoEntity> findByGradeIds(List<Long> gradeIds) {
         return  prizeInfoRepository .findByGradeIds(gradeIds);
     }
+
+    public PrizeInfoEntity findById(Long findById) {
+        return  prizeInfoRepository .findById(findById);
+    }
 }

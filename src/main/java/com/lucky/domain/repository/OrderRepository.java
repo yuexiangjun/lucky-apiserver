@@ -19,4 +19,6 @@ public interface OrderRepository {
 
 
 	List<OrderEntity> listIds(OrderEntity entity, List<Long> wechatUserIds, List<Long> seriesIds);
+
+	List<OrderEntity> findByIds(List<Long> orderIds);
 }

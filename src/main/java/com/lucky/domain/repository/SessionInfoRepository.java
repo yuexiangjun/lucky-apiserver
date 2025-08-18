@@ -10,7 +10,7 @@ public interface SessionInfoRepository {
     Long saveOrUpdate(SessionInfoEntity entity);
 
 
-    Boolean saveList(List<SessionInfoEntity> sessionInfoEntities);
+    Boolean saveOrUpdateBatch(List<SessionInfoEntity> sessionInfoEntities);
 
     List<SessionInfoEntity> findByTopicId(Long topicId);
 

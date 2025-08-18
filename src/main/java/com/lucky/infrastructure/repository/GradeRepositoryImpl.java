@@ -77,4 +77,10 @@ public class GradeRepositoryImpl extends ServiceImpl<GradeMapper, GradePO> imple
                 .collect(Collectors.toList());
 
     }
+
+    @Override
+    public GradeEntity findById(Long gradeId) {
+        var gradePO = gradeMapper.selectById(gradeId);
+        return GradePO .toEntity(gradePO);
+    }
 }

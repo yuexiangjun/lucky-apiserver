@@ -1,6 +1,7 @@
 package com.lucky.api.controller.admin;
 
 import com.lucky.api.controller.admin.dto.PrizeInfoDTO;
+import com.lucky.api.controller.admin.dto.UpdatePrizeInfoDTO;
 import com.lucky.api.controller.admin.vo.PrizeInfoVO;
 import com.lucky.api.utils.ResponseFormat;
 import com.lucky.application.PrizeInfoServer;
@@ -114,4 +115,16 @@ public class PrizeInfoController {
         if (!aBoolean)
             throw BusinessException.newInstance("删除失败");
     }
+    /**
+     * 修改奖品
+     */
+    @PutMapping("/update-prize")
+    @ResponseFormat
+    public void updatePrize(@RequestBody UpdatePrizeInfoDTO dto) {
+        var entity = UpdatePrizeInfoDTO.toEntity(dto, dto.getTopicId());
+     var aBoolean =   prizeInfoServer.updatePrize(entity);
+        if (!aBoolean)
+            throw BusinessException.newInstance("修改商品失败");
+    }
+
 }

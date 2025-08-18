@@ -49,6 +49,10 @@ public class GradePO {
      * 是否启用
      */
     private Boolean status;
+    /**
+     * 奖项能否修改 0：不可修改 1：可修改
+     */
+    private Integer editable;
 
     public static GradePO getInstance(GradeEntity entity) {
         if (Objects.isNull(entity))
@@ -57,6 +61,7 @@ public class GradePO {
                 .id(entity.getId())
                 .type(entity.getType())
                 .sort(entity.getSort())
+                .editable(entity.getEditable())
                 .name(entity.getName())
                 .probability(entity.getProbability())
                 .status(entity.getStatus())
@@ -72,6 +77,7 @@ public class GradePO {
                 .id(po.getId())
                 .sort(po.getSort())
                 .type(po.getType())
+                .editable(po.getEditable())
                 .name(po.getName())
                 .probability(po.getProbability())
                 .status(po.getStatus())

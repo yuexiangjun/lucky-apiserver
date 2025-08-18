@@ -11,6 +11,7 @@ import com.lucky.domain.valueobject.BaseDataPage;
 import com.lucky.domain.valueobject.InventoryInfo;
 import com.lucky.domain.valueobject.SessionInfo;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import java.math.BigDecimal;
@@ -203,4 +204,5 @@ public class SessionInfoServer {
                 .concat(String.valueOf(sessionId));
         return key;
     }
+
 }

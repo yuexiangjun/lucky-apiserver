@@ -39,4 +39,8 @@ public class GradeService {
     public  List<GradeEntity> findByIds(List<Long> gradeIds) {
         return gradeRepository.findByIds(gradeIds);
     }
+
+    public GradeEntity findById(Long gradeId) {
+        return gradeRepository.findById(gradeId);
+    }
 }

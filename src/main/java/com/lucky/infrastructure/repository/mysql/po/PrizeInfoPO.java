@@ -56,6 +56,11 @@ public class PrizeInfoPO {
      * 单价
      */
     private BigDecimal price;
+
+    /**
+     * 替换商品id
+     */
+    private Long replacePrizeId;
     public static PrizeInfoPO getInstance(PrizeInfoEntity entity) {
         if (Objects.isNull(entity))
             return null;
@@ -68,6 +73,7 @@ public class PrizeInfoPO {
                 .prizeName(entity.getPrizeName())
                 .prizeUrl(entity.getPrizeUrl())
                 .inventory(entity.getInventory())
+                .replacePrizeId(entity.getReplacePrizeId())
                 .build();
 
     }
@@ -85,6 +91,7 @@ public class PrizeInfoPO {
                 .prizeName(po.getPrizeName())
                 .prizeUrl(po.getPrizeUrl())
                 .inventory(po.getInventory())
+                .replacePrizeId(po.getReplacePrizeId())
                 .build();
 
     }

@@ -44,7 +44,7 @@ public class OrderPrizeRepositoryImpl extends ServiceImpl<OrderPrizeMapper, Orde
 			return List.of();
 		var orderPrizePOLambdaQueryWrapper = Wrappers.lambdaQuery(OrderPrizePO.class)
 				.in(OrderPrizePO::getProductId, prizeInfoIds)
-				.eq(OrderPrizePO::getIsDelivery, isDelivery)
+				.eq(Objects.nonNull(isDelivery),OrderPrizePO::getIsDelivery, isDelivery)
 				.orderByDesc(OrderPrizePO::getCreateTime);
 		return list(orderPrizePOLambdaQueryWrapper)
 				.stream()

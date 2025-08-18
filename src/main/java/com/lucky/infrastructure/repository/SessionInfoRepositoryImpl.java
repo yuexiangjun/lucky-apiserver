@@ -43,13 +43,13 @@ public class SessionInfoRepositoryImpl extends ServiceImpl<SessionInfoMapper, Se
 	}
 
 	@Override
-	public Boolean saveList(List<SessionInfoEntity> sessionInfoEntities) {
+	public Boolean saveOrUpdateBatch(List<SessionInfoEntity> sessionInfoEntities) {
 
 		var sessionInfoPOS = sessionInfoEntities.stream()
 				.map(SessionInfoPO::getInstance)
 				.collect(Collectors.toList());
 
-		return this.saveBatch(sessionInfoPOS);
+		return this.saveOrUpdateBatch(sessionInfoPOS);
 	}
 
 	@Override

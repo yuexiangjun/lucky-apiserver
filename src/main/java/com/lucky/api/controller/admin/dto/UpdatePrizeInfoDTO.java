@@ -1,11 +1,13 @@
-package com.lucky.domain.entity;
+package com.lucky.api.controller.admin.dto;
 
+import com.lucky.domain.entity.PrizeInfoEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.util.Objects;
 
 /**
  * 奖品
@@ -14,7 +16,7 @@ import java.math.BigDecimal;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class PrizeInfoEntity {
+public class UpdatePrizeInfoDTO {
     /**
      * id
      */
@@ -51,7 +53,21 @@ public class PrizeInfoEntity {
     private BigDecimal price;
 
     /**
-     * 替换商品id
+     * @param dto
+     * @return
      */
-    private Long replacePrizeId;
+    public static PrizeInfoEntity toEntity(UpdatePrizeInfoDTO dto, Long topicId) {
+        if (Objects.isNull(dto))
+            return null;
+        return PrizeInfoEntity.builder()
+                .id(dto.getId())
+                .type(dto.getType())
+                .gradeId(dto.getGradeId())
+                .topicId(topicId)
+                .price(dto.getPrice())
+                .prizeName(dto.getPrizeName())
+                .prizeUrl(dto.getPrizeUrl())
+                .inventory(dto.getInventory())
+                .build();
+    }
 }

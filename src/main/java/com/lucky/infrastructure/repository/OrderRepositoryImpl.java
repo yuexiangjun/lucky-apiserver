@@ -112,4 +112,18 @@ public class OrderRepositoryImpl extends ServiceImpl<OrderMapper, OrderPO> imple
 				.map(OrderPO::toEntity)
 				.collect(Collectors.toList());
 	}
+
+	@Override
+	public List<OrderEntity> findByIds(List<Long> orderIds) {
+
+		if (CollectionUtils.isEmpty(orderIds))
+			return List.of();
+		var wrapper = Wrappers.lambdaQuery(OrderPO.class)
+				.in(OrderPO::getId, orderIds);
+		return this.list(wrapper)
+				.stream()
+				.map(OrderPO::toEntity)
+				.collect(Collectors.toList());
+
+	}
 }

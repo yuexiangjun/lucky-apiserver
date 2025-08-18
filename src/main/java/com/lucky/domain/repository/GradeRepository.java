@@ -26,4 +26,6 @@ public interface GradeRepository {
     Boolean deleteById(Long id);
 
     List<GradeEntity> findByIds(List<Long> gradeIds);
+
+	GradeEntity findById(Long gradeId);
 }

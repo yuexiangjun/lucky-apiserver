@@ -114,4 +114,10 @@ public class PrizeInfoRepositoryImpl extends ServiceImpl<PrizeInfoMapper, PrizeI
                 .map(PrizeInfoPO::toEntity)
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public PrizeInfoEntity findById(Long findById) {
+        var po = this.getById(findById);
+       return PrizeInfoPO.toEntity( po);
+    }
 }

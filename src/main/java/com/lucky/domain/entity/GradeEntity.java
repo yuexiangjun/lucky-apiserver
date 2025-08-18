@@ -43,4 +43,9 @@ public class GradeEntity {
 	 */
 	private Boolean status;
 
+	/**
+	 * 奖项能否修改 0：不可修改 1：可修改
+	 */
+	private Integer editable;
+
 }
