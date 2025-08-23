@@ -41,7 +41,14 @@ public class BaseController {
         String token = getToken();
         if (token == null)
             return 1l;
-        if (Objects.equals(JwtUtils.getClient(token), 2)) {
+	    Integer client = null;
+	    try {
+		    client = JwtUtils.getClient(token);
+	    } catch (Exception e) {
+
+		    client = 0;
+	    }
+        if (Objects.equals(client, 2)) {
             return Long.valueOf(JwtUtils.getUserId(token));
         }
         return null;

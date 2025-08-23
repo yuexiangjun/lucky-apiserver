@@ -56,6 +56,7 @@ public class JwtUtils {
 	 * 获取客户端
 	 */
 	public static Integer getClient(String token) {
+
 		Claims claims = parseToken(token);
 		String value = getValue(claims, SecurityConstants.CLIENT);
 		if (Strings.isNotBlank(value))
