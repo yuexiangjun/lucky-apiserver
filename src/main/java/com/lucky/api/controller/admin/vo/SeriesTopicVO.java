@@ -45,6 +45,10 @@ public class SeriesTopicVO {
      * 价格（多少钱一抽）
      */
     private BigDecimal price;
+    /**
+     * 排序
+     */
+    private Integer sort;
 
     /**
      * 是否启用

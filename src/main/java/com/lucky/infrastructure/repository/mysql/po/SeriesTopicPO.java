@@ -60,6 +60,17 @@ public class SeriesTopicPO {
     @TableField(typeHandler = JacksonTypeHandler.class)
     private List<Long> gradeId;
 
+    /**
+     * 排序
+     */
+    private Integer sort;
+
+    /**
+     *
+     * @param entity
+     * @return
+     */
+
     public static SeriesTopicPO getInstance(SeriesTopicEntity entity) {
         if (Objects.isNull(entity))
             return null;
@@ -70,6 +81,7 @@ public class SeriesTopicPO {
                 .topicColor(entity.getTopicColor())
                 .session(entity.getSession())
                 .status(entity.getStatus())
+                .sort(entity.getSort())
                 .topicUrl(entity.getTopicUrl())
                 .gradeId(entity.getGradeIds())
                 .build();
@@ -84,6 +96,7 @@ public class SeriesTopicPO {
                 .name(po.getName())
                 .price(po.getPrice())
                 .topicColor(po.getTopicColor())
+                .sort(po.getSort())
                 .session(po.getSession())
                 .status(po.getStatus())
                 .topicUrl(po.getTopicUrl())

@@ -47,6 +47,10 @@ public class SeriesTopicDTO {
      * 是否启用
      */
     private Boolean status;
+    /**
+     * 排序
+     */
+    private Integer sort;
 
     public static SeriesTopicEntity toEntity(SeriesTopicDTO dto) {
 
@@ -58,6 +62,7 @@ public class SeriesTopicDTO {
                 .name(dto.getName())
                 .topicColor(dto.getTopicColor())
                 .status(dto.getStatus())
+                .sort(dto.getSort())
                 .topicUrl(dto.getTopicUrl())
                 .price(dto.getPrice())
                 .gradeIds(dto.getGradeIds())

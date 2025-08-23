@@ -108,6 +108,17 @@ public class SeriesTopicController {
         if (!aBoolean)
             throw BusinessException.newInstance("设置场次失败");
     }
+    /**
+     * 修改排序
+     */
+    @PostMapping("/sort")
+    @ResponseFormat
+    public void updateSort(@RequestParam Long topicId, @RequestParam Integer sort) {
+        var aBoolean = topicServer.updateSort(topicId, sort);
+        if (!aBoolean)
+            throw BusinessException.newInstance("修改排序失败");
+    }
+
 
 
 }
