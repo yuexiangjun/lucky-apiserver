@@ -112,10 +112,10 @@ public class PrizeInfoServer {
 		if (!Objects.equals(gradeEntity.getEditable(), 1))
 			throw BusinessException.newInstance("奖品等级不可修改");
 
-		//查询该奖品是抽取过了
-
-		if (orderService.boxCabinets(entity.getTopicId(), id))
-			throw BusinessException.newInstance("奖品已抽取，不能修改");
+//		//查询该奖品是抽取过了
+//
+//		if (orderService.boxCabinets(entity.getTopicId(), id))
+//			throw BusinessException.newInstance("奖品已抽取，不能修改");
 
 		entity.setId(null);
 
