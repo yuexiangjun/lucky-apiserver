@@ -51,6 +51,10 @@ public class SeriesTopicDetail {
      * 是否启用
      */
     private Boolean status;
+    /**
+     * 排序
+     */
+    private Integer sort;
 
     /**
      * 奖项详情
