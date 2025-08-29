@@ -6,4 +6,6 @@ ALTER TABLE `lucky-star`.`prize_info` ADD COLUMN `replace_prize_id` bigint(0) NU
 
 ALTER TABLE `lucky-star`.`series_topic` ADD COLUMN `sort` int(10) NULL DEFAULT 1 NULL COMMENT '排序';
 
+ALTER TABLE `lucky-star`.`prize_info` ADD COLUMN `is_delete` tinyint(1) NULL DEFAULT 0 COMMENT '是否删除' ;
+
 SET FOREIGN_KEY_CHECKS=1;
