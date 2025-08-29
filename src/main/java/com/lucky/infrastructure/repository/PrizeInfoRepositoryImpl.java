@@ -58,6 +58,7 @@ public class PrizeInfoRepositoryImpl extends ServiceImpl<PrizeInfoMapper, PrizeI
     @Override
     public List<PrizeInfoEntity> findByTopicId(Long topicId) {
         var wrapper = Wrappers.lambdaQuery(PrizeInfoPO.class)
+                .eq(PrizeInfoPO::getIsDelete, false)
                 .eq(PrizeInfoPO::getTopicId, topicId);
         return prizeInfoMapper.selectList(wrapper)
                 .stream()
@@ -72,6 +73,7 @@ public class PrizeInfoRepositoryImpl extends ServiceImpl<PrizeInfoMapper, PrizeI
             return List.of();
 
         var wrapper = Wrappers.lambdaQuery(PrizeInfoPO.class)
+                .eq(PrizeInfoPO::getIsDelete, false)
                 .in(PrizeInfoPO::getId, productIds);
         return prizeInfoMapper.selectList(wrapper)
                 .stream()
@@ -88,6 +90,7 @@ public class PrizeInfoRepositoryImpl extends ServiceImpl<PrizeInfoMapper, PrizeI
             throw BusinessException.newInstance("缺少TopicId");
 
         var wrapper = Wrappers.lambdaQuery(PrizeInfoPO.class)
+                .eq(PrizeInfoPO::getIsDelete, false)
                 .eq(PrizeInfoPO::getTopicId, topicId);
 
         this.remove(wrapper);
@@ -108,6 +111,7 @@ public class PrizeInfoRepositoryImpl extends ServiceImpl<PrizeInfoMapper, PrizeI
             return List.of();
 
         var wrapper = Wrappers.lambdaQuery(PrizeInfoPO.class)
+                .eq(PrizeInfoPO::getIsDelete, false)
                 .in(PrizeInfoPO::getGradeId, gradeIds);
         return prizeInfoMapper.selectList(wrapper)
                 .stream()

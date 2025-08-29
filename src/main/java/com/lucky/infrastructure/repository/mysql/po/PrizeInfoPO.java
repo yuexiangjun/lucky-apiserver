@@ -61,6 +61,10 @@ public class PrizeInfoPO {
      * 替换商品id
      */
     private Long replacePrizeId;
+    /**
+     * 是否删除
+     */
+    private Boolean isDelete;
     public static PrizeInfoPO getInstance(PrizeInfoEntity entity) {
         if (Objects.isNull(entity))
             return null;
@@ -74,6 +78,7 @@ public class PrizeInfoPO {
                 .prizeUrl(entity.getPrizeUrl())
                 .inventory(entity.getInventory())
                 .replacePrizeId(entity.getReplacePrizeId())
+                .isDelete(entity.getIsDelete())
                 .build();
 
     }
@@ -92,6 +97,7 @@ public class PrizeInfoPO {
                 .prizeUrl(po.getPrizeUrl())
                 .inventory(po.getInventory())
                 .replacePrizeId(po.getReplacePrizeId())
+                 .isDelete(po.getIsDelete())
                 .build();
 
     }

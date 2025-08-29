@@ -54,4 +54,8 @@ public class PrizeInfoEntity {
      * 替换商品id
      */
     private Long replacePrizeId;
+    /**
+     * 是否删除
+     */
+    private Boolean isDelete;
 }

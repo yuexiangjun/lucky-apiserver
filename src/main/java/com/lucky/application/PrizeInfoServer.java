@@ -122,6 +122,7 @@ public class PrizeInfoServer {
 		var prizeInfoId = prizeInfoService.saveOrUpdate(entity);
 
 		prizeInfo.setReplacePrizeId(prizeInfoId);
+		prizeInfo.setIsDelete(true);
 		prizeInfoService.saveOrUpdate(prizeInfo);
 
 
