@@ -245,4 +245,16 @@ public class OrderService {
 
 
 	}
+
+	public BaseDataPage<OrderEntity> listPage(OrderEntity entity, List<Long> findWechatUserIds, List<Long> seriesIds, Integer page, Integer size) {
+		BaseDataPage<OrderEntity> listPage = orderRepository.listPage(entity, findWechatUserIds, seriesIds, page, size);
+
+		var orderEntities = listPage.getDataList();
+
+		 var orderEntityList =this.getOrderEntities(orderEntities);
+		 listPage.setDataList(orderEntityList);
+		 return listPage;
+
+
+	}
 }

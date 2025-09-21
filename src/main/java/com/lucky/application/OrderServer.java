@@ -1035,4 +1035,128 @@ public class OrderServer {
 	}
 
 
+	public BaseDataPage<Order> listPage(OrderEntity entity,
+										String userNameOrPhone,
+										String seriesName,
+										Integer payType,
+										Integer page,
+										Integer size) {
+		List<Long> findWechatUserIds = new ArrayList<Long>();
+		if (Strings.isNotBlank(userNameOrPhone)) {
+			var wechatUserEntities = wechatUserService.getUserNameOrPhone(userNameOrPhone);
+			findWechatUserIds = wechatUserEntities.stream()
+					.map(WechatUserEntity::getId)
+					.collect(Collectors.toList());
+		}
+		//获取系列id
+		List<Long> seriesIds = new ArrayList<Long>();
+		if (Strings.isNotBlank(userNameOrPhone)) {
+			var seriesTopicEntities = seriesTopicService.getIdByName(seriesName);
+			seriesIds = seriesTopicEntities.stream()
+					.map(SeriesTopicEntity::getId)
+					.collect(Collectors.toList());
+
+		}
+
+
+		var listPage = orderService.listPage(entity, findWechatUserIds, seriesIds,  page, size);
+
+		var list = listPage.getDataList();
+
+
+		if (CollectionUtils.isEmpty(list))
+			return new BaseDataPage<>();
+
+		var payOrderIds = list.stream()
+				.map(OrderEntity::getPayOrderId)
+				.distinct()
+				.collect(Collectors.toList());
+
+		var payOrderEntities = payOrderService.findByIdsList(payOrderIds);
+		var payOrderMap = payOrderEntities.stream()
+				.collect(Collectors.toMap(PayOrderEntity::getId, PayOrderEntity::getPayType));
+
+
+		//主题id
+		var topicIds = list.stream()
+				.map(OrderEntity::getTopicId)
+				.collect(Collectors.toList());
+
+		//商品id
+		var productIds = list.stream()
+				.map(s -> s.getOrderPrizeEntities()
+						.stream()
+						.map(OrderPrizeEntity::getProductId)
+						.collect(Collectors.toList())
+				)
+				.flatMap(List::stream)
+				.collect(Collectors.toList());
+
+		var wechatUserIds = list.stream()
+				.map(OrderEntity::getWechatUserId)
+				.collect(Collectors.toList());
+
+		var seriesTopicByName = seriesTopicService.findByIds(topicIds)
+				.stream()
+				.collect(Collectors.toMap(SeriesTopicEntity::getId, SeriesTopicEntity::getName));
+
+		var products = prizeInfoService.findByIds(productIds);
+
+		var gradeIds = products.stream()
+				.map(PrizeInfoEntity::getGradeId)
+				.collect(Collectors.toList());
+
+		var prizeInfoMap = products.stream()
+				.collect(Collectors.toMap(PrizeInfoEntity::getId, Function.identity()));
+
+		var gradeEntityByName = gradeService.findByIds(gradeIds)
+				.stream()
+				.collect(Collectors.toMap(GradeEntity::getId, GradeEntity::getName));
+
+		List<WechatUserEntity> wechatUsers = wechatUserService.getByIds(wechatUserIds);
+		var wechatUserMap = wechatUsers.stream()
+				.collect(Collectors.toMap(WechatUserEntity::getId, s -> {
+					if (Strings.isBlank(s.getName())) {
+						return "用户-".concat(s.getPhone().substring(0, 3)).concat("***");
+
+					} else return s.getName();
+				}));
+
+		 var  orders= list.stream()
+				.map(orderEntity ->
+						orderEntity.getOrderPrizeEntities()
+								.stream()
+								.map(orderPrizeEntity -> {
+
+									var prizeInfoEntity = prizeInfoMap.get(orderPrizeEntity.getProductId());
+									return Order
+											.builder()
+											.id(orderEntity.getId())
+											.payType(payOrderMap.get(orderEntity.getPayOrderId()))
+											.finishTime(orderEntity.getFinishTime())
+											.createTime(orderEntity.getCreateTime())
+											.sendTime(orderEntity.getSendTime())
+											.status(orderEntity.getStatus())
+											.wechatName(wechatUserMap.get(orderEntity.getWechatUserId()))
+											.topicName(seriesTopicByName.get(orderEntity.getTopicId()))
+											.productName(prizeInfoEntity.getPrizeName())
+											.productUrl(prizeInfoEntity.getPrizeUrl())
+											.sessionName(gradeEntityByName.get(prizeInfoEntity.getGradeId()))
+											.build();
+								}).collect(Collectors.toList())
+
+				)
+				.flatMap(List::stream)
+				.filter(s -> {
+					if (Objects.isNull(payType))
+						return true;
+					return Objects.equals(s.getPayType(), payType);
+				})
+				.collect(Collectors.toList());
+
+		return BaseDataPage.newInstance(
+				listPage.getTotal(),
+				listPage.getPages(),
+				orders);
+	}
 }

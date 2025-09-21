@@ -95,6 +95,35 @@ public class OrderRepositoryImpl extends ServiceImpl<OrderMapper, OrderPO> imple
 
 	}
 
+	@Override
+	public BaseDataPage<OrderEntity> listPage(OrderEntity entity,
+											  List<Long> wechatUserIds,
+											  List<Long> seriesIds,
+											  Integer page,
+											  Integer size) {
+		var orderPOPage = new com.baomidou.mybatisplus.extension.plugins.pagination.Page<OrderPO>(page, size);
+		var wrapper = Wrappers.lambdaQuery(OrderPO.class)
+				.eq(Objects.nonNull(entity.getWechatUserId()), OrderPO::getWechatUserId, entity.getWechatUserId())
+				.eq(Objects.nonNull(entity.getTopicId()), OrderPO::getTopicId, entity.getTopicId())
+				.eq(Objects.nonNull(entity.getSessionId()), OrderPO::getSessionId, entity.getSessionId())
+				.eq(Objects.nonNull(entity.getStatus()), OrderPO::getStatus, entity.getStatus())
+				.in (!CollectionUtils.isEmpty(wechatUserIds), OrderPO::getWechatUserId, wechatUserIds)
+				.in (!CollectionUtils.isEmpty(seriesIds), OrderPO::getTopicId, seriesIds)
+				.orderByDesc(OrderPO::getCreateTime);
+
+
+		Page<OrderPO> page1 = this.page(orderPOPage, wrapper);
+
+
+		return BaseDataPage.newInstance(
+				page1.getTotal(),
+				page1.getPages(),
+				page1.getRecords()
+						.stream()
+						.map(OrderPO::toEntity)
+						.collect(Collectors.toList()));
+
+	}
 
 
 	@Override
