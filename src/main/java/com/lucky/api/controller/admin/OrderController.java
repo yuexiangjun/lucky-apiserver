@@ -40,7 +40,7 @@ public class OrderController {
 
         var entity = OrderDTO.toEntity(dto);
 
-        return orderServer.list(entity,dto.getUserNameOrPhone(),dto.getSeriesName(),dto.getPayType())
+        return orderServer.list(entity,dto.getUserNameOrPhone(),dto.getSeriesName(),dto.getPayType(),false)
                 .stream()
                 .map(OrderVO::getInstance)
                 .collect(Collectors.toList());
@@ -56,7 +56,7 @@ public class OrderController {
 
         var entity = OrderDTO.toEntity(dto);
 
-        var orderBaseDataPage = orderServer.listPage(entity, dto.getUserNameOrPhone(), dto.getSeriesName(), dto.getPayType(), dto.getPage(), dto.getSize());
+        var orderBaseDataPage = orderServer.listPage(entity, dto.getUserNameOrPhone(), dto.getSeriesName(), dto.getPayType(), dto.getPage(), dto.getSize(),false);
 
         List<Order> dataList = orderBaseDataPage.getDataList();
 

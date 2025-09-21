@@ -26,7 +26,15 @@ public class LogisticsOrderInfoDTO {
      * 手机号码
      */
     private String phone;
+    /**
+     * 页
+     */
+    private Integer page;
+    /**
+     * 条数
+     */
 
+    private Integer size;
 
     /**
      *

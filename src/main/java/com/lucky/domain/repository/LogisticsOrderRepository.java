@@ -1,6 +1,7 @@
 package com.lucky.domain.repository;
 
 import com.lucky.domain.entity.LogisticsOrderEntity;
+import com.lucky.domain.valueobject.BaseDataPage;
 
 import java.util.List;
 
@@ -16,4 +17,6 @@ public interface LogisticsOrderRepository {
     List<LogisticsOrderEntity> getByWechatUserId(Long wechatUserId);
 
     List<LogisticsOrderEntity> getByAdminList(LogisticsOrderEntity entity);
+
+    BaseDataPage<LogisticsOrderEntity> getByAdminListPage(LogisticsOrderEntity entity, Integer page, Integer size);
 }

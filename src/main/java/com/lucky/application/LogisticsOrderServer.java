@@ -6,6 +6,7 @@ import com.lucky.domain.LogisticsOrderService;
 import com.lucky.domain.PrizeInfoService;
 import com.lucky.domain.WechatUserService;
 import com.lucky.domain.entity.*;
+import com.lucky.domain.valueobject.BaseDataPage;
 import com.lucky.domain.valueobject.LogisticsOrderInfo;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.stereotype.Component;
@@ -150,4 +151,28 @@ public class LogisticsOrderServer {
     }
 
 
+    public  BaseDataPage<LogisticsOrderInfo> getByAdminListPage(LogisticsOrderEntity entity, String phone, Integer page, Integer size) {
+
+
+
+        if (Strings.isNotBlank(phone)) {
+            var wechatUserEntity = wechatUserService.getByPhone(phone);
+            if (!Objects.isNull(wechatUserEntity))
+                entity.setWechatUserId(wechatUserEntity.getId());
+        }
+
+
+        var  dataPage= logisticsOrderService.getByAdminListPage(entity, page, size);
+
+        var logisticsOrderEntities = dataPage.getDataList();
+
+        if (CollectionUtil.isEmpty(logisticsOrderEntities))
+            return new BaseDataPage<>();
+
+
+        List<LogisticsOrderInfo> logisticsOrderInfos = this.getLogisticsOrderInfos(logisticsOrderEntities);
+
+        return BaseDataPage.newInstance(dataPage.getTotal(), dataPage.getPages(), logisticsOrderInfos);
+
+    }
 }

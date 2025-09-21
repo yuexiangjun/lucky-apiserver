@@ -2,6 +2,7 @@ package com.lucky.domain;
 
 import com.lucky.domain.entity.SeriesTopicEntity;
 import com.lucky.domain.repository.SeriesTopicRepository;
+import com.lucky.domain.valueobject.BaseDataPage;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
@@ -38,6 +39,9 @@ public class SeriesTopicService {
 	 */
 	public List<SeriesTopicEntity> findByList(SeriesTopicEntity seriesTopicEntity) {
 		return seriesTopicRepository.findByList(seriesTopicEntity);
+	}
+	public BaseDataPage<SeriesTopicEntity> findByListPage(SeriesTopicEntity seriesTopicEntity, Integer page, Integer size){
+		return seriesTopicRepository.findByListPage(seriesTopicEntity, page, size);
 	}
 
 	public SeriesTopicEntity findById(Long id) {

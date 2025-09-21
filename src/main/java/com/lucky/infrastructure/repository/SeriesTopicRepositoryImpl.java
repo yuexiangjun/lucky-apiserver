@@ -1,9 +1,11 @@
 package com.lucky.infrastructure.repository;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.lucky.domain.entity.SeriesTopicEntity;
 import com.lucky.domain.repository.SeriesTopicRepository;
+import com.lucky.domain.valueobject.BaseDataPage;
 import com.lucky.infrastructure.repository.mysql.mapper.SeriesTopicMapper;
 import com.lucky.infrastructure.repository.mysql.po.SeriesTopicPO;
 import org.springframework.stereotype.Component;
@@ -67,6 +69,28 @@ public class SeriesTopicRepositoryImpl extends ServiceImpl<SeriesTopicMapper, Se
 				.stream()
 				.map(SeriesTopicPO::toEntity)
 				.collect(Collectors.toList());
+	}
+
+	/**
+	 * 列表
+	 */
+	public BaseDataPage<SeriesTopicEntity> findByListPage(SeriesTopicEntity seriesTopicEntity,Integer page,Integer size) {
+		Page<SeriesTopicPO> seriesTopicPOPage = new Page<>(page, size);
+
+		var wrapper = Wrappers.<SeriesTopicPO>lambdaQuery()
+				.eq(Objects.nonNull(seriesTopicEntity.getStatus()), SeriesTopicPO::getStatus, seriesTopicEntity.getStatus())
+				.orderByAsc(SeriesTopicPO::getSort)
+				.orderByDesc(SeriesTopicPO::getId)
+				;
+
+		Page<SeriesTopicPO> page1 = this.page(seriesTopicPOPage, wrapper);
+		return BaseDataPage.newInstance(
+				page1.getTotal(),
+				page1.getPages(),
+				page1.getRecords()
+						.stream()
+						.map(SeriesTopicPO::toEntity)
+						.collect(Collectors.toList()));
 	}
 
 	@Override

@@ -2,11 +2,14 @@ package com.lucky.infrastructure.repository;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.lucky.domain.entity.LogisticsOrderEntity;
 import com.lucky.domain.repository.LogisticsOrderRepository;
+import com.lucky.domain.valueobject.BaseDataPage;
 import com.lucky.infrastructure.repository.mysql.mapper.LogisticsOrderMapper;
 import com.lucky.infrastructure.repository.mysql.po.LogisticsOrderPO;
+import com.lucky.infrastructure.repository.mysql.po.SeriesTopicPO;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -58,5 +61,32 @@ public class LogisticsOrderRepositoryImpl extends ServiceImpl<LogisticsOrderMapp
 						.stream()
 						.map(LogisticsOrderPO::toEntity)
 						.collect(Collectors.toList());
+	}
+
+	@Override
+	public BaseDataPage<LogisticsOrderEntity> getByAdminListPage(LogisticsOrderEntity entity, Integer page, Integer size) {
+		Page<LogisticsOrderPO> seriesTopicPOPage = new Page<>(page, size);
+		var queryWrapper = new LambdaQueryWrapper<LogisticsOrderPO>()
+				.eq(Objects.nonNull(entity.getStatus()), LogisticsOrderPO::getStatus, entity.getStatus())
+				.eq(Objects.nonNull(entity.getWechatUserId()), LogisticsOrderPO::getWechatUserId, entity.getWechatUserId())
+				.like(Objects.nonNull(entity.getNumber()), LogisticsOrderPO::getNumber, entity.getNumber())
+				.like(Objects.nonNull(entity.getLogisticsNumber()), LogisticsOrderPO::getLogisticsNumber, entity.getLogisticsNumber())
+				.orderByAsc(LogisticsOrderPO::getStatus)
+				.orderByDesc(LogisticsOrderPO::getCreateTime);
+
+				this.list(queryWrapper)
+						.stream()
+						.map(LogisticsOrderPO::toEntity)
+						.collect(Collectors.toList());
+
+
+		Page<LogisticsOrderPO> page1 = this.page(seriesTopicPOPage, queryWrapper);
+		return BaseDataPage.newInstance(
+				page1.getTotal(),
+				page1.getPages(),
+				page1.getRecords()
+						.stream()
+						.map(LogisticsOrderPO::toEntity)
+						.collect(Collectors.toList()));
 	}
 }

@@ -2,6 +2,7 @@ package com.lucky.api.controller.admin;
 
 import com.lucky.api.controller.admin.dto.EnabledDTO;
 import com.lucky.api.controller.admin.dto.SeriesTopicDTO;
+import com.lucky.api.controller.admin.vo.OrderVO;
 import com.lucky.api.controller.admin.vo.SeriesTopicVO;
 import com.lucky.api.utils.ResponseFormat;
 import com.lucky.application.SeriesTopicServer;
@@ -9,7 +10,10 @@ import com.lucky.application.SeriesTopicServer;
 import com.lucky.domain.entity.SeriesTopicEntity;
 import com.lucky.domain.exception.BusinessException;
 
+import com.lucky.domain.valueobject.BaseDataPage;
+import com.lucky.domain.valueobject.Order;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -96,6 +100,31 @@ public class SeriesTopicController {
                 .stream()
                 .map(SeriesTopicVO::getInstance)
                 .collect(Collectors.toList());
+    }
+
+    /**
+     * 列表  分页
+     */
+    @PostMapping("/list-page")
+    @ResponseFormat
+    public BaseDataPage<SeriesTopicVO> findByListPage(@RequestParam Integer page, @RequestParam Integer size) {
+        log.info("后台系列列表");
+        var  seriesTopicEntity= SeriesTopicEntity
+                .builder().build();
+       var orderBaseDataPage =   topicServer.findByListPage(page, size, seriesTopicEntity);
+        var dataList = orderBaseDataPage.getDataList();
+        if (CollectionUtils.isEmpty(dataList))
+            return new BaseDataPage<>(0l);
+
+        var dataListVO = dataList
+                .stream()
+                .map(SeriesTopicVO::getInstance)
+                .collect(Collectors.toList());
+
+        return BaseDataPage.newInstance(
+                orderBaseDataPage.getTotal(),
+                orderBaseDataPage.getPages(),
+                dataListVO);
     }
 
     /**

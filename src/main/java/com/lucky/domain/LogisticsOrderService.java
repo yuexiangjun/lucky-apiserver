@@ -7,6 +7,7 @@ import com.lucky.domain.entity.OrderPrizeEntity;
 import com.lucky.domain.enumes.NoCounterType;
 import com.lucky.domain.repository.LogisticsOrderPrizeRepository;
 import com.lucky.domain.repository.LogisticsOrderRepository;
+import com.lucky.domain.valueobject.BaseDataPage;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -122,5 +123,30 @@ public class LogisticsOrderService {
 				.peek(s -> s.setGoods(LogisticsOrderPrizeMap.getOrDefault(s.getId(), List.of())))
 				.collect(Collectors.toList());
 
+	}
+
+	public BaseDataPage<LogisticsOrderEntity> getByAdminListPage(LogisticsOrderEntity entity, Integer page, Integer size) {
+		var  dataPage= logisticsOrderRepository.getByAdminListPage(entity, page, size);
+
+		List<LogisticsOrderEntity> logisticsOrderEntities = dataPage.getDataList();
+
+		if (CollectionUtil.isEmpty(logisticsOrderEntities))
+			return new BaseDataPage<>();
+
+		var logisticsOrderIds = logisticsOrderEntities.stream()
+				.map(LogisticsOrderEntity::getId)
+				.collect(Collectors.toList());
+
+		var logisticsOrderPrizeEntities = logisticsOrderPrizeRepository.getByLogisticsOrderIds(logisticsOrderIds);
+
+		var LogisticsOrderPrizeMap = logisticsOrderPrizeEntities.stream()
+				.collect(Collectors.groupingBy(LogisticsOrderPrizeEntity::getLogisticsOrderId));
+
+
+		List<LogisticsOrderEntity> collect = logisticsOrderEntities.stream()
+				.peek(s -> s.setGoods(LogisticsOrderPrizeMap.getOrDefault(s.getId(), List.of())))
+				.collect(Collectors.toList());
+
+		return BaseDataPage.newInstance(dataPage.getTotal(), dataPage.getPages(), collect);
 	}
 }

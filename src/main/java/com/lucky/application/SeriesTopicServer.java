@@ -9,6 +9,7 @@ import com.lucky.domain.entity.GradeEntity;
 import com.lucky.domain.entity.SeriesTopicEntity;
 import com.lucky.domain.entity.SessionInfoEntity;
 import com.lucky.domain.exception.BusinessException;
+import com.lucky.domain.valueobject.BaseDataPage;
 import com.lucky.domain.valueobject.Inventory;
 import com.lucky.domain.valueobject.SeriesTopicDetail;
 import org.springframework.stereotype.Component;
@@ -150,5 +151,29 @@ public class SeriesTopicServer {
 		seriesTopicEntity.setSort(sort);
 		Long l = seriesTopicService.saveOrUpdate(seriesTopicEntity);
 		return Objects.nonNull(l);
+	}
+
+	public BaseDataPage<SeriesTopicDetail> findByListPage(Integer page, Integer size, SeriesTopicEntity entity) {
+		BaseDataPage<SeriesTopicEntity>  dataPage= seriesTopicService.findByListPage(entity , page, size);
+
+		var byList = dataPage.getDataList();
+
+		if (CollectionUtils.isEmpty(byList))
+			return new BaseDataPage<>();
+
+		var gradeIds = byList.stream()
+				.map(SeriesTopicEntity::getGradeIds)
+				.filter(CollectionUtil::isNotEmpty)
+				.flatMap(List::stream)
+				.collect(Collectors.toList());
+
+		List<GradeEntity> byIds = gradeService.findByIds(gradeIds);
+		var gradeMapName = byIds.stream()
+				.collect(Collectors.toMap(GradeEntity::getId, GradeEntity::getName));
+		 var  seriesTopicDetails= byList.stream()
+				.map(s -> SeriesTopicDetail.getInstance(s, gradeMapName))
+				.collect(Collectors.toList());
+
+		return BaseDataPage.newInstance(dataPage.getTotal(), dataPage.getPages(), seriesTopicDetails);
 	}
 }
