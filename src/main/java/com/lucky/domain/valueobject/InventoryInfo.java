@@ -41,6 +41,10 @@ public class InventoryInfo {
 	 */
 	private Integer sort;
 	/**
+	 * 单价
+	 */
+	private BigDecimal price;
+	/**
 	 * 获取概率
 	 */
 	private  String  probability;

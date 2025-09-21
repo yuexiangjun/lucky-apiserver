@@ -11,7 +11,6 @@ import com.lucky.domain.valueobject.BaseDataPage;
 import com.lucky.domain.valueobject.InventoryInfo;
 import com.lucky.domain.valueobject.SessionInfo;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import java.math.BigDecimal;
@@ -24,19 +23,19 @@ import java.util.stream.Collectors;
 
 @Component
 public class SessionInfoServer {
-	private final SessionInfoService sessionInfoService;
-	private final PrizeInfoService prizeInfoService;
-	private final GradeService gradeService;
-	private final RedisService redisService;
+    private final SessionInfoService sessionInfoService;
+    private final PrizeInfoService prizeInfoService;
+    private final GradeService gradeService;
+    private final RedisService redisService;
 
-	public SessionInfoServer(SessionInfoService sessionInfoService,
-	                         PrizeInfoService prizeInfoService,
-	                         GradeService gradeService, RedisService redisService) {
-		this.sessionInfoService = sessionInfoService;
-		this.prizeInfoService = prizeInfoService;
-		this.gradeService = gradeService;
-		this.redisService = redisService;
-	}
+    public SessionInfoServer(SessionInfoService sessionInfoService,
+                             PrizeInfoService prizeInfoService,
+                             GradeService gradeService, RedisService redisService) {
+        this.sessionInfoService = sessionInfoService;
+        this.prizeInfoService = prizeInfoService;
+        this.gradeService = gradeService;
+        this.redisService = redisService;
+    }
 
     /**
      * 商品详情
@@ -86,6 +85,8 @@ public class SessionInfoServer {
                                     .prizeId(s.getId())
                                     .prizeUrl(s.getPrizeUrl())
                                     .prizeName(s.getPrizeName())
+                                    .price(s.getPrice())
+
                                     .gradeName(gradeEntity.getName())
                                     .sort(gradeEntity.getSort())
                                     .probability(InventoryInfo.removeTrailingZeros(probability.toPlainString()).concat("‰"))
@@ -114,23 +115,23 @@ public class SessionInfoServer {
                             .stream()
                             .map(p -> {
 
-								PrizeInfoEntity prizeInfoEntity = prizeInfoEntityMap.get(p.getPrizeId());
-								GradeEntity gradeEntity = gradeEntityMap.get(prizeInfoEntity.getGradeId());
-								var probability = new BigDecimal(0);
-								if (new BigDecimal(p.getInventory()).compareTo(BigDecimal.ZERO) > 0)
-									probability = new BigDecimal(p.getInventory()).divide(new BigDecimal(remainInventory), 5, BigDecimal.ROUND_HALF_UP).multiply(BigDecimal.valueOf(100));
-								return InventoryInfo.builder()
-										.prizeId(p.getPrizeId())
-										.totalInventory(totalInventoryMap.get(p.getPrizeId()))
-										.remainInventory(p.getInventory())
-										.prizeUrl(prizeInfoEntity.getPrizeUrl())
-										.prizeName(prizeInfoEntity.getPrizeName())
-										.gradeName(gradeEntity.getName())
-										.probability(InventoryInfo.removeTrailingZeros(probability.toPlainString()).concat("%"))
-										.sort(gradeEntity.getSort())
-										.build();
-							})
-							.collect(Collectors.toList());
+                                PrizeInfoEntity prizeInfoEntity = prizeInfoEntityMap.get(p.getPrizeId());
+                                GradeEntity gradeEntity = gradeEntityMap.get(prizeInfoEntity.getGradeId());
+                                var probability = new BigDecimal(0);
+                                if (new BigDecimal(p.getInventory()).compareTo(BigDecimal.ZERO) > 0)
+                                    probability = new BigDecimal(p.getInventory()).divide(new BigDecimal(remainInventory), 5, BigDecimal.ROUND_HALF_UP).multiply(BigDecimal.valueOf(100));
+                                return InventoryInfo.builder()
+                                        .prizeId(p.getPrizeId())
+                                        .totalInventory(totalInventoryMap.get(p.getPrizeId()))
+                                        .remainInventory(p.getInventory())
+                                        .prizeUrl(prizeInfoEntity.getPrizeUrl())
+                                        .prizeName(prizeInfoEntity.getPrizeName())
+                                        .gradeName(gradeEntity.getName())
+                                        .probability(InventoryInfo.removeTrailingZeros(probability.toPlainString()).concat("%"))
+                                        .sort(gradeEntity.getSort())
+                                        .build();
+                            })
+                            .collect(Collectors.toList());
 
                     if (!CollectionUtils.isEmpty(hides)) {
                         inventoryInfos.addAll(hides);
@@ -157,7 +158,7 @@ public class SessionInfoServer {
                             .remainInventory(remainInventory)
                             .inventoryInfos(inventoryInfos)
                             .endTime(expire >= 0 ? expire : null)
-		                    .status(s.getStatus())
+                            .status(s.getStatus())
                             .isLineUpSuccess(isLineUpSuccess)
                             .build();
 
@@ -167,11 +168,11 @@ public class SessionInfoServer {
                 .collect(Collectors.toList());
 
 
-		return BaseDataPage.newInstance(
-				sessionInfoEntityPage.getTotal(),
-				sessionInfoEntityPage.getPages(),
-				sessionInfoList);
-	}
+        return BaseDataPage.newInstance(
+                sessionInfoEntityPage.getTotal(),
+                sessionInfoEntityPage.getPages(),
+                sessionInfoList);
+    }
 
     /**
      * 奖项详情

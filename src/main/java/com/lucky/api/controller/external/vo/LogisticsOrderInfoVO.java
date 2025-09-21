@@ -51,6 +51,10 @@ public class LogisticsOrderInfoVO {
      * 商品信息
      */
     private List<WechatPrizeInfoVO> goods;
+    /**
+     * 收货人名
+     */
+    private String name;
 
     /**
      * 收货地址

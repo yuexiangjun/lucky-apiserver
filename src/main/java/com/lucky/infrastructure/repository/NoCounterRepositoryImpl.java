@@ -26,7 +26,7 @@ public class NoCounterRepositoryImpl extends ServiceImpl<NoCounterMapper, NoCoun
 		var eq =  Wrappers.lambdaQuery(NoCounterPO.class)
 				.eq(NoCounterPO::getBelongDay, localDate)
 
-				.eq(NoCounterPO::getType, type.name());
+				.eq(NoCounterPO::getType, type.name().concat("-").concat(type.getPrefix()));
 		NoCounterPO one = this.getOne(eq);
 		return	NoCounterPO.toEntity( one);
 

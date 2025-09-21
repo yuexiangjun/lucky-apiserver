@@ -63,4 +63,13 @@ public class DeliveryAddressEntity {
 
 
     }
+    public static String getNameStr(DeliveryAddressEntity entity) {
+        if (Objects.isNull(entity))
+            return null;
+
+
+        return entity.getName();
+
+
+    }
 }

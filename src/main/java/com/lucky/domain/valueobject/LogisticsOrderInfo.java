@@ -44,6 +44,10 @@ public class LogisticsOrderInfo {
      */
     private List<PrizeInfoEntity> goods;
     /**
+     * 收货人名
+     */
+    private String name;
+    /**
      * 收货地址
      */
     private String  address;

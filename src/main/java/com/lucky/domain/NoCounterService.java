@@ -33,6 +33,7 @@ public class NoCounterService {
 						.type(Strings.isBlank(type.getPrefix()) ? type.name() : type.name().concat("-").concat(type.getPrefix()))
 						.build();
 			}
+
 			var result = getNextNo(entity, type);
 			this.noCounterRepository.saveOrUpdate(entity);
 			return result;
