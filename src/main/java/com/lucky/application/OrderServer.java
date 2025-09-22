@@ -143,7 +143,7 @@ public class OrderServer {
                         if (Objects.equals(isHide, true))
                             return "用户-".concat(s.getPhone().substring(0, 3)).concat("***");
                         else
-                            return "用户-".concat(s.getPhone() );
+                            return "用户-".concat(s.getPhone());
 
                     } else return s.getName();
                 }));
@@ -1038,7 +1038,7 @@ public class OrderServer {
     }
 
 
-    public BaseDataPage<Order> listPage(OrderEntity entity,
+    public BaseDataPage<OrderInfo> listPage(OrderEntity entity,
                                         String userNameOrPhone,
                                         String seriesName,
                                         Integer payType,
@@ -1124,48 +1124,66 @@ public class OrderServer {
                         if (Objects.equals(isHide, true))
                             return "用户-".concat(s.getPhone().substring(0, 3)).concat("***");
                         else
-                            return "用户-".concat(s.getPhone() );
-
+                            return "用户-".concat(s.getPhone());
 
 
                     } else return s.getName();
                 }));
 
-        var orders = list.stream()
-                .map(orderEntity ->
-                        orderEntity.getOrderPrizeEntities()
-                                .stream()
-                                .map(orderPrizeEntity -> {
 
-                                    var prizeInfoEntity = prizeInfoMap.get(orderPrizeEntity.getProductId());
-                                    return Order
-                                            .builder()
-                                            .id(orderEntity.getId())
-                                            .payType(payOrderMap.get(orderEntity.getPayOrderId()))
-                                            .finishTime(orderEntity.getFinishTime())
-                                            .createTime(orderEntity.getCreateTime())
-                                            .sendTime(orderEntity.getSendTime())
-                                            .status(orderEntity.getStatus())
-                                            .wechatName(wechatUserMap.get(orderEntity.getWechatUserId()))
-                                            .topicName(seriesTopicByName.get(orderEntity.getTopicId()))
-                                            .productName(prizeInfoEntity.getPrizeName())
-                                            .productUrl(prizeInfoEntity.getPrizeUrl())
-                                            .sessionName(gradeEntityByName.get(prizeInfoEntity.getGradeId()))
-                                            .build();
-                                }).collect(Collectors.toList())
+      var dataList =  list.stream()
+                .map(orderEntity ->
+                        {
+                            var orders = orderEntity.getOrderPrizeEntities()
+                                    .stream()
+                                    .map(orderPrizeEntity -> {
+
+                                        var prizeInfoEntity = prizeInfoMap.get(orderPrizeEntity.getProductId());
+                                        return Order
+                                                .builder()
+                                                .id(orderEntity.getId())
+                                                .payType(payOrderMap.get(orderEntity.getPayOrderId()))
+                                                .finishTime(orderEntity.getFinishTime())
+                                                .createTime(orderEntity.getCreateTime())
+                                                .sendTime(orderEntity.getSendTime())
+                                                .status(orderEntity.getStatus())
+                                                .wechatName(wechatUserMap.get(orderEntity.getWechatUserId()))
+                                                .topicName(seriesTopicByName.get(orderEntity.getTopicId()))
+                                                .productName(prizeInfoEntity.getPrizeName())
+                                                .productUrl(prizeInfoEntity.getPrizeUrl())
+                                                .sessionName(gradeEntityByName.get(prizeInfoEntity.getGradeId()))
+                                                .build();
+                                    }).collect(Collectors.toList());
+
+                            return OrderInfo
+                                    .builder()
+                                    .id(orderEntity.getId())
+                                    .wechatUserId(orderEntity.getWechatUserId())
+                                    .wechatName(wechatUserMap.get(orderEntity.getWechatUserId()))
+                                    .topicId(orderEntity.getTopicId())
+                                    .topicName(seriesTopicByName.get(orderEntity.getTopicId()))
+                                    .payType(payOrderMap.get(orderEntity.getPayOrderId()))
+                                    .createTime(orderEntity.getCreateTime())
+                                    .orderList(orders)
+                                    .build();
+
+
+                        }
 
                 )
-                .flatMap(List::stream)
+
                 .filter(s -> {
                     if (Objects.isNull(payType))
                         return true;
                     return Objects.equals(s.getPayType(), payType);
-                })
-                .collect(Collectors.toList());
+                }).collect(Collectors.toList());
+
+
+
 
         return BaseDataPage.newInstance(
                 listPage.getTotal(),
                 listPage.getPages(),
-                orders);
+                dataList);
     }
 }

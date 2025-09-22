@@ -2,6 +2,7 @@ package com.lucky.api.controller.admin;
 
 import com.lucky.api.controller.admin.dto.OrderDTO;
 import com.lucky.api.controller.admin.dto.StatusDTO;
+import com.lucky.api.controller.admin.vo.OrderInfoVO;
 import com.lucky.api.controller.admin.vo.OrderVO;
 import com.lucky.api.controller.admin.vo.SalesVO;
 import com.lucky.api.utils.ResponseFormat;
@@ -52,19 +53,19 @@ public class OrderController {
      */
     @PostMapping("/list-page")
     @ResponseFormat
-    public BaseDataPage<OrderVO> listPage(@RequestBody OrderDTO dto) {
+    public BaseDataPage<OrderInfoVO> listPage(@RequestBody OrderDTO dto) {
 
         var entity = OrderDTO.toEntity(dto);
 
         var orderBaseDataPage = orderServer.listPage(entity, dto.getUserNameOrPhone(), dto.getSeriesName(), dto.getPayType(), dto.getPage(), dto.getSize(),false);
 
-        List<Order> dataList = orderBaseDataPage.getDataList();
+        var dataList = orderBaseDataPage.getDataList();
 
         if (CollectionUtils.isEmpty(dataList))
            return new BaseDataPage<>(0l);
 
         var dataListVO = dataList.stream()
-                .map(OrderVO::getInstance)
+                .map(OrderInfoVO::getInstance)
                 .collect(Collectors.toList());
 
         return BaseDataPage.newInstance(
