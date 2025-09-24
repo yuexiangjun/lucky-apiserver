@@ -1,6 +1,7 @@
 package com.lucky.api.controller.admin;
 
 import com.lucky.api.controller.admin.dto.EnabledDTO;
+import com.lucky.api.controller.admin.dto.PageSizeDTO;
 import com.lucky.api.controller.admin.dto.SeriesTopicDTO;
 import com.lucky.api.controller.admin.vo.OrderVO;
 import com.lucky.api.controller.admin.vo.SeriesTopicVO;
@@ -93,7 +94,7 @@ public class SeriesTopicController {
     @PostMapping("/list")
     @ResponseFormat
     public List<SeriesTopicVO> findByList() {
-        log.info("后台系列列表");
+
          var  seriesTopicEntity= SeriesTopicEntity
                 .builder().build();
         return topicServer.findByList(seriesTopicEntity)
@@ -107,11 +108,11 @@ public class SeriesTopicController {
      */
     @PostMapping("/list-page")
     @ResponseFormat
-    public BaseDataPage<SeriesTopicVO> findByListPage(@RequestParam Integer page, @RequestParam Integer size) {
-        log.info("后台系列列表");
+    public BaseDataPage<SeriesTopicVO> findByListPage(@RequestBody PageSizeDTO dto) {
+
         var  seriesTopicEntity= SeriesTopicEntity
                 .builder().build();
-       var orderBaseDataPage =   topicServer.findByListPage(page, size, seriesTopicEntity);
+       var orderBaseDataPage =   topicServer.findByListPage(dto.getPage(), dto.getSize() , seriesTopicEntity);
         var dataList = orderBaseDataPage.getDataList();
         if (CollectionUtils.isEmpty(dataList))
             return new BaseDataPage<>(0l);
